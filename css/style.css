@@ -1,4 +1,4 @@
-/* style.css */
+/* General Styles */
 * {
   margin: 0;
   padding: 0;
@@ -38,4 +38,12 @@ button {
 
 button:hover {
   background-color: #45a049;
+}
+
+/* Map styles */
+#map {
+  height: 400px;
+  width: 90%;
+  margin: 20px auto;
+  border: 1px solid #ddd;
 }

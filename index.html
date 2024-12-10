@@ -1,10 +1,9 @@
-<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Worcester Holiday Finder</title>
+    <title>Holiday Destination Finder</title>
     <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
@@ -17,10 +16,13 @@
         <input type="text" id="search" placeholder="Search for a city..." />
         <button id="searchButton">Search</button>
       </div>
+      <div id="map"></div>
     </main>
 
+    <!-- JavaScript -->
     <script src="js/script.js"></script>
-    <!-- Google API key -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBdQIJwjRsPXRBeRsghd47w6_9NUIetTTA&libraries=places"></script>
+
+    <!-- Google Maps -->
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBdQIJwjRsPXRBeRsghd47w6_9NUIetTTA&libraries=places&callback=initMap"></script>
   </body>
 </html>

@@ -1,17 +1,24 @@
-// script.js
+// Define initMap in global scope so Google Maps can find it
+function initMap() {
+  // London coordinates
+  const defaultLocation = { lat: 51.5074, lng: -0.1278 };
+
+  // Create the map
+  const map = new google.maps.Map(document.getElementById("map"), {
+    center: defaultLocation,
+    zoom: 13,
+  });
+}
+
+// Add event listeners after DOM loads
 document.addEventListener("DOMContentLoaded", function () {
-  // Get DOM elements
   const searchInput = document.getElementById("search");
   const searchButton = document.getElementById("searchButton");
 
-  // Add click event to search button
   searchButton.addEventListener("click", function () {
     const searchTerm = searchInput.value;
     if (searchTerm) {
-      alert("You searched for: " + searchTerm);
-      // We'll add the actual search functionality later
+      console.log("Searching for:", searchTerm);
     }
   });
 });
-
-// API key AIzaSyBdQIJwjRsPXRBeRsghd47w6_9NUIetTTA
