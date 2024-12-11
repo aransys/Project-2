@@ -1,20 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title></title>
-    <link rel="stylesheet" href="css/style.css" />
-  </head>
-  <body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Music Explorer - Interactive Music Discovery Platform">
+    
+    <!-- Normalize CSS first, then custom CSS -->
+    <link rel="stylesheet" href="https://necolas.github.io/normalize.css/8.0.1/normalize.css">
+    <link rel="stylesheet" href="css/style.css">
+    
+    <title>Music Explorer</title>
+</head>
+<body>
     <header>
+        <nav>
+            <div class="logo">
+                <h1>Music Explorer</h1>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#search">Search</a></li>
+                <li><a href="#favorites">Favorites</a></li>
+                <li><a href="#about">About</a></li>
+            </ul>
+        </nav>
     </header>
 
     <main>
+        <section id="search-section">
+            <!-- going to add the search form here later -->
+            <h2>Discover Music</h2>
+        </section>
+
+        <section id="results-section">
+            <!-- This is where search results will appear -->
+        </section>
     </main>
 
-    <!-- JavaScript -->
-    <script src="js/script.js"></script>
+    <footer>
+        <p>Created by Aurimas Ransys - Powered by Spotify</p>
+    </footer>
 
-  </body>
+    <!-- JavaScript -->
+    <script src="js/config.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/main.js"></script>
+</body>
 </html>

@@ -1,0 +1,65 @@
+
+:root {
+  /* Color scheme - can easily change these later */
+  --primary-color: #1DB954;    /* Spotify green */
+  --secondary-color: #191414;  /* Spotify black */
+  --text-color: #FFFFFF;
+  --background-color: #121212;
+  --error-color: #E74C3C;
+  
+  /* Spacing variables */
+  --spacing-small: 0.5rem;
+  --spacing-medium: 1rem;
+  --spacing-large: 2rem;
+}
+
+/* Basic styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  line-height: 1.6;
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+/* Navigation styles */
+nav {
+  background-color: var(--secondary-color);
+  padding: var(--spacing-medium);
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: var(--spacing-medium);
+}
+
+.nav-links a {
+  color: var(--text-color);
+  text-decoration: none;
+  padding: var(--spacing-small);
+}
+
+.nav-links a:hover {
+  color: var(--primary-color);
+}
+
+/* Main content */
+main {
+  padding: var(--spacing-large);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Basic responsive design */
+@media (max-width: 768px) {
+  .nav-links {
+      flex-direction: column;
+      text-align: center;
+  }
+}
