@@ -1,12 +1,11 @@
-
 :root {
   /* Color scheme - can easily change these later */
-  --primary-color: #1DB954;    /* Spotify green */
-  --secondary-color: #191414;  /* Spotify black */
-  --text-color: #FFFFFF;
+  --primary-color: #1db954; /* Spotify green */
+  --secondary-color: #191414; /* Spotify black */
+  --text-color: #ffffff;
   --background-color: #121212;
-  --error-color: #E74C3C;
-  
+  --error-color: #e74c3c;
+
   /* Spacing variables */
   --spacing-small: 0.5rem;
   --spacing-medium: 1rem;
@@ -21,7 +20,7 @@
 }
 
 body {
-  font-family: 'Arial', sans-serif;
+  font-family: "Arial", sans-serif;
   line-height: 1.6;
   background-color: var(--background-color);
   color: var(--text-color);
@@ -56,10 +55,132 @@ main {
   margin: 0 auto;
 }
 
+/* In your style.css */
+.results-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  padding: 2rem;
+}
+
+.track-card {
+  background: var(--secondary-color);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform 0.2s ease;
+}
+
+.track-card:hover {
+  transform: translateY(-5px);
+}
+
+.track-image img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.track-info {
+  padding: 1rem;
+}
+
+.track-name {
+  color: var(--text-color);
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.artist-name,
+.album-name {
+  color: #888;
+  font-size: 0.9rem;
+  margin: 0.2rem 0;
+}
+
+.track-actions {
+  padding: 1rem;
+  text-align: center;
+}
+
+.preview-button {
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.preview-button:hover {
+  background: #1ed760;
+}
+
+/* Results section */
+.results-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  padding: 2rem;
+}
+
+.track-card {
+  background: var(--secondary-color);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform 0.2s ease;
+}
+
+.track-card:hover {
+  transform: translateY(-5px);
+}
+
+.track-image img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.track-info {
+  padding: 1rem;
+}
+
+.track-name {
+  color: var(--text-color);
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.artist-name,
+.album-name {
+  color: #888;
+  font-size: 0.9rem;
+  margin: 0.2rem 0;
+}
+
+.track-actions {
+  padding: 1rem;
+  text-align: center;
+}
+
+.preview-button {
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.preview-button:hover {
+  background: #1ed760;
+}
+
 /* Basic responsive design */
 @media (max-width: 768px) {
   .nav-links {
-      flex-direction: column;
-      text-align: center;
+    flex-direction: column;
+    text-align: center;
   }
 }
