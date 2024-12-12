@@ -53,10 +53,27 @@ An interactive music exploration platform that allows users to discover and inte
 - API functionality testing
 - User interaction testing
 
-## Credits
+## Credits & Attribution
 
-- Created by Aurimas Ransys
-- Powered by Spotify Web API
+### Design & Layout Inspiration
+
+- Card layout grid system inspired by common web design patterns and Spotify's own interface design
+- CSS Grid implementation referenced from MDN Web Docs (Mozilla Developer Network)
+- Responsive design patterns based on industry standard practices
+
+### Code Attribution
+
+- Spotify API implementation based on official Spotify Web API documentation (https://developer.spotify.com/documentation/web-api)
+- Authentication flow follows Spotify API best practices
+- Search functionality and results display inspired by Spotify Web API examples
+- Dynamic content loading implementation based on JavaScript DOM manipulation patterns
+- Card component structure follows conventional web component design patterns
+
+### CSS Styling
+
+- Normalize.css used for consistent cross-browser styling (https://necolas.github.io/normalize.css/)
+- Color scheme inspired by Spotify's brand colors
+- Card hover effects and transitions based on common UX design patterns
 
 ## License
 
