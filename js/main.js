@@ -6,14 +6,8 @@
 document.addEventListener("DOMContentLoaded", () => {
   let isSearching = false;
 
-  // Create search form - HTML structure inspired by conventional form patterns
-  const searchForm = document.createElement("form");
-  searchForm.innerHTML = `
-      <input type="text" id="search-input" placeholder="Search for a song...">
-      <button type="submit">Search</button>
-  `;
-
-  document.getElementById("search-section").appendChild(searchForm);
+  // getting the form
+  const searchForm = document.getElementById("search-form");
 
   // Function to create track cards - Layout structure inspired by Spotify's design patterns
   function displayTracks(tracks) {
