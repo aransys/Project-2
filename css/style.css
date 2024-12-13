@@ -168,6 +168,18 @@ main {
   }
 }
 
+
+/* Preview section */
+.preview-button.spotify-link {
+  background-color: #1DB954; /* Spotify green */
+  text-decoration: none;
+  display: inline-block;
+}
+
+.preview-button.spotify-link:hover {
+  background-color: #1ed760;
+}
+
 /* Results section */
 .results-grid {
   display: grid;

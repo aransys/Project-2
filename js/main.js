@@ -26,9 +26,16 @@ document.addEventListener('DOMContentLoaded', () => {
     // Function to display tracks
     function displayTracks(tracks) {
         const resultsGrid = document.querySelector('.results-grid');
-        resultsGrid.innerHTML = ''; // Clear existing results
-
+        if (!resultsGrid) return; // Guard clause for missing element
+        
+        resultsGrid.innerHTML = '';
+    
         tracks.forEach(track => {
+            // Add external URL as fallback when preview isn't available
+            const hasPreview = track.preview_url !== null;
+            const buttonText = hasPreview ? 'Preview' : 'Listen on Spotify';
+            const buttonClass = hasPreview ? 'preview-button' : 'preview-button spotify-link';
+            
             const trackCard = document.createElement('article');
             trackCard.className = 'track-card';
             
@@ -44,14 +51,59 @@ document.addEventListener('DOMContentLoaded', () => {
                     <p class="album-name">${track.album.name}</p>
                 </div>
                 <div class="track-actions">
-                    <button class="preview-button">Preview</button>
+                    ${hasPreview ? 
+                        `<button class="${buttonClass}" data-preview-url="${track.preview_url}">
+                            ${buttonText}
+                        </button>` :
+                        `<a href="${track.external_urls.spotify}" target="_blank" class="${buttonClass}">
+                            ${buttonText}
+                        </a>`
+                    }
                 </div>
             `;
-
+    
             resultsGrid.appendChild(trackCard);
         });
+    
+        // Add event listeners for preview buttons
+        setupPreviewButtons();
     }
-
+    
+    // Add this new function to handle preview functionality
+    function setupPreviewButtons() {
+        let currentlyPlaying = null;
+    
+        document.querySelectorAll('.preview-button:not(.disabled)').forEach(button => {
+            button.addEventListener('click', () => {
+                const previewUrl = button.dataset.previewUrl;
+                
+                // If there's already something playing, stop it
+                if (currentlyPlaying) {
+                    currentlyPlaying.audio.pause();
+                    currentlyPlaying.button.textContent = 'Preview';
+                }
+    
+                // If clicking the same button that's playing, just stop it
+                if (currentlyPlaying && currentlyPlaying.button === button) {
+                    currentlyPlaying = null;
+                    return;
+                }
+    
+                // Play the new preview
+                const audio = new Audio(previewUrl);
+                currentlyPlaying = { audio, button };
+                button.textContent = 'Stop';
+    
+                audio.play();
+                
+                // When audio ends, reset the button
+                audio.onended = () => {
+                    button.textContent = 'Preview';
+                    currentlyPlaying = null;
+                };
+            });
+        });
+    }
     // Form submission handler
     searchForm.addEventListener('submit', async (e) => {
         e.preventDefault();
