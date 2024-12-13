@@ -170,14 +170,32 @@ main {
 
 
 /* Preview section */
-.preview-button.spotify-link {
-  background-color: #1DB954; /* Spotify green */
+.preview-button, .spotify-link {
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  border: none;
+  background: var(--primary-color);
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
   text-decoration: none;
-  display: inline-block;
+  font-size: 0.9rem;
 }
 
-.preview-button.spotify-link:hover {
-  background-color: #1ed760;
+.preview-button:hover, .spotify-link:hover {
+  background: #1ed760;
+}
+
+.preview-button.playing {
+  background: #e74c3c;
+}
+
+.spotify-link {
+  background: #333;
+}
+
+.spotify-link:hover {
+  background: #444;
 }
 
 /* Results section */
@@ -223,8 +241,9 @@ main {
 }
 
 .track-actions {
+  display: flex;
+  justify-content: center;
   padding: 1rem;
-  text-align: center;
 }
 
 .preview-button {

@@ -26,15 +26,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // Function to display tracks
     function displayTracks(tracks) {
         const resultsGrid = document.querySelector('.results-grid');
-        if (!resultsGrid) return; // Guard clause for missing element
-        
         resultsGrid.innerHTML = '';
     
         tracks.forEach(track => {
-            // Add external URL as fallback when preview isn't available
-            const hasPreview = track.preview_url !== null;
-            const buttonText = hasPreview ? 'Preview' : 'Listen on Spotify';
-            const buttonClass = hasPreview ? 'preview-button' : 'preview-button spotify-link';
+            // Check for preview URL and external Spotify URL
+            const previewUrl = track.preview_url;
+            const spotifyUrl = track.external_urls.spotify;
             
             const trackCard = document.createElement('article');
             trackCard.className = 'track-card';
@@ -51,13 +48,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     <p class="album-name">${track.album.name}</p>
                 </div>
                 <div class="track-actions">
-                    ${hasPreview ? 
-                        `<button class="${buttonClass}" data-preview-url="${track.preview_url}">
-                            ${buttonText}
-                        </button>` :
-                        `<a href="${track.external_urls.spotify}" target="_blank" class="${buttonClass}">
-                            ${buttonText}
-                        </a>`
+                    ${previewUrl 
+                        ? `<button class="preview-button" data-preview-url="${previewUrl}">
+                             <span class="button-text">Preview</span>
+                           </button>`
+                        : `<a href="${spotifyUrl}" target="_blank" class="spotify-link">
+                             Open in Spotify
+                           </a>`
                     }
                 </div>
             `;
@@ -65,7 +62,6 @@ document.addEventListener('DOMContentLoaded', () => {
             resultsGrid.appendChild(trackCard);
         });
     
-        // Add event listeners for preview buttons
         setupPreviewButtons();
     }
     
