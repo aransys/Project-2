@@ -306,6 +306,16 @@ nav {
   display: block;
 }
 
+.track-card.playing {
+  animation: cardPulse 2s ease-in-out infinite;
+}
+
+/* Update existing hover effect to work with the animation */
+.track-card:hover:not(.playing) {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
 /* PROGRESS BAR */
 .progress-bar {
   width: 100%;
@@ -383,6 +393,21 @@ nav {
   }
   50% {
     transform: translateY(-20px);
+  }
+}
+
+@keyframes cardPulse {
+  0% {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(29, 185, 84, 0.2);
+  }
+  50% {
+    transform: translateY(-7px);
+    box-shadow: 0 15px 30px rgba(29, 185, 84, 0.3);
+  }
+  100% {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(29, 185, 84, 0.2);
   }
 }
 
