@@ -263,6 +263,10 @@ main {
   background: #1ed760;
 }
 
+.preview-button.playing {
+  background-color: #e74c3c; /* Red when playing */
+}
+
 /* Basic responsive design */
 @media (max-width: 768px) {
   .nav-links {

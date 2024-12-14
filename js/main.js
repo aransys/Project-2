@@ -29,15 +29,12 @@ document.addEventListener('DOMContentLoaded', () => {
         resultsGrid.innerHTML = '';
     
         tracks.forEach(track => {
-            // Check for preview URL and external Spotify URL
-            const previewUrl = track.preview_url;
-            const spotifyUrl = track.external_urls.spotify;
-            
             const trackCard = document.createElement('article');
             trackCard.className = 'track-card';
             
             const albumImage = track.album.images[0]?.url || 'https://via.placeholder.com/200';
             
+            // Force preview button for now, we'll handle the preview URL in the click handler
             trackCard.innerHTML = `
                 <div class="track-image">
                     <img src="${albumImage}" alt="${track.name} album art">
@@ -48,14 +45,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     <p class="album-name">${track.album.name}</p>
                 </div>
                 <div class="track-actions">
-                    ${previewUrl 
-                        ? `<button class="preview-button" data-preview-url="${previewUrl}">
-                             <span class="button-text">Preview</span>
-                           </button>`
-                        : `<a href="${spotifyUrl}" target="_blank" class="spotify-link">
-                             Open in Spotify
-                           </a>`
-                    }
+                    <button class="preview-button" 
+                        data-preview-url="${track.preview_url || ''}"
+                        data-spotify-url="${track.external_urls.spotify}">
+                        Preview
+                    </button>
                 </div>
             `;
     
@@ -64,42 +58,63 @@ document.addEventListener('DOMContentLoaded', () => {
     
         setupPreviewButtons();
     }
-    
-    // Add this new function to handle preview functionality
+
+    let currentlyPlaying = {
+        audio: null,
+        button: null
+    };
+    // function to handle preview functionality
     function setupPreviewButtons() {
-        let currentlyPlaying = null;
-    
-        document.querySelectorAll('.preview-button:not(.disabled)').forEach(button => {
+        document.querySelectorAll('.preview-button').forEach(button => {
             button.addEventListener('click', () => {
                 const previewUrl = button.dataset.previewUrl;
+                const spotifyUrl = button.dataset.spotifyUrl;
                 
-                // If there's already something playing, stop it
-                if (currentlyPlaying) {
-                    currentlyPlaying.audio.pause();
-                    currentlyPlaying.button.textContent = 'Preview';
+                // If no preview URL available, open in Spotify
+                if (!previewUrl) {
+                    window.open(spotifyUrl, '_blank');
+                    return;
                 }
     
-                // If clicking the same button that's playing, just stop it
-                if (currentlyPlaying && currentlyPlaying.button === button) {
-                    currentlyPlaying = null;
-                    return;
+                // If something is already playing, stop it
+                if (currentlyPlaying.audio) {
+                    currentlyPlaying.audio.pause();
+                    currentlyPlaying.button.textContent = 'Preview';
+                    currentlyPlaying.button.classList.remove('playing');
+                    
+                    // If clicking the same button that's playing, just stop
+                    if (currentlyPlaying.button === button) {
+                        currentlyPlaying = { audio: null, button: null };
+                        return;
+                    }
                 }
     
                 // Play the new preview
                 const audio = new Audio(previewUrl);
-                currentlyPlaying = { audio, button };
                 button.textContent = 'Stop';
-    
-                audio.play();
+                button.classList.add('playing');
                 
-                // When audio ends, reset the button
+                currentlyPlaying = { audio, button };
+                audio.play().catch(error => {
+                    console.error('Playback failed:', error);
+                    // If playback fails, open in Spotify
+                    window.open(spotifyUrl, '_blank');
+                    button.textContent = 'Preview';
+                    button.classList.remove('playing');
+                    currentlyPlaying = { audio: null, button: null };
+                });
+                
+                // When audio ends
                 audio.onended = () => {
                     button.textContent = 'Preview';
-                    currentlyPlaying = null;
+                    button.classList.remove('playing');
+                    currentlyPlaying = { audio: null, button: null };
                 };
             });
         });
     }
+
+    // Fetch data from the Spotify API
     // Form submission handler
     searchForm.addEventListener('submit', async (e) => {
         e.preventDefault();
