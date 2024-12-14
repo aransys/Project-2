@@ -26,16 +26,15 @@ document.addEventListener("DOMContentLoaded", () => {
   // Function to display tracks
   function displayTracks(tracks) {
     const resultsGrid = document.querySelector(".results-grid");
-    if (!resultsGrid) return;
+    if (!resultsGrid) return; // Guard clause for missing element
 
     resultsGrid.innerHTML = "";
 
     tracks.forEach((track) => {
-      // Debug logs
-      console.log("Track Name:", track.name);
-      console.log("Has Preview URL:", !!track.preview_url);
-      console.log("Preview URL:", track.preview_url);
-      console.log("-------------------");
+      // Add external URL as fallback when preview isn't available
+      const hasPreview = track.preview_url !== null;
+      const buttonText = hasPreview ? "Preview" : "Listen on Spotify";
+      const buttonClass = hasPreview ? "preview-button" : "preview-button spotify-link";
 
       const trackCard = document.createElement("article");
       trackCard.className = "track-card";
@@ -52,60 +51,53 @@ document.addEventListener("DOMContentLoaded", () => {
                     <p class="album-name">${track.album.name}</p>
                 </div>
                 <div class="track-actions">
-                    <button class="preview-button" 
-                            data-preview-url="${track.preview_url || ""}"
-                            data-spotify-url="${track.external_urls.spotify}">
-                        ${track.preview_url ? "Preview" : "Open in Spotify"}
-                    </button>
+                    ${
+                      hasPreview
+                        ? `<button class="${buttonClass}" data-preview-url="${track.preview_url}">
+                            ${buttonText}
+                        </button>`
+                        : `<a href="${track.external_urls.spotify}" target="_blank" class="${buttonClass}">
+                            ${buttonText}
+                        </a>`
+                    }
                 </div>
             `;
 
       resultsGrid.appendChild(trackCard);
     });
 
+    // Add event listeners for preview buttons
     setupPreviewButtons();
   }
 
-  // Handle preview functionality
+  // Add this new function to handle preview functionality
   function setupPreviewButtons() {
     let currentlyPlaying = null;
 
-    document.querySelectorAll(".preview-button").forEach((button) => {
+    document.querySelectorAll(".preview-button:not(.disabled)").forEach((button) => {
       button.addEventListener("click", () => {
         const previewUrl = button.dataset.previewUrl;
-        const spotifyUrl = button.dataset.spotifyUrl;
 
-        console.log("Button clicked");
-        console.log("Preview URL:", previewUrl);
-        console.log("Spotify URL:", spotifyUrl);
-
-        if (!previewUrl) {
-          window.open(spotifyUrl, "_blank");
-          return;
-        }
-
-        // Handle currently playing audio
+        // If there's already something playing, stop it
         if (currentlyPlaying) {
           currentlyPlaying.audio.pause();
           currentlyPlaying.button.textContent = "Preview";
-          if (currentlyPlaying.button === button) {
-            currentlyPlaying = null;
-            return;
-          }
         }
 
-        // Play new audio
+        // If clicking the same button that's playing, just stop it
+        if (currentlyPlaying && currentlyPlaying.button === button) {
+          currentlyPlaying = null;
+          return;
+        }
+
+        // Play the new preview
         const audio = new Audio(previewUrl);
+        currentlyPlaying = { audio, button };
         button.textContent = "Stop";
 
-        audio.play().catch((error) => {
-          console.error("Playback failed:", error);
-          window.open(spotifyUrl, "_blank");
-          button.textContent = "Preview";
-        });
+        audio.play();
 
-        currentlyPlaying = { audio, button };
-
+        // When audio ends, reset the button
         audio.onended = () => {
           button.textContent = "Preview";
           currentlyPlaying = null;
@@ -113,7 +105,6 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     });
   }
-
   // Form submission handler
   searchForm.addEventListener("submit", async (e) => {
     e.preventDefault();

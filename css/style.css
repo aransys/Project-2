@@ -170,14 +170,33 @@ main {
 
 
 /* Preview section */
-.preview-button.spotify-link {
-  background-color: #1DB954; /* Spotify green */
+
+.preview-button, .spotify-link {
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  border: none;
+  background: var(--primary-color);
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
   text-decoration: none;
-  display: inline-block;
+  font-size: 0.9rem;
 }
 
-.preview-button.spotify-link:hover {
-  background-color: #1ed760;
+.preview-button:hover, .spotify-link:hover {
+  background: #1ed760;
+}
+
+.preview-button.playing {
+  background: #e74c3c;
+}
+
+.spotify-link {
+  background: #333;
+}
+
+.spotify-link:hover {
+  background: #444;
 }
 
 /* Results section */
@@ -192,7 +211,9 @@ main {
   background: var(--secondary-color);
   border-radius: 8px;
   overflow: hidden;
-  transition: transform 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* Make all cards the same height */
 }
 
 .track-card:hover {
@@ -207,6 +228,7 @@ main {
 
 .track-info {
   padding: 1rem;
+  flex-grow: 1; /* This will push the button to the bottom */
 }
 
 .track-name {
@@ -224,7 +246,7 @@ main {
 
 .track-actions {
   padding: 1rem;
-  text-align: center;
+  margin-top: auto; /* This ensures it stays at the bottom */
 }
 
 .preview-button {
@@ -239,6 +261,10 @@ main {
 
 .preview-button:hover {
   background: #1ed760;
+}
+
+.preview-button.playing {
+  background-color: #e74c3c; /* Red when playing */
 }
 
 /* Basic responsive design */
