@@ -66,6 +66,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Handle preview functionality
   function setupPreviewButtons() {
     let currentlyPlaying = null;
+    let loadingTimeout = null;
 
     document.querySelectorAll(".track-card").forEach((card) => {
         card.addEventListener("click", async () => {
@@ -86,16 +87,25 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             }
 
-            // Show loading state
-            card.classList.add('loading');
-            button.textContent = "Loading...";
+            // Clear any existing timeout
+            if (loadingTimeout) {
+                clearTimeout(loadingTimeout);
+            }
+
+            // Set a timeout to show loading state only if loading takes more than 200ms
+            loadingTimeout = setTimeout(() => {
+                card.classList.add('loading');
+                button.textContent = "Loading...";
+            }, 200);
 
             // Create and load audio
             const audio = new Audio(previewUrl);
             
             try {
-                // Wait for audio to be ready
                 await audio.play();
+                
+                // Clear the loading timeout
+                clearTimeout(loadingTimeout);
                 
                 // Remove loading state, show playing state
                 card.classList.remove('loading');
@@ -105,7 +115,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 
                 currentlyPlaying = { audio, card, button, playIcon };
 
-                // When audio ends
                 audio.onended = () => {
                     card.classList.remove('playing', 'loading');
                     button.textContent = "Preview";
@@ -114,6 +123,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 };
             } catch (error) {
                 console.error('Playback failed:', error);
+                clearTimeout(loadingTimeout);
                 card.classList.remove('loading', 'playing');
                 button.textContent = "Preview";
                 playIcon.textContent = "▶";
