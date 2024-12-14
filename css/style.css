@@ -1,18 +1,15 @@
 :root {
-  /* Color scheme - can easily change these later */
-  --primary-color: #1db954; /* Spotify green */
-  --secondary-color: #191414; /* Spotify black */
+  --primary-color: #1db954;
+  --secondary-color: #191414;
   --text-color: #ffffff;
   --background-color: #121212;
   --error-color: #e74c3c;
-
-  /* Spacing variables */
   --spacing-small: 0.5rem;
   --spacing-medium: 1rem;
   --spacing-large: 2rem;
 }
 
-/* Basic styles */
+/* Base Styles */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -26,7 +23,14 @@ body {
   color: var(--text-color);
 }
 
-/* Navigation styles */
+/* Layout */
+main {
+  padding: var(--spacing-large);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Navigation */
 nav {
   background-color: var(--secondary-color);
   padding: var(--spacing-medium);
@@ -48,14 +52,7 @@ nav {
   color: var(--primary-color);
 }
 
-/* Main content */
-main {
-  padding: var(--spacing-large);
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-/* Search form */
+/* Search Form */
 .search-form {
   max-width: 600px;
   margin: 2rem auto;
@@ -105,7 +102,7 @@ main {
   transform: translateY(0);
 }
 
-/* Loading indicator */
+/* Loading Spinner */
 .loading-spinner {
   text-align: center;
   padding: 2rem;
@@ -125,14 +122,9 @@ main {
   animation: spin 1s linear infinite;
 }
 
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-/* Error section */
+/* Error Message */
 .error-message {
-  background-color: #e74c3c;
+  background-color: var(--error-color);
   color: white;
   padding: 1rem;
   margin: 1rem auto;
@@ -157,49 +149,36 @@ main {
   padding: 0 0.5rem;
 }
 
-@keyframes slideDown {
-  from {
-      transform: translateY(-20px);
-      opacity: 0;
-  }
-  to {
-      transform: translateY(0);
-      opacity: 1;
-  }
+
+/* WELCOME MESSAGE */
+.welcome-message {
+  text-align: center;
+  padding: 4rem 1rem;
+  color: var(--text-color);
 }
 
-
-/* Preview section */
-
-.preview-button, .spotify-link {
-  padding: 0.5rem 1rem;
-  border-radius: 20px;
-  border: none;
-  background: var(--primary-color);
-  color: white;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  text-decoration: none;
-  font-size: 0.9rem;
+.welcome-message h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
 }
 
-.preview-button:hover, .spotify-link:hover {
-  background: #1ed760;
+.welcome-message p {
+  font-size: 1.2rem;
+  color: #888;
+  margin-bottom: 2rem;
 }
 
-.preview-button.playing {
-  background: #e74c3c;
+.welcome-icon {
+  font-size: 4rem;
+  animation: bounce 2s infinite;
 }
 
-.spotify-link {
-  background: #333;
+/* Hide welcome message when results are shown */
+.results-grid:not(:empty) ~ .welcome-message {
+  display: none;
 }
 
-.spotify-link:hover {
-  background: #444;
-}
-
-/* Results section */
+/* Results Grid */
 .results-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -207,18 +186,28 @@ main {
   padding: 2rem;
 }
 
+/* Track Card */
 .track-card {
+  background: var(--secondary-color);
+  border-radius: 8px;
+  overflow: hidden;
   cursor: pointer;
   position: relative;
-  transition: transform 0.2s ease;
-}
-
-.track-card:hover {
-  transform: translateY(-5px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .track-image {
   position: relative;
+  width: 100%;
+}
+
+.track-image img {
+  width: 100%;
+  height: auto;
+  display: block;
 }
 
 .play-overlay {
@@ -227,34 +216,28 @@ main {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.4);
   display: flex;
   align-items: center;
   justify-content: center;
   opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.track-card:hover .play-overlay {
-  opacity: 1;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(2px);
 }
 
 .play-icon {
   color: white;
   font-size: 3rem;
-}
-
-.track-card.playing .play-icon {
-  content: "⏸";
+  transform: scale(0.8);
+  transition: transform 0.3s ease;
 }
 
 .track-info {
   padding: 1rem;
-  flex-grow: 1; /* This will push the button to the bottom */
+  flex-grow: 1;
 }
 
 .track-name {
-  color: var(--text-color);
   font-size: 1.2rem;
   margin-bottom: 0.5rem;
 }
@@ -268,31 +251,79 @@ main {
 
 .track-actions {
   padding: 1rem;
-  margin-top: auto; /* This ensures it stays at the bottom */
+  text-align: center;
+  margin-top: auto;
 }
 
 .preview-button {
   background: var(--primary-color);
   color: white;
   border: none;
-  padding: 0.5rem 1rem;
+  padding: 0.5rem 1.5rem;
   border-radius: 20px;
   cursor: pointer;
-  transition: background 0.2s ease;
+  transition: all 0.3s ease;
 }
 
-.preview-button:hover {
-  background: #1ed760;
+/* States */
+.track-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
 }
 
-.preview-button.playing {
-  background-color: #e74c3c; /* Red when playing */
+.track-card:hover .play-overlay {
+  opacity: 1;
 }
 
-/* Basic responsive design */
+.track-card:hover .play-icon {
+  transform: scale(1);
+}
+
+.track-card.playing .play-overlay {
+  opacity: 1;
+  background: rgba(29, 185, 84, 0.4);
+}
+
+.track-card.playing .preview-button {
+  background-color: #e74c3c;
+}
+
+/* Animations */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes slideDown {
+  from {
+      transform: translateY(-20px);
+      opacity: 0;
+  }
+  to {
+      transform: translateY(0);
+      opacity: 1;
+  }
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-20px); }
+}
+
+/* Responsive */
 @media (max-width: 768px) {
   .nav-links {
-    flex-direction: column;
-    text-align: center;
+      flex-direction: column;
+      text-align: center;
+  }
+  
+  .search-form {
+      flex-direction: column;
+  }
+  
+  .results-grid {
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      padding: 1rem;
   }
 }
