@@ -25,89 +25,102 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Function to display tracks
   function displayTracks(tracks) {
-      const resultsGrid = document.querySelector(".results-grid");
-      if (!resultsGrid) return;
+    const resultsGrid = document.querySelector(".results-grid");
+    if (!resultsGrid) return;
 
-      resultsGrid.innerHTML = "";
+    resultsGrid.innerHTML = "";
 
-      tracks.forEach((track) => {
-          const trackCard = document.createElement("article");
-          trackCard.className = "track-card";
-          trackCard.dataset.previewUrl = track.preview;
+    tracks.forEach((track) => {
+        console.log('Processing track:', track.title);  // Debug log
 
-          trackCard.innerHTML = `
-              <div class="track-card-inner">
-                  <div class="track-image">
-                      <img src="${track.album.cover_medium}" alt="${track.title} album art">
-                      <div class="play-overlay">
-                          <span class="play-icon">▶</span>
-                      </div>
-                  </div>
-                  <div class="track-info">
-                      <h3 class="track-name">${track.title}</h3>
-                      <p class="artist-name">${track.artist.name}</p>
-                      <p class="album-name">${track.album.title}</p>
-                  </div>
-                  <div class="track-actions">
-                      <button class="preview-button">Preview</button>
-                  </div>
-              </div>
-          `;
+        const trackCard = document.createElement("article");
+        trackCard.className = "track-card";
+        trackCard.dataset.previewUrl = track.preview || '';  // Add fallback
 
-          resultsGrid.appendChild(trackCard);
-      });
+        trackCard.innerHTML = `
+            <div class="track-card-inner">
+                <div class="track-image">
+                    <img src="${track.album.cover_medium || ''}" alt="${track.title} album art">
+                    <div class="play-overlay">
+                        <span class="play-icon">▶</span>
+                        <div class="loading-ring"></div>
+                    </div>
+                </div>
+                <div class="track-info">
+                    <h3 class="track-name">${track.title}</h3>
+                    <p class="artist-name">${track.artist.name}</p>
+                    <p class="album-name">${track.album.title}</p>
+                </div>
+                <div class="track-actions">
+                    <button class="preview-button">Preview</button>
+                </div>
+            </div>
+        `;
 
-      setupPreviewButtons();
-  }
+        resultsGrid.appendChild(trackCard);
+    });
+
+    setupPreviewButtons();
+}
 
   // Handle preview functionality
   function setupPreviewButtons() {
-      let currentlyPlaying = null;
+    let currentlyPlaying = null;
 
-      document.querySelectorAll(".track-card").forEach((card) => {
-          card.addEventListener("click", () => {
-              const previewUrl = card.dataset.previewUrl;
-              const button = card.querySelector('.preview-button');
-              const playIcon = card.querySelector('.play-icon');
-              
-              // If there's already something playing, stop it
-              if (currentlyPlaying) {
-                  currentlyPlaying.audio.pause();
-                  currentlyPlaying.card.classList.remove('playing');
-                  currentlyPlaying.button.textContent = "Preview";
-                  currentlyPlaying.playIcon.textContent = "▶";
-                  
-                  if (currentlyPlaying.card === card) {
-                      currentlyPlaying = null;
-                      return;
-                  }
-              }
+    document.querySelectorAll(".track-card").forEach((card) => {
+        card.addEventListener("click", async () => {
+            const previewUrl = card.dataset.previewUrl;
+            const button = card.querySelector('.preview-button');
+            const playIcon = card.querySelector('.play-icon');
+            
+            // If there's already something playing, stop it
+            if (currentlyPlaying) {
+                currentlyPlaying.audio.pause();
+                currentlyPlaying.card.classList.remove('playing', 'loading');
+                currentlyPlaying.button.textContent = "Preview";
+                currentlyPlaying.playIcon.textContent = "▶";
+                
+                if (currentlyPlaying.card === card) {
+                    currentlyPlaying = null;
+                    return;
+                }
+            }
 
-              // Play new audio
-              const audio = new Audio(previewUrl);
-              card.classList.add('playing');
-              button.textContent = "Stop";
-              playIcon.textContent = "⏸";
-              
-              audio.play().catch(error => {
-                  console.error('Playback failed:', error);
-                  card.classList.remove('playing');
-                  button.textContent = "Preview";
-                  playIcon.textContent = "▶";
-              });
+            // Show loading state
+            card.classList.add('loading');
+            button.textContent = "Loading...";
 
-              currentlyPlaying = { audio, card, button, playIcon };
+            // Create and load audio
+            const audio = new Audio(previewUrl);
+            
+            try {
+                // Wait for audio to be ready
+                await audio.play();
+                
+                // Remove loading state, show playing state
+                card.classList.remove('loading');
+                card.classList.add('playing');
+                button.textContent = "Stop";
+                playIcon.textContent = "⏸";
+                
+                currentlyPlaying = { audio, card, button, playIcon };
 
-              // When audio ends
-              audio.onended = () => {
-                  card.classList.remove('playing');
-                  button.textContent = "Preview";
-                  playIcon.textContent = "▶";
-                  currentlyPlaying = null;
-              };
-          });
-      });
-  }
+                // When audio ends
+                audio.onended = () => {
+                    card.classList.remove('playing', 'loading');
+                    button.textContent = "Preview";
+                    playIcon.textContent = "▶";
+                    currentlyPlaying = null;
+                };
+            } catch (error) {
+                console.error('Playback failed:', error);
+                card.classList.remove('loading', 'playing');
+                button.textContent = "Preview";
+                playIcon.textContent = "▶";
+            }
+        });
+    });
+}
 
   // Form submission handler
   searchForm.addEventListener("submit", async (e) => {
