@@ -26,78 +26,70 @@ document.addEventListener("DOMContentLoaded", () => {
   // Function to display tracks
   function displayTracks(tracks) {
     const resultsGrid = document.querySelector(".results-grid");
-    if (!resultsGrid) return; // Guard clause for missing element
+    if (!resultsGrid) return;
 
     resultsGrid.innerHTML = "";
 
     tracks.forEach((track) => {
-      // Add external URL as fallback when preview isn't available
-      const hasPreview = track.preview_url !== null;
-      const buttonText = hasPreview ? "Preview" : "Listen on Spotify";
-      const buttonClass = hasPreview ? "preview-button" : "preview-button spotify-link";
+      console.log("Track Preview URL:", track.preview); // Debug log
 
       const trackCard = document.createElement("article");
       trackCard.className = "track-card";
 
-      const albumImage = track.album.images[0]?.url || "https://via.placeholder.com/200";
-
       trackCard.innerHTML = `
-                <div class="track-image">
-                    <img src="${albumImage}" alt="${track.name} album art">
-                </div>
-                <div class="track-info">
-                    <h3 class="track-name">${track.name}</h3>
-                    <p class="artist-name">${track.artists[0].name}</p>
-                    <p class="album-name">${track.album.name}</p>
-                </div>
-                <div class="track-actions">
-                    ${
-                      hasPreview
-                        ? `<button class="${buttonClass}" data-preview-url="${track.preview_url}">
-                            ${buttonText}
-                        </button>`
-                        : `<a href="${track.external_urls.spotify}" target="_blank" class="${buttonClass}">
-                            ${buttonText}
-                        </a>`
-                    }
-                </div>
-            `;
+              <div class="track-image">
+                  <img src="${track.album.cover_medium}" alt="${track.title} album art">
+              </div>
+              <div class="track-info">
+                  <h3 class="track-name">${track.title}</h3>
+                  <p class="artist-name">${track.artist.name}</p>
+                  <p class="album-name">${track.album.title}</p>
+              </div>
+              <div class="track-actions">
+                  <button class="preview-button" data-preview-url="${track.preview}">
+                      Preview
+                  </button>
+              </div>
+          `;
 
       resultsGrid.appendChild(trackCard);
     });
 
-    // Add event listeners for preview buttons
     setupPreviewButtons();
   }
 
-  // Add this new function to handle preview functionality
+  // Handle preview functionality
   function setupPreviewButtons() {
     let currentlyPlaying = null;
 
-    document.querySelectorAll(".preview-button:not(.disabled)").forEach((button) => {
+    document.querySelectorAll(".preview-button").forEach((button) => {
       button.addEventListener("click", () => {
         const previewUrl = button.dataset.previewUrl;
+
+        console.log("Attempting to play:", previewUrl); // Debug log
 
         // If there's already something playing, stop it
         if (currentlyPlaying) {
           currentlyPlaying.audio.pause();
           currentlyPlaying.button.textContent = "Preview";
+          if (currentlyPlaying.button === button) {
+            currentlyPlaying = null;
+            return;
+          }
         }
 
-        // If clicking the same button that's playing, just stop it
-        if (currentlyPlaying && currentlyPlaying.button === button) {
-          currentlyPlaying = null;
-          return;
-        }
-
-        // Play the new preview
+        // Play new audio
         const audio = new Audio(previewUrl);
-        currentlyPlaying = { audio, button };
         button.textContent = "Stop";
 
-        audio.play();
+        audio.play().catch((error) => {
+          console.error("Playback failed:", error);
+          button.textContent = "Preview";
+        });
 
-        // When audio ends, reset the button
+        currentlyPlaying = { audio, button };
+
+        // When audio ends
         audio.onended = () => {
           button.textContent = "Preview";
           currentlyPlaying = null;
@@ -105,6 +97,7 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     });
   }
+
   // Form submission handler
   searchForm.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -130,9 +123,9 @@ document.addEventListener("DOMContentLoaded", () => {
       loadingSpinner.classList.remove("hidden");
       resultsGrid.classList.add("hidden");
 
-      const tracks = await spotifyAPI.searchTracks(query);
+      const tracks = await musicAPI.searchTracks(query);
 
-      if (tracks.length === 0) {
+      if (!tracks || tracks.length === 0) {
         showError("No tracks found. Try a different search term.");
         return;
       }
@@ -143,7 +136,7 @@ document.addEventListener("DOMContentLoaded", () => {
       showError("Something went wrong. Please try again later.");
     } finally {
       isSearching = false;
-      loadingSpinner.classList.add("hidden");
+      loadingSpinner.classList.remove("hidden");
       resultsGrid.classList.remove("hidden");
     }
   });
