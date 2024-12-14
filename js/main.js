@@ -51,8 +51,14 @@ document.addEventListener("DOMContentLoaded", () => {
             <p class="artist-name">${track.artist.name}</p>
             <p class="album-name">${track.album.title}</p>
         </div>
-        <div class="progress-bar hidden">
-            <div class="progress"></div>
+        <div class="progress-container hidden">
+            <div class="time-info">
+                <span class="current-time">0:00</span>
+                <span class="duration">-:--</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress"></div>
+            </div>
         </div>
         <div class="track-actions">
             <button class="preview-button">Preview</button>
@@ -71,12 +77,18 @@ document.addEventListener("DOMContentLoaded", () => {
     let currentlyPlaying = null;
     let loadingTimeout = null;
 
+    function formatTime(seconds) {
+      const mins = Math.floor(seconds / 60);
+      const secs = Math.floor(seconds % 60);
+      return `${mins}:${secs.toString().padStart(2, "0")}`;
+    }
+
     document.querySelectorAll(".track-card").forEach((card) => {
       card.addEventListener("click", async () => {
         const previewUrl = card.dataset.previewUrl;
         const button = card.querySelector(".preview-button");
         const playIcon = card.querySelector(".play-icon");
-        const progressBar = card.querySelector(".progress-bar");
+        const progressContainer = card.querySelector(".progress-container");
         const progress = card.querySelector(".progress");
 
         // If there's already something playing, stop it
@@ -85,7 +97,7 @@ document.addEventListener("DOMContentLoaded", () => {
           currentlyPlaying.card.classList.remove("playing", "loading");
           currentlyPlaying.button.textContent = "Preview";
           currentlyPlaying.playIcon.textContent = "▶";
-          currentlyPlaying.progressBar.classList.add("hidden");
+          currentlyPlaying.progressContainer.classList.add("hidden");
           currentlyPlaying.progress.style.width = "0%";
 
           if (currentlyPlaying.card === card) {
@@ -103,9 +115,19 @@ document.addEventListener("DOMContentLoaded", () => {
           button.textContent = "Loading...";
         }, 200);
 
-        const audio = new Audio(previewUrl);
-
         try {
+          // Create audio and set up duration as soon as possible
+          const audio = new Audio(previewUrl);
+
+          // Wait for metadata to load before playing
+          await new Promise((resolve) => {
+            audio.addEventListener("loadedmetadata", () => {
+              const duration = card.querySelector(".duration");
+              duration.textContent = formatTime(audio.duration);
+              resolve();
+            });
+          });
+
           await audio.play();
           clearTimeout(loadingTimeout);
 
@@ -113,12 +135,15 @@ document.addEventListener("DOMContentLoaded", () => {
           card.classList.add("playing");
           button.textContent = "Stop";
           playIcon.textContent = "⏸";
-          progressBar.classList.remove("hidden");
+          progressContainer.classList.remove("hidden");
 
-          // Update progress bar
+          // Update progress and time
           audio.addEventListener("timeupdate", () => {
             const percentage = (audio.currentTime / audio.duration) * 100;
             progress.style.width = `${percentage}%`;
+
+            const currentTime = card.querySelector(".current-time");
+            currentTime.textContent = formatTime(audio.currentTime);
           });
 
           currentlyPlaying = {
@@ -126,7 +151,7 @@ document.addEventListener("DOMContentLoaded", () => {
             card,
             button,
             playIcon,
-            progressBar,
+            progressContainer,
             progress,
           };
 
@@ -134,7 +159,7 @@ document.addEventListener("DOMContentLoaded", () => {
             card.classList.remove("playing", "loading");
             button.textContent = "Preview";
             playIcon.textContent = "▶";
-            progressBar.classList.add("hidden");
+            progressContainer.classList.add("hidden");
             progress.style.width = "0%";
             currentlyPlaying = null;
           };
@@ -144,7 +169,7 @@ document.addEventListener("DOMContentLoaded", () => {
           card.classList.remove("loading", "playing");
           button.textContent = "Preview";
           playIcon.textContent = "▶";
-          progressBar.classList.add("hidden");
+          progressContainer.classList.add("hidden");
           progress.style.width = "0%";
         }
       });
