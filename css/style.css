@@ -208,22 +208,44 @@ main {
 }
 
 .track-card {
-  background: var(--secondary-color);
-  border-radius: 8px;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  height: 100%; /* Make all cards the same height */
+  cursor: pointer;
+  position: relative;
+  transition: transform 0.2s ease;
 }
 
 .track-card:hover {
   transform: translateY(-5px);
 }
 
-.track-image img {
+.track-image {
+  position: relative;
+}
+
+.play-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
-  height: auto;
-  display: block;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.track-card:hover .play-overlay {
+  opacity: 1;
+}
+
+.play-icon {
+  color: white;
+  font-size: 3rem;
+}
+
+.track-card.playing .play-icon {
+  content: "⏸";
 }
 
 .track-info {
