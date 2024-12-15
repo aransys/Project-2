@@ -83,7 +83,7 @@ API Switch & Core Functionality:
 - Implemented proper audio handling
 - Created smooth loading states
 
-### Day 4 (December 14, 2024 - continued)
+### Day 4 (December 14, 2024)
 
 Enhanced Player Features:
 
@@ -97,6 +97,28 @@ Enhanced Player Features:
 - Implemented time formatting
 - Added animation keyframes
 - Enhanced state management
+
+### Day 4 (December 14, 2024 - evening/night)
+
+- Tackled deployment challenges
+- Successfully migrated from local setup to GitHub Pages
+- Fixed API integration issues for live deployment
+- Implemented direct API configuration for simpler deployment
+- Tested and verified live functionality
+
+Technical Challenges Overcome:
+
+- Resolved deployment configuration issues
+- Fixed CORS and API access problems
+- Streamlined API key implementation
+- Successfully tested live environment
+
+Personal Achievement:
+
+- Continued development despite personal challenges
+- Used coding as a positive focus
+- Maintained project momentum
+- Successfully deployed first live version
 
 ## Challenges & Solutions
 
