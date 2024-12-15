@@ -1,5 +1,97 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // hamburger menu
+  // Utility function to format time
+  function formatTime(seconds) {
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins}:${secs.toString().padStart(2, "0")}`;
+  }
+
+  // VOLUME CONTROL FUNCTION
+  function createVolumeControl(audio) {
+    // volume control container
+    const volumeContainer = document.createElement("div");
+    volumeContainer.className = "volume-control";
+
+    // prevent clicks from bubbling up
+    volumeContainer.onclick = (e) => e.stopPropagation();
+
+    // volume slider
+    const volumeSlider = document.createElement("input");
+    volumeSlider.type = "range";
+    volumeSlider.min = "0";
+    volumeSlider.max = "1";
+    volumeSlider.step = "0.01";
+    volumeSlider.value = "0.5";
+    volumeSlider.className = "volume-slider";
+    volumeSlider.onclick = (e) => e.stopPropagation();
+
+    // mute button
+    const muteButton = document.createElement("button");
+    muteButton.innerHTML = "🔊";
+    muteButton.className = "mute-button";
+    muteButton.onclick = (e) => e.stopPropagation();
+
+    // Volume state variables
+    let isMuted = false;
+    let previousVolume = 0.5;
+
+    // Mute/Unmute functionality
+    muteButton.addEventListener("click", () => {
+      if (isMuted) {
+        // Unmute
+        audio.volume = previousVolume;
+        volumeSlider.value = previousVolume;
+        muteButton.innerHTML = "🔊";
+        isMuted = false;
+      } else {
+        // Mute
+        previousVolume = audio.volume;
+        audio.volume = 0;
+        volumeSlider.value = 0;
+        muteButton.innerHTML = "🔇";
+        isMuted = true;
+      }
+    });
+
+    // Volume slider event listener
+    volumeSlider.addEventListener("input", (e) => {
+      e.stopPropagation(); // Add this line
+      const volume = parseFloat(e.target.value);
+      audio.volume = volume;
+
+      if (volume === 0) {
+        muteButton.innerHTML = "🔇";
+        isMuted = true;
+      } else {
+        muteButton.innerHTML = "🔊";
+        isMuted = false;
+      }
+    });
+
+    muteButton.addEventListener("click", (e) => {
+      e.stopPropagation(); // Add this line
+      if (isMuted) {
+        audio.volume = previousVolume;
+        volumeSlider.value = previousVolume;
+        muteButton.innerHTML = "🔊";
+        isMuted = false;
+      } else {
+        previousVolume = audio.volume;
+        audio.volume = 0;
+        volumeSlider.value = 0;
+        muteButton.innerHTML = "🔇";
+        isMuted = true;
+      }
+    });
+
+    // Append elements to container
+    volumeContainer.appendChild(muteButton);
+    volumeContainer.appendChild(volumeSlider);
+
+    return volumeContainer;
+  }
+
+  // Hamburger menu
   const hamburger = document.querySelector(".hamburger");
   const navLinks = document.querySelector(".nav-links");
 
@@ -8,7 +100,7 @@ document.addEventListener("DOMContentLoaded", () => {
     navLinks.classList.toggle("active");
   });
 
-  // close menu when clicking a link
+  // Close menu when clicking a link
   document.querySelectorAll(".nav-links a").forEach((link) => {
     link.addEventListener("click", () => {
       hamburger.classList.remove("active");
@@ -100,13 +192,77 @@ document.addEventListener("DOMContentLoaded", () => {
       return `${mins}:${secs.toString().padStart(2, "0")}`;
     }
 
+    function createVolumeControl(audio) {
+      const volumeContainer = document.createElement("div");
+      volumeContainer.className = "volume-control";
+
+      const volumeSlider = document.createElement("input");
+      volumeSlider.type = "range";
+      volumeSlider.min = "0";
+      volumeSlider.max = "1";
+      volumeSlider.step = "0.01";
+      volumeSlider.value = "0.5";
+      volumeSlider.className = "volume-slider";
+
+      const muteButton = document.createElement("button");
+      muteButton.innerHTML = "🔊";
+      muteButton.className = "mute-button";
+
+      let isMuted = false;
+      let previousVolume = 0.5;
+
+      muteButton.addEventListener("click", (e) => {
+        if (isMuted) {
+          audio.volume = previousVolume;
+          volumeSlider.value = previousVolume;
+          muteButton.innerHTML = "🔊";
+          isMuted = false;
+        } else {
+          previousVolume = audio.volume;
+          audio.volume = 0;
+          volumeSlider.value = 0;
+          muteButton.innerHTML = "🔇";
+          isMuted = true;
+        }
+      });
+
+      volumeSlider.addEventListener("input", (e) => {
+        const volume = parseFloat(e.target.value);
+        audio.volume = volume;
+
+        if (volume === 0) {
+          muteButton.innerHTML = "🔇";
+          isMuted = true;
+        } else {
+          muteButton.innerHTML = "🔊";
+          isMuted = false;
+        }
+      });
+
+      volumeContainer.appendChild(muteButton);
+      volumeContainer.appendChild(volumeSlider);
+
+      return volumeContainer;
+    }
+
     document.querySelectorAll(".track-card").forEach((card) => {
-      card.addEventListener("click", async () => {
+      const playButton = card.querySelector(".preview-button");
+      const playOverlay = card.querySelector(".play-overlay");
+      const imageArea = card.querySelector(".track-image");
+      const trackInfo = card.querySelector(".track-info");
+
+      const handlePlayPause = async () => {
         const previewUrl = card.dataset.previewUrl;
         const button = card.querySelector(".preview-button");
         const playIcon = card.querySelector(".play-icon");
         const progressContainer = card.querySelector(".progress-container");
         const progress = card.querySelector(".progress");
+
+        // Remove existing volume control if it exists
+        const existingVolumeControl = card.querySelector(".volume-control");
+        if (existingVolumeControl) {
+          existingVolumeControl.remove();
+        }
 
         // If there's already something playing, stop it
         if (currentlyPlaying) {
@@ -116,6 +272,11 @@ document.addEventListener("DOMContentLoaded", () => {
           currentlyPlaying.playIcon.textContent = "▶";
           currentlyPlaying.progressContainer.classList.add("hidden");
           currentlyPlaying.progress.style.width = "0%";
+
+          const oldVolumeControl = currentlyPlaying.card.querySelector(".volume-control");
+          if (oldVolumeControl) {
+            oldVolumeControl.remove();
+          }
 
           if (currentlyPlaying.card === card) {
             currentlyPlaying = null;
@@ -133,10 +294,9 @@ document.addEventListener("DOMContentLoaded", () => {
         }, 200);
 
         try {
-          // Create audio and set up duration as soon as possible
           const audio = new Audio(previewUrl);
+          audio.volume = 0.5; // Set initial volume
 
-          // Wait for metadata to load before playing
           await new Promise((resolve) => {
             audio.addEventListener("loadedmetadata", () => {
               const duration = card.querySelector(".duration");
@@ -148,13 +308,16 @@ document.addEventListener("DOMContentLoaded", () => {
           await audio.play();
           clearTimeout(loadingTimeout);
 
+          // Create and add volume control
+          const volumeControl = createVolumeControl(audio);
+          card.querySelector(".progress-container").after(volumeControl);
+
           card.classList.remove("loading");
           card.classList.add("playing");
           button.textContent = "Stop";
           playIcon.textContent = "⏸";
           progressContainer.classList.remove("hidden");
 
-          // Update progress and time
           audio.addEventListener("timeupdate", () => {
             const percentage = (audio.currentTime / audio.duration) * 100;
             progress.style.width = `${percentage}%`;
@@ -178,6 +341,12 @@ document.addEventListener("DOMContentLoaded", () => {
             playIcon.textContent = "▶";
             progressContainer.classList.add("hidden");
             progress.style.width = "0%";
+
+            const volumeControl = card.querySelector(".volume-control");
+            if (volumeControl) {
+              volumeControl.remove();
+            }
+
             currentlyPlaying = null;
           };
         } catch (error) {
@@ -189,6 +358,25 @@ document.addEventListener("DOMContentLoaded", () => {
           progressContainer.classList.add("hidden");
           progress.style.width = "0%";
         }
+      };
+
+      // Add click listeners to specific elements instead of the whole card
+      playButton.addEventListener("click", (e) => {
+        e.stopPropagation();
+        handlePlayPause();
+      });
+
+      playOverlay.addEventListener("click", (e) => {
+        e.stopPropagation();
+        handlePlayPause();
+      });
+      imageArea.addEventListener("click", (e) => {
+        e.stopPropagation();
+        handlePlayPause();
+      });
+      trackInfo.addEventListener("click", (e) => {
+        e.stopPropagation();
+        handlePlayPause();
       });
     });
   }
