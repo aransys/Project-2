@@ -120,6 +120,23 @@ Personal Achievement:
 - Maintained project momentum
 - Successfully deployed first live version
 
+### Day 5 (December 15, 2024)
+
+Navigation and Responsiveness Improvements:
+
+- Resolved mobile navigation menu issues
+- Implemented responsive design for navigation links
+- Fixed hamburger menu functionality across different screen sizes
+- Optimized CSS for better cross-device compatibility
+- Refined search bar and button alignment
+
+Technical Challenges Overcome:
+
+- Debugged navigation link visibility on different screen sizes
+- Improved media query implementation
+- Resolved positioning issues in responsive design
+- Enhanced user interface consistency
+
 ## Challenges & Solutions
 
 ### API Integration Journey
