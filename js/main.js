@@ -8,14 +8,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // VOLUME CONTROL FUNCTION
   function createVolumeControl(audio) {
-    // volume control container
-    const volumeContainer = document.createElement("div");
-    volumeContainer.className = "volume-control";
+    const controlsContainer = document.createElement("div");
+    controlsContainer.className = "player-controls";
 
-    // prevent clicks from bubbling up
-    volumeContainer.onclick = (e) => e.stopPropagation();
+    const timeContainer = document.createElement("div");
+    timeContainer.className = "time-container";
 
-    // volume slider
+    const currentTime = document.createElement("span");
+    currentTime.className = "current-time";
+    currentTime.textContent = "0:00";
+
+    const duration = document.createElement("span");
+    duration.className = "duration";
+    duration.textContent = "-:--";
+
     const volumeSlider = document.createElement("input");
     volumeSlider.type = "range";
     volumeSlider.min = "0";
@@ -23,74 +29,41 @@ document.addEventListener("DOMContentLoaded", () => {
     volumeSlider.step = "0.01";
     volumeSlider.value = "0.5";
     volumeSlider.className = "volume-slider";
-    volumeSlider.onclick = (e) => e.stopPropagation();
 
-    // mute button
-    const muteButton = document.createElement("button");
-    muteButton.innerHTML = "🔊";
-    muteButton.className = "mute-button";
-    muteButton.onclick = (e) => e.stopPropagation();
-
-    // Volume state variables
     let isMuted = false;
     let previousVolume = 0.5;
 
-    // Mute/Unmute functionality
-    muteButton.addEventListener("click", () => {
-      if (isMuted) {
-        // Unmute
-        audio.volume = previousVolume;
-        volumeSlider.value = previousVolume;
-        muteButton.innerHTML = "🔊";
-        isMuted = false;
-      } else {
-        // Mute
-        previousVolume = audio.volume;
-        audio.volume = 0;
-        volumeSlider.value = 0;
-        muteButton.innerHTML = "🔇";
-        isMuted = true;
-      }
-    });
-
-    // Volume slider event listener
     volumeSlider.addEventListener("input", (e) => {
-      e.stopPropagation(); // Add this line
+      e.stopPropagation();
       const volume = parseFloat(e.target.value);
       audio.volume = volume;
-
-      if (volume === 0) {
-        muteButton.innerHTML = "🔇";
-        isMuted = true;
-      } else {
-        muteButton.innerHTML = "🔊";
-        isMuted = false;
-      }
+      previousVolume = volume;
     });
 
-    muteButton.addEventListener("click", (e) => {
-      e.stopPropagation(); // Add this line
-      if (isMuted) {
-        audio.volume = previousVolume;
-        volumeSlider.value = previousVolume;
-        muteButton.innerHTML = "🔊";
-        isMuted = false;
-      } else {
-        previousVolume = audio.volume;
-        audio.volume = 0;
-        volumeSlider.value = 0;
-        muteButton.innerHTML = "🔇";
-        isMuted = true;
-      }
-    });
+    timeContainer.appendChild(currentTime);
+    controlsContainer.appendChild(timeContainer);
+    controlsContainer.appendChild(volumeSlider);
+    controlsContainer.appendChild(duration);
 
-    // Append elements to container
-    volumeContainer.appendChild(muteButton);
-    volumeContainer.appendChild(volumeSlider);
-
-    return volumeContainer;
+    return {
+      controlsContainer,
+      muteHandler: (e) => {
+        e.stopPropagation();
+        if (isMuted) {
+          audio.volume = previousVolume;
+          volumeSlider.value = previousVolume;
+          isMuted = false;
+          return "🔊";
+        } else {
+          previousVolume = audio.volume;
+          audio.volume = 0;
+          volumeSlider.value = 0;
+          isMuted = true;
+          return "🔇";
+        }
+      },
+    };
   }
-
   // Hamburger menu
   const hamburger = document.querySelector(".hamburger");
   const navLinks = document.querySelector(".nav-links");
@@ -182,84 +155,33 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Handle preview functionality
+  // SETUP PREVIEW BUTTON FUNCTION
   function setupPreviewButtons() {
     let currentlyPlaying = null;
     let loadingTimeout = null;
-
-    function formatTime(seconds) {
-      const mins = Math.floor(seconds / 60);
-      const secs = Math.floor(seconds % 60);
-      return `${mins}:${secs.toString().padStart(2, "0")}`;
-    }
-
-    function createVolumeControl(audio) {
-      const volumeContainer = document.createElement("div");
-      volumeContainer.className = "volume-control";
-
-      const volumeSlider = document.createElement("input");
-      volumeSlider.type = "range";
-      volumeSlider.min = "0";
-      volumeSlider.max = "1";
-      volumeSlider.step = "0.01";
-      volumeSlider.value = "0.5";
-      volumeSlider.className = "volume-slider";
-
-      const muteButton = document.createElement("button");
-      muteButton.innerHTML = "🔊";
-      muteButton.className = "mute-button";
-
-      let isMuted = false;
-      let previousVolume = 0.5;
-
-      muteButton.addEventListener("click", (e) => {
-        if (isMuted) {
-          audio.volume = previousVolume;
-          volumeSlider.value = previousVolume;
-          muteButton.innerHTML = "🔊";
-          isMuted = false;
-        } else {
-          previousVolume = audio.volume;
-          audio.volume = 0;
-          volumeSlider.value = 0;
-          muteButton.innerHTML = "🔇";
-          isMuted = true;
-        }
-      });
-
-      volumeSlider.addEventListener("input", (e) => {
-        const volume = parseFloat(e.target.value);
-        audio.volume = volume;
-
-        if (volume === 0) {
-          muteButton.innerHTML = "🔇";
-          isMuted = true;
-        } else {
-          muteButton.innerHTML = "🔊";
-          isMuted = false;
-        }
-      });
-
-      volumeContainer.appendChild(muteButton);
-      volumeContainer.appendChild(volumeSlider);
-
-      return volumeContainer;
-    }
 
     document.querySelectorAll(".track-card").forEach((card) => {
       const playButton = card.querySelector(".preview-button");
       const playOverlay = card.querySelector(".play-overlay");
       const imageArea = card.querySelector(".track-image");
       const trackInfo = card.querySelector(".track-info");
+      const trackActions = card.querySelector(".track-actions");
+
+      // Update buttons layout
+      trackActions.innerHTML = `
+            <button class="preview-button">Preview</button>
+        `;
 
       const handlePlayPause = async () => {
         const previewUrl = card.dataset.previewUrl;
         const button = card.querySelector(".preview-button");
+        const muteButton = card.querySelector(".mute-button");
         const playIcon = card.querySelector(".play-icon");
         const progressContainer = card.querySelector(".progress-container");
         const progress = card.querySelector(".progress");
 
         // Remove existing volume control if it exists
-        const existingVolumeControl = card.querySelector(".volume-control");
+        const existingVolumeControl = card.querySelector(".player-controls");
         if (existingVolumeControl) {
           existingVolumeControl.remove();
         }
@@ -272,11 +194,7 @@ document.addEventListener("DOMContentLoaded", () => {
           currentlyPlaying.playIcon.textContent = "▶";
           currentlyPlaying.progressContainer.classList.add("hidden");
           currentlyPlaying.progress.style.width = "0%";
-
-          const oldVolumeControl = currentlyPlaying.card.querySelector(".volume-control");
-          if (oldVolumeControl) {
-            oldVolumeControl.remove();
-          }
+          currentlyPlaying.muteButton.textContent = "🔊";
 
           if (currentlyPlaying.card === card) {
             currentlyPlaying = null;
@@ -295,26 +213,37 @@ document.addEventListener("DOMContentLoaded", () => {
 
         try {
           const audio = new Audio(previewUrl);
-          audio.volume = 0.5; // Set initial volume
+          audio.volume = 0.5;
 
           await new Promise((resolve) => {
             audio.addEventListener("loadedmetadata", () => {
               const duration = card.querySelector(".duration");
-              duration.textContent = formatTime(audio.duration);
+              duration.textContent = `-${formatTime(audio.duration)}`;
               resolve();
             });
           });
 
           await audio.play();
           clearTimeout(loadingTimeout);
+          // Add the mute button
+          const muteButton = document.createElement("button");
+          muteButton.className = "mute-button";
+          muteButton.textContent = "🔊";
+          card.querySelector(".track-actions").appendChild(muteButton);
 
-          // Create and add volume control
-          const volumeControl = createVolumeControl(audio);
-          card.querySelector(".progress-container").after(volumeControl);
+          // Create volume control
+          const { controlsContainer, muteHandler } = createVolumeControl(audio);
+          card.querySelector(".progress-container").after(controlsContainer);
+
+          // Set up mute button handler
+          muteButton.addEventListener("click", (e) => {
+            const newIcon = muteHandler(e);
+            muteButton.textContent = newIcon;
+          });
 
           card.classList.remove("loading");
           card.classList.add("playing");
-          button.textContent = "Stop";
+          button.textContent = "Preview";
           playIcon.textContent = "⏸";
           progressContainer.classList.remove("hidden");
 
@@ -323,13 +252,18 @@ document.addEventListener("DOMContentLoaded", () => {
             progress.style.width = `${percentage}%`;
 
             const currentTime = card.querySelector(".current-time");
+            const duration = card.querySelector(".duration");
+
             currentTime.textContent = formatTime(audio.currentTime);
+            const remainingTime = audio.duration - audio.currentTime;
+            duration.textContent = `-${formatTime(remainingTime)}`;
           });
 
           currentlyPlaying = {
             audio,
             card,
             button,
+            muteButton,
             playIcon,
             progressContainer,
             progress,
@@ -341,12 +275,8 @@ document.addEventListener("DOMContentLoaded", () => {
             playIcon.textContent = "▶";
             progressContainer.classList.add("hidden");
             progress.style.width = "0%";
-
-            const volumeControl = card.querySelector(".volume-control");
-            if (volumeControl) {
-              volumeControl.remove();
-            }
-
+            const muteButton = card.querySelector(".mute-button");
+            if (muteButton) muteButton.remove();
             currentlyPlaying = null;
           };
         } catch (error) {
@@ -360,7 +290,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       };
 
-      // Add click listeners to specific elements instead of the whole card
+      // Add click handlers
       playButton.addEventListener("click", (e) => {
         e.stopPropagation();
         handlePlayPause();
@@ -370,10 +300,12 @@ document.addEventListener("DOMContentLoaded", () => {
         e.stopPropagation();
         handlePlayPause();
       });
+
       imageArea.addEventListener("click", (e) => {
         e.stopPropagation();
         handlePlayPause();
       });
+
       trackInfo.addEventListener("click", (e) => {
         e.stopPropagation();
         handlePlayPause();
