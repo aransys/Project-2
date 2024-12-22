@@ -89,7 +89,7 @@ nav {
 /* DARK/LIGHT THEME TOGGLE */
 .theme-toggle {
   position: absolute;
-  right: 80px; /* Space for hamburger menu */
+  right: 80px;
   top: 50%;
   transform: translateY(-50%);
   background: none;
@@ -106,9 +106,20 @@ nav {
   transform: translateY(-50%) rotate(15deg);
 }
 
+
+@media (min-width: 769px) {
+  .theme-toggle {
+      right: 20px;
+  }
+
+  .nav-links {
+      padding-right: 60px;
+  }
+}
+
 @media (max-width: 768px) {
   .theme-toggle {
-    right: 60px; /* Adjust for mobile */
+    right: 60px;
   }
 }
 
