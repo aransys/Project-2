@@ -164,7 +164,21 @@ Technical Challenges Overcome:
 - Enhanced button visibility logic
 - Refined audio control layout and spacing
 
-This time I focused on polishing the user interface and improving the overall playback experience, making the audio controls more intuitive and visually appealing.
+### Day 7 (December 17, 2024)
+
+Theme Implementation and UI Improvements:
+
+- Added dark/light theme toggle functionality
+- Implemented theme-specific color variables
+- Enhanced responsive design for theme toggle
+- Fixed positioning issues across different screen sizes
+
+Technical Challenges Overcome:
+
+- Maintained consistent spacing with dynamic navigation elements
+- Resolved theme toggle button positioning across breakpoints
+- Enhanced responsive layout compatibility
+- Implemented seamless theme switching logic
 
 ## Challenges & Solutions
 
@@ -801,6 +815,98 @@ This time I focused on polishing the user interface and improving the overall pl
        e.stopPropagation();
        const volume = parseFloat(e.target.value);
        audio.volume = volume;
+     });
+     ```
+
+### Theme Implementation and Responsive Design
+
+1. Theme Variable Management
+
+   - **Challenge**: Implementing theme switching while maintaining existing variables
+   - **Initial Setup**:
+     ```css
+     /* Original dark theme setup */
+     :root {
+       --primary-color: #1db954;
+       --secondary-color: #191414;
+       --text-color: #ffffff;
+       --background-color: #121212;
+     }
+     ```
+   - **Solution**: Created theme-specific variable sets while preserving spacing variables
+
+     ```css
+     /* Dark theme (default) */
+     :root {
+       --primary-color: #1db954;
+       --secondary-color: #191414;
+       --text-color: #ffffff;
+       --background-color: #121212;
+       /* Preserved spacing variables */
+       --spacing-small: 0.5rem;
+       --spacing-medium: 1rem;
+       --spacing-large: 2rem;
+     }
+
+     /* Light theme */
+     [data-theme="light"] {
+       --primary-color: #1db954;
+       --secondary-color: #ffffff;
+       --text-color: #191414;
+       --background-color: #f5f5f5;
+     }
+     ```
+
+2. Theme Toggle Positioning
+
+   - **Challenge**: Maintaining proper button position across different screen sizes
+   - **Initial Issue**: Theme toggle overlapping with navigation links on larger screens
+   - **Solution**: Implemented responsive positioning with media queries
+
+     ```css
+     .theme-toggle {
+       position: absolute;
+       right: 80px;
+       top: 50%;
+       transform: translateY(-50%);
+       z-index: 10;
+     }
+
+     @media (min-width: 769px) {
+       .theme-toggle {
+         right: 20px;
+       }
+
+       .nav-links {
+         padding-right: 60px;
+       }
+     }
+
+     @media (max-width: 768px) {
+       .theme-toggle {
+         right: 60px;
+       }
+     }
+     ```
+
+3. Theme Switch Logic
+
+   - **Challenge**: Implementing smooth theme switching with proper state management
+   - **Solution**: Created toggle functionality with visual feedback
+
+     ```javascript
+     const themeToggle = document.querySelector(".theme-toggle");
+     let isDarkTheme = true;
+
+     themeToggle.addEventListener("click", () => {
+       isDarkTheme = !isDarkTheme;
+       if (isDarkTheme) {
+         document.documentElement.removeAttribute("data-theme");
+         themeToggle.textContent = "🌞";
+       } else {
+         document.documentElement.setAttribute("data-theme", "light");
+         themeToggle.textContent = "🌙";
+       }
      });
      ```
 
