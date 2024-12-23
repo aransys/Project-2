@@ -1,18 +1,47 @@
 document.addEventListener("DOMContentLoaded", () => {
   // Theme toggle functionality
   const themeToggle = document.querySelector(".theme-toggle");
-  let isDarkTheme = true; // Since we start with dark theme
+  let isDarkTheme = true; //
 
   themeToggle.addEventListener("click", () => {
     isDarkTheme = !isDarkTheme;
     if (isDarkTheme) {
       document.documentElement.removeAttribute("data-theme");
-      themeToggle.textContent = "🌞"; // Sun emoji for light mode option
+      themeToggle.textContent = "🌞";
     } else {
       document.documentElement.setAttribute("data-theme", "light");
-      themeToggle.textContent = "🌙"; // Moon emoji for dark mode option
+      themeToggle.textContent = "🌙";
     }
   });
+
+  // Sorting functionality
+  let currentTracks = []; // Store current tracks for sorting
+
+  const sortSelect = document.getElementById("sort-select");
+  sortSelect.addEventListener("change", () => {
+    const sortType = sortSelect.value;
+
+    if (sortType === "default") {
+      renderTracks(currentTracks);
+      return;
+    }
+
+    const sortedTracks = [...currentTracks].sort((a, b) => {
+      switch (sortType) {
+        case "title":
+          return a.title.localeCompare(b.title);
+        case "artist":
+          return a.artist.name.localeCompare(b.artist.name);
+        case "duration":
+          return a.duration - b.duration;
+        default:
+          return 0;
+      }
+    });
+
+    renderTracks(sortedTracks);
+  });
+
   // Utility function to format time
   function formatTime(seconds) {
     const mins = Math.floor(seconds / 60);
@@ -107,45 +136,53 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Function to display tracks
   function displayTracks(tracks) {
+    currentTracks = [...tracks]; // Store tracks for sorting
+    renderTracks(tracks);
+  }
+
+  // New render function - add this right after displayTracks
+  function renderTracks(tracks) {
     const resultsGrid = document.querySelector(".results-grid");
+    const sortContainer = document.querySelector(".sort-container");
     if (!resultsGrid) return;
 
     resultsGrid.innerHTML = "";
+    sortContainer.classList.remove("hidden");
 
     tracks.forEach((track) => {
-      console.log("Processing track:", track.title); // Debug log
+      console.log("Processing track:", track.title);
 
       const trackCard = document.createElement("article");
       trackCard.className = "track-card";
-      trackCard.dataset.previewUrl = track.preview || ""; // Add fallback
+      trackCard.dataset.previewUrl = track.preview || "";
 
       trackCard.innerHTML = `
-    <div class="track-card-inner">
-        <div class="track-image">
-            <img src="${track.album.cover_medium || ""}" alt="${track.title} album art">
-            <div class="play-overlay">
-                <span class="play-icon">▶</span>
-                <div class="loading-ring"></div>
-            </div>
-        </div>
-        <div class="track-info">
-            <h3 class="track-name">${track.title}</h3>
-            <p class="artist-name">${track.artist.name}</p>
-            <p class="album-name">${track.album.title}</p>
-        </div>
-        <div class="progress-container hidden">
-            <div class="time-info">
-                <span class="current-time">0:00</span>
-                <span class="duration">-:--</span>
-            </div>
-            <div class="progress-bar">
-                <div class="progress"></div>
-            </div>
-        </div>
-        <div class="track-actions">
-            <button class="preview-button">Preview</button>
-        </div>
-    </div>
+  <div class="track-card-inner">
+      <div class="track-image">
+          <img src="${track.album.cover_medium || ""}" alt="${track.title} album art">
+          <div class="play-overlay">
+              <span class="play-icon">▶</span>
+              <div class="loading-ring"></div>
+          </div>
+      </div>
+      <div class="track-info">
+          <h3 class="track-name">${track.title}</h3>
+          <p class="artist-name">${track.artist.name}</p>
+          <p class="album-name">${track.album.title}</p>
+      </div>
+      <div class="progress-container hidden">
+          <div class="time-info">
+              <span class="current-time">0:00</span>
+              <span class="duration">-:--</span>
+          </div>
+          <div class="progress-bar">
+              <div class="progress"></div>
+          </div>
+      </div>
+      <div class="track-actions">
+          <button class="preview-button">Preview</button>
+      </div>
+  </div>
 `;
 
       resultsGrid.appendChild(trackCard);
@@ -351,6 +388,8 @@ document.addEventListener("DOMContentLoaded", () => {
   // Form submission handler
   searchForm.addEventListener("submit", async (e) => {
     e.preventDefault();
+
+    sortSelect.value = "default";
 
     if (isSearching) {
       showError("A search is already in progress. Please wait...");

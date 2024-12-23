@@ -46,12 +46,19 @@
       </section>
 
       <section id="results-section">
+        <div class="sort-container hidden">
+          <select id="sort-select" class="sort-select">
+            <option value="default">Sort by...</option>
+            <option value="title">Title (A-Z)</option>
+            <option value="artist">Artist (A-Z)</option>
+            <option value="duration">Duration</option>
+          </select>
+        </div>
         <div class="loading-spinner hidden">
           <div class="spinner"></div>
           <p>Searching for tracks...</p>
         </div>
         <div class="results-grid"></div>
-        <!-- Add this new welcome section -->
         <div class="welcome-message">
           <h2>Welcome to Music Explorer</h2>
           <p>Search for your favorite songs and listen to previews!</p>

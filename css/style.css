@@ -106,14 +106,13 @@ nav {
   transform: translateY(-50%) rotate(15deg);
 }
 
-
 @media (min-width: 769px) {
   .theme-toggle {
-      right: 20px;
+    right: 20px;
   }
 
   .nav-links {
-      padding-right: 60px;
+    padding-right: 60px;
   }
 }
 
@@ -121,6 +120,33 @@ nav {
   .theme-toggle {
     right: 60px;
   }
+}
+
+/* SORT SONG */
+.sort-container {
+  max-width: 600px;
+  margin: 1rem auto;
+  padding: 0 1rem;
+}
+
+.sort-container.hidden {
+  display: none;
+}
+
+.sort-select {
+  width: 200px;
+  padding: 0.5rem;
+  border-radius: 20px;
+  background-color: var(--secondary-color);
+  color: var(--text-color);
+  border: 2px solid var(--primary-color);
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.sort-select:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--primary-color);
 }
 
 /* HAMBURGER MENU STYLES */
