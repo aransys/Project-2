@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Music Explorer - Interactive Music Discovery Platform" />
+
+    <!-- Normalize CSS first, then custom CSS -->
+    <link rel="stylesheet" href="https://necolas.github.io/normalize.css/8.0.1/normalize.css" />
+    <link rel="stylesheet" href="css/style.css" />
+
+    <title>Music Explorer</title>
+  </head>
+  <body>
+    <header>
+      <nav>
+        <div class="logo">
+          <h1>Music Explorer</h1>
+        </div>
+        <button class="theme-toggle">🌞</button>
+        <button class="hamburger">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+        <ul class="nav-links">
+          <li><a href="#search">Search</a></li>
+          <li><a href="#favorites">Favorites</a></li>
+          <li><a href="#about">About</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main>
+      <section id="search-section">
+        <form id="search-form" class="search-form">
+          <input type="text" id="search-input" class="search-input" placeholder="Search for songs..." autocomplete="off" />
+          <button type="submit" class="search-button">Search</button>
+        </form>
+
+        <!-- Errors handling -->
+        <div class="error-message hidden" id="error-container">
+          <p id="error-text"></p>
+          <button class="error-close">×</button>
+        </div>
+      </section>
+
+      <section id="results-section">
+        <div class="sort-container hidden">
+          <select id="sort-select" class="sort-select">
+            <option value="default">Sort by...</option>
+            <option value="title">Title (A-Z)</option>
+            <option value="artist">Artist (A-Z)</option>
+            <option value="duration">Duration</option>
+          </select>
+        </div>
+        <div class="loading-spinner hidden">
+          <div class="spinner"></div>
+          <p>Searching for tracks...</p>
+        </div>
+        <div class="results-grid"></div>
+        <div class="welcome-message">
+          <h2>Welcome to Music Explorer</h2>
+          <p>Search for your favorite songs and listen to previews!</p>
+          <div class="welcome-icon">🎵</div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <p>Created by Aurimas Ransys - Powered by Deezer</p>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="js/api.js"></script>
+    <script src="js/main.js"></script>
+  </body>
+</html>

@@ -164,7 +164,7 @@ Technical Challenges Overcome:
 - Enhanced button visibility logic
 - Refined audio control layout and spacing
 
-### Day 7 (December 17, 2024)
+### Day 7 (December 22, 2024)
 
 Theme Implementation and UI Improvements:
 
@@ -179,6 +179,36 @@ Technical Challenges Overcome:
 - Resolved theme toggle button positioning across breakpoints
 - Enhanced responsive layout compatibility
 - Implemented seamless theme switching logic
+
+### Day 8 (December 22, 2024)
+
+Sorting Implementation and Code Organization:
+
+- Added track sorting functionality (title, artist, duration)
+- Implemented dynamic track reordering
+- Enhanced code structure with separate render function
+- Maintained audio player state during sorting
+
+Technical Challenges Overcome:
+
+- Preserved audio playback state during track reordering
+- Implemented seamless track re-rendering
+- Managed state between sorting and search operations
+- Enhanced user interface for sorting options
+
+### Day 9 (December 23, 2024) Custom Dropdown Styling and Cross-Browser Compatibility:
+
+- Enhanced sort select dropdown appearance
+- Implemented custom arrow styling
+- Ensured cross-browser compatibility
+- Improved dropdown accessibility and usability
+
+### Technical Challenges Overcome:
+
+- Replaced default browser dropdown styling
+- Created consistent appearance across different browsers
+- Maintained proper spacing and alignment
+- Implemented custom SVG arrow indicator
 
 ## Challenges & Solutions
 
@@ -909,6 +939,195 @@ Technical Challenges Overcome:
        }
      });
      ```
+
+### Sorting Implementation and State Management
+
+4. Track State Management
+
+   - **Challenge**: Maintaining track data and player state during sorting operations
+   - **Initial Issue**: Losing audio playback state when reordering tracks
+   - **Solution**: Implemented state preservation system
+
+     ```javascript
+     let currentTracks = []; // Global state for tracks
+
+     function displayTracks(tracks) {
+       currentTracks = [...tracks]; // Create new reference
+       renderTracks(tracks);
+     }
+
+     // Reset sort on new search
+     searchForm.addEventListener("submit", async (e) => {
+       sortSelect.value = "default"; // Reset sorting
+       // ... rest of search handling
+     });
+     ```
+
+5. Sort Logic Implementation
+
+   - **Challenge**: Creating flexible, maintainable sorting system
+   - **Solution**: Implemented switch-based sorting with localeCompare
+
+     ```javascript
+     sortSelect.addEventListener("change", () => {
+       const sortType = sortSelect.value;
+
+       if (sortType === "default") {
+         renderTracks(currentTracks);
+         return;
+       }
+
+       const sortedTracks = [...currentTracks].sort((a, b) => {
+         switch (sortType) {
+           case "title":
+             return a.title.localeCompare(b.title);
+           case "artist":
+             return a.artist.name.localeCompare(b.artist.name);
+           case "duration":
+             return a.duration - b.duration;
+           default:
+             return 0;
+         }
+       });
+
+       renderTracks(sortedTracks);
+     });
+     ```
+
+6. UI Integration
+
+   - **Challenge**: Seamlessly integrating sort controls with existing UI
+   - **Solution**: Dynamic visibility management
+
+     ```html
+     <div class="sort-container hidden">
+       <select id="sort-select" class="sort-select">
+         <option value="default">Sort by...</option>
+         <option value="title">Title (A-Z)</option>
+         <option value="artist">Artist (A-Z)</option>
+         <option value="duration">Duration</option>
+       </select>
+     </div>
+     ```
+
+     ```css
+     .sort-container {
+       max-width: 600px;
+       margin: 1rem auto;
+       padding: 0 1rem;
+     }
+
+     .sort-container.hidden {
+       display: none;
+     }
+     ```
+
+7. Render System Architecture
+
+   - **Challenge**: Efficiently managing DOM updates during sorting
+   - **Solution**: Separated concerns with dedicated render function
+
+     ```javascript
+     function renderTracks(tracks) {
+       const resultsGrid = document.querySelector(".results-grid");
+       const sortContainer = document.querySelector(".sort-container");
+
+       resultsGrid.innerHTML = ""; // Clear existing content
+       sortContainer.classList.remove("hidden");
+
+       tracks.forEach((track) => {
+         const trackCard = createTrackCard(track);
+         resultsGrid.appendChild(trackCard);
+       });
+
+       setupPreviewButtons(); // Reinitialize interactive elements
+     }
+     ```
+
+8. State Synchronization
+
+   - **Challenge**: Maintaining consistency between sorted state and audio playback
+   - **Solution**: Implemented comprehensive state tracking
+
+     ```javascript
+     // Track current state
+     let currentlyPlaying = {
+       audio: null,
+       card: null,
+       playIcon: null,
+       progressContainer: null,
+       progress: null,
+     };
+
+     // Preserve state during sorting
+     function handleSort() {
+       const currentlyPlayingTrack = currentlyPlaying?.card ? currentTracks.find((track) => track.id === currentlyPlaying.card.dataset.trackId) : null;
+
+       // Apply sorting
+       // Re-establish playback state if needed
+     }
+     ```
+
+     ### Challenges & Solutions
+
+9. Default Browser Arrow Removal
+
+   - **Challenge**: Browser default dropdown arrows vary in appearance and position
+   - **Solution**:
+
+   ```css
+   .sort-select {
+     appearance: none;
+     -webkit-appearance: none;
+     -moz-appearance: none;
+   }
+   ```
+
+10. Custom Arrow Implementation
+
+    - **Challenge**: Creating a consistent, theme-compatible dropdown arrow
+    - **Solution**:
+
+    ```css
+    .sort-select {
+      background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23ffffff%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+      background-repeat: no-repeat;
+      background-position: right 1rem top 50%;
+      background-size: 0.65rem auto;
+    }
+    ```
+
+11. Spacing and Alignment
+    - **Challenge**: Ensuring proper spacing between text and custom arrow
+    - **Solution**:
+    ```css
+    .sort-select {
+      padding: 0.5rem 2.5rem 0.5rem 1rem;
+      width: 200px;
+      border-radius: 20px;
+    }
+    ```
+
+### Key Improvements:
+
+1. **Cross-Browser Consistency**: Unified appearance across different browsers using vendor prefixes and custom styling
+2. **Enhanced UX**: Better spacing and positioning of the dropdown arrow
+3. **Theme Integration**: Custom arrow color matching the application's theme
+4. **Maintainable Code**: Clean, well-structured CSS implementation
+
+### Future Considerations:
+
+- Potential dark/light theme arrow color adaptation
+- Mobile-specific touch area optimization
+- Additional hover/focus states for enhanced interactivity
+
+Technical Improvements Achieved:
+
+- Efficient track reordering without interrupting playback
+- Seamless integration with existing audio controls
+- Maintainable sorting logic with extensibility
+- Responsive UI updates during sort operations
+- Robust state management across sorting operations
 
 ## Credits
 
