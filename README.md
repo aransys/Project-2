@@ -180,6 +180,22 @@ Technical Challenges Overcome:
 - Enhanced responsive layout compatibility
 - Implemented seamless theme switching logic
 
+### Day 8 (December 17, 2024)
+
+Sorting Implementation and Code Organization:
+
+- Added track sorting functionality (title, artist, duration)
+- Implemented dynamic track reordering
+- Enhanced code structure with separate render function
+- Maintained audio player state during sorting
+
+Technical Challenges Overcome:
+
+- Preserved audio playback state during track reordering
+- Implemented seamless track re-rendering
+- Managed state between sorting and search operations
+- Enhanced user interface for sorting options
+
 ## Challenges & Solutions
 
 ### API Integration Journey
@@ -909,6 +925,142 @@ Technical Challenges Overcome:
        }
      });
      ```
+
+### Sorting Implementation and State Management
+
+4. Track State Management
+
+   - **Challenge**: Maintaining track data and player state during sorting operations
+   - **Initial Issue**: Losing audio playback state when reordering tracks
+   - **Solution**: Implemented state preservation system
+
+     ```javascript
+     let currentTracks = []; // Global state for tracks
+
+     function displayTracks(tracks) {
+       currentTracks = [...tracks]; // Create new reference
+       renderTracks(tracks);
+     }
+
+     // Reset sort on new search
+     searchForm.addEventListener("submit", async (e) => {
+       sortSelect.value = "default"; // Reset sorting
+       // ... rest of search handling
+     });
+     ```
+
+5. Sort Logic Implementation
+
+   - **Challenge**: Creating flexible, maintainable sorting system
+   - **Solution**: Implemented switch-based sorting with localeCompare
+
+     ```javascript
+     sortSelect.addEventListener("change", () => {
+       const sortType = sortSelect.value;
+
+       if (sortType === "default") {
+         renderTracks(currentTracks);
+         return;
+       }
+
+       const sortedTracks = [...currentTracks].sort((a, b) => {
+         switch (sortType) {
+           case "title":
+             return a.title.localeCompare(b.title);
+           case "artist":
+             return a.artist.name.localeCompare(b.artist.name);
+           case "duration":
+             return a.duration - b.duration;
+           default:
+             return 0;
+         }
+       });
+
+       renderTracks(sortedTracks);
+     });
+     ```
+
+6. UI Integration
+
+   - **Challenge**: Seamlessly integrating sort controls with existing UI
+   - **Solution**: Dynamic visibility management
+
+     ```html
+     <div class="sort-container hidden">
+       <select id="sort-select" class="sort-select">
+         <option value="default">Sort by...</option>
+         <option value="title">Title (A-Z)</option>
+         <option value="artist">Artist (A-Z)</option>
+         <option value="duration">Duration</option>
+       </select>
+     </div>
+     ```
+
+     ```css
+     .sort-container {
+       max-width: 600px;
+       margin: 1rem auto;
+       padding: 0 1rem;
+     }
+
+     .sort-container.hidden {
+       display: none;
+     }
+     ```
+
+7. Render System Architecture
+
+   - **Challenge**: Efficiently managing DOM updates during sorting
+   - **Solution**: Separated concerns with dedicated render function
+
+     ```javascript
+     function renderTracks(tracks) {
+       const resultsGrid = document.querySelector(".results-grid");
+       const sortContainer = document.querySelector(".sort-container");
+
+       resultsGrid.innerHTML = ""; // Clear existing content
+       sortContainer.classList.remove("hidden");
+
+       tracks.forEach((track) => {
+         const trackCard = createTrackCard(track);
+         resultsGrid.appendChild(trackCard);
+       });
+
+       setupPreviewButtons(); // Reinitialize interactive elements
+     }
+     ```
+
+8. State Synchronization
+
+   - **Challenge**: Maintaining consistency between sorted state and audio playback
+   - **Solution**: Implemented comprehensive state tracking
+
+     ```javascript
+     // Track current state
+     let currentlyPlaying = {
+       audio: null,
+       card: null,
+       playIcon: null,
+       progressContainer: null,
+       progress: null,
+     };
+
+     // Preserve state during sorting
+     function handleSort() {
+       const currentlyPlayingTrack = currentlyPlaying?.card ? currentTracks.find((track) => track.id === currentlyPlaying.card.dataset.trackId) : null;
+
+       // Apply sorting
+       // Re-establish playback state if needed
+     }
+     ```
+
+Technical Improvements Achieved:
+
+- Efficient track reordering without interrupting playback
+- Seamless integration with existing audio controls
+- Maintainable sorting logic with extensibility
+- Responsive UI updates during sort operations
+- Robust state management across sorting operations
 
 ## Credits
 
