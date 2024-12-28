@@ -37,7 +37,7 @@ body {
   font-family: "Outfit", "Arial", sans-serif;
   line-height: 1.6;
   background: radial-gradient(circle, rgba(163, 147, 235, 1) 0%, rgba(94, 99, 182, 1) 26%, rgba(39, 41, 109, 1) 76%, rgba(20, 21, 56, 1) 100%);
-
+  background-attachment: fixed;
   color: var(--text-color);
   min-height: 100vh;
   display: flex;
@@ -361,6 +361,11 @@ nav {
 /* Hide welcome message when results are shown */
 .results-grid:not(:empty) ~ .welcome-message {
   display: none;
+}
+
+.results-grid:not(:empty) ~ .search-form {
+  display: flex;
+  margin-bottom: 2rem;
 }
 
 /* Results Grid */

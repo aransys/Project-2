@@ -40,6 +40,23 @@
 
     <main>
       <section id="results-section">
+        <div class="welcome-message">
+          <div class="welcome-icon"><i class="fas fa-music"></i></div>
+          <h2>Welcome to Music Explorer</h2>
+          <p>Search for your favorite songs and listen to previews!</p>
+        </div>
+
+        <form id="search-form" class="search-form">
+          <input type="text" id="search-input" class="search-input" placeholder="Search for songs..." autocomplete="off" />
+          <button type="submit" class="search-button">Search</button>
+        </form>
+
+        <!-- Error message after search form -->
+        <div class="error-message hidden" id="error-container">
+          <p id="error-text"></p>
+          <button class="error-close">×</button>
+        </div>
+
         <div class="sort-container hidden">
           <select id="sort-select" class="sort-select">
             <option value="default">Sort by...</option>
@@ -53,24 +70,6 @@
           <p>Searching for tracks...</p>
         </div>
         <div class="results-grid"></div>
-        <div class="welcome-message">
-          <div class="welcome-icon"><i class="fas fa-music"></i></div>
-          <h2>Welcome to Music Explorer</h2>
-          <p>Search for your favorite songs and listen to previews!</p>
-        </div>
-      </section>
-      <!-- SEARCH BAR -->
-      <section id="search-section">
-        <form id="search-form" class="search-form">
-          <input type="text" id="search-input" class="search-input" placeholder="Search for songs..." autocomplete="off" />
-          <button type="submit" class="search-button">Search</button>
-        </form>
-
-        <!-- Errors handling -->
-        <div class="error-message hidden" id="error-container">
-          <p id="error-text"></p>
-          <button class="error-close">×</button>
-        </div>
       </section>
     </main>
 
