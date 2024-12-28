@@ -5,6 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Music Explorer - Interactive Music Discovery Platform" />
 
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap" rel="stylesheet" />
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" />
+
     <!-- Normalize CSS first, then custom CSS -->
     <link rel="stylesheet" href="https://necolas.github.io/normalize.css/8.0.1/normalize.css" />
     <link rel="stylesheet" href="css/style.css" />
@@ -15,7 +22,7 @@
     <header>
       <nav>
         <div class="logo">
-          <h1>Music Explorer</h1>
+          <h1>ME</h1>
         </div>
         <button class="theme-toggle">🌞</button>
         <button class="hamburger">
@@ -32,19 +39,6 @@
     </header>
 
     <main>
-      <section id="search-section">
-        <form id="search-form" class="search-form">
-          <input type="text" id="search-input" class="search-input" placeholder="Search for songs..." autocomplete="off" />
-          <button type="submit" class="search-button">Search</button>
-        </form>
-
-        <!-- Errors handling -->
-        <div class="error-message hidden" id="error-container">
-          <p id="error-text"></p>
-          <button class="error-close">×</button>
-        </div>
-      </section>
-
       <section id="results-section">
         <div class="sort-container hidden">
           <select id="sort-select" class="sort-select">
@@ -60,9 +54,22 @@
         </div>
         <div class="results-grid"></div>
         <div class="welcome-message">
+          <div class="welcome-icon"><i class="fas fa-music"></i></div>
           <h2>Welcome to Music Explorer</h2>
           <p>Search for your favorite songs and listen to previews!</p>
-          <div class="welcome-icon">🎵</div>
+        </div>
+      </section>
+      <!-- SEARCH BAR -->
+      <section id="search-section">
+        <form id="search-form" class="search-form">
+          <input type="text" id="search-input" class="search-input" placeholder="Search for songs..." autocomplete="off" />
+          <button type="submit" class="search-button">Search</button>
+        </form>
+
+        <!-- Errors handling -->
+        <div class="error-message hidden" id="error-container">
+          <p id="error-text"></p>
+          <button class="error-close">×</button>
         </div>
       </section>
     </main>
