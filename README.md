@@ -203,6 +203,17 @@ Technical Challenges Overcome:
 - Ensured cross-browser compatibility
 - Improved dropdown accessibility and usability
 
+### Day 10 (December 28, 2024)
+
+UI/UX Enhancements and Design System Implementation:
+
+- Implemented modern gradient background
+- Enhanced card and button designs
+- Added responsive animations
+- Improved visual hierarchy
+- Integrated Font Awesome icons
+- Added Google Fonts (Outfit) for better typography
+
 ### Technical Challenges Overcome:
 
 - Replaced default browser dropdown styling
@@ -1114,6 +1125,127 @@ Technical Challenges Overcome:
 2. **Enhanced UX**: Better spacing and positioning of the dropdown arrow
 3. **Theme Integration**: Custom arrow color matching the application's theme
 4. **Maintainable Code**: Clean, well-structured CSS implementation
+
+### Design System Implementation
+
+1. Color Scheme and Theming
+
+   - **Challenge**: Creating a cohesive color system that works in both dark and light modes
+   - **Solution**:
+
+     ```css
+     :root {
+       --primary-color: #a393eb;
+       --secondary-color: #5e63b6;
+       --text-color: #ffffff;
+       --background-color: #27296d;
+       --gradient-color-1: rgba(163, 147, 235, 1);
+       --gradient-color-2: rgba(94, 99, 182, 1);
+       --gradient-color-3: rgba(39, 41, 109, 1);
+       --gradient-color-4: rgba(20, 21, 56, 1);
+     }
+
+     [data-theme="light"] {
+       --primary-color: #1db954;
+       --secondary-color: #ffffff;
+       --text-color: #191414;
+       --background-color: #f5f5f5;
+     }
+     ```
+
+2. Gradient Background Implementation
+
+   - **Challenge**: Creating an immersive, responsive background
+   - **Solution**:
+     ```css
+     body {
+       background: radial-gradient(circle, rgba(163, 147, 235, 1) 0%, rgba(94, 99, 182, 1) 26%, rgba(39, 41, 109, 1) 76%, rgba(20, 21, 56, 1) 100%);
+       background-attachment: fixed;
+     }
+     ```
+
+3. Enhanced Component Design
+
+   - **Challenge**: Creating consistent, modern UI components
+   - **Solution**: Implemented unified button styles
+
+     ```css
+     .search-button {
+       border: 2px solid var(--background-color);
+       padding: 0.75rem 1.5rem;
+       border-radius: 25px;
+       background: var(--background-color);
+       color: var(--text-color);
+       transition: all 0.2s ease-in;
+     }
+
+     .search-button:hover {
+       color: var(--primary-color);
+       border-color: var(--text-color);
+       background: var(--text-color);
+       box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+       transform: translateY(-1px);
+     }
+     ```
+
+4. Typography Improvements
+
+   - **Challenge**: Establishing a clear typographic hierarchy
+   - **Solution**:
+
+     ```html
+     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap" rel="stylesheet" />
+     ```
+
+     ```css
+     body {
+       font-family: "Outfit", "Arial", sans-serif;
+     }
+
+     .welcome-message h2 {
+       font-size: 4rem;
+     }
+
+     .welcome-message p {
+       font-size: 1.7rem;
+     }
+     ```
+
+5. Responsive Design Enhancements
+
+   - **Challenge**: Maintaining design integrity across devices
+   - **Solution**:
+
+     ```css
+     @media (max-width: 768px) {
+       main {
+         padding: var(--spacing-small);
+       }
+
+       .search-form {
+         width: 100%;
+         box-sizing: border-box;
+       }
+
+       .results-grid {
+         grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+       }
+     }
+
+     @media (max-width: 480px) {
+       .search-form {
+         flex-direction: column;
+       }
+     }
+     ```
+
+Visual Improvements:
+
+- Enhanced welcome screen with larger typography
+- Improved button and input field interactions
+- Added subtle animations for user feedback
+- Implemented consistent spacing system
+- Enhanced mobile responsiveness
 
 ### Future Considerations:
 
