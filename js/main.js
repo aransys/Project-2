@@ -141,23 +141,11 @@ document.addEventListener("DOMContentLoaded", () => {
     renderTracks(tracks);
   }
 
-  // New render function - add this right after displayTracks
+  // RENDER TRACKS FUNCTRION
   function renderTracks(tracks) {
     const resultsGrid = document.querySelector(".results-grid");
     const sortContainer = document.querySelector(".sort-container");
     if (!resultsGrid) return;
-
-    // Log complete details of first track
-    if (tracks.length > 0) {
-      console.log("Detailed track info:", {
-        title: tracks[0].title,
-        artist: tracks[0].artist,
-        album: tracks[0].album,
-        preview: tracks[0].preview,
-        duration: tracks[0].duration,
-        complete_object: tracks[0], // Log the entire object
-      });
-    }
 
     resultsGrid.innerHTML = "";
     sortContainer.classList.remove("hidden");
@@ -165,44 +153,44 @@ document.addEventListener("DOMContentLoaded", () => {
     tracks.forEach((track) => {
       const trackCard = document.createElement("article");
       trackCard.className = "track-card";
-
-      // Store preview URL and log it
       trackCard.dataset.previewUrl = track.preview || "";
-      console.log("Preview URL for", track.title, ":", track.preview);
 
-      // Calculate duration and log it
       const duration = track.duration || 0;
-      console.log("Duration for", track.title, ":", duration, "seconds");
+      const formattedDuration = formatTime(duration);
 
       trackCard.innerHTML = `
             <div class="track-card-inner">
+                <!-- Image Section -->
                 <div class="track-image">
                     <img src="${track.album?.cover_medium || track.album?.cover || ""}" 
-                         alt="${track.title} album art"
-                         onerror="this.style.display='none'">
+                         alt="${track.title} album art">
                     <div class="play-overlay">
                         <span class="play-icon">▶</span>
                         <div class="loading-ring"></div>
                     </div>
                 </div>
+                
+                <!-- Info Section -->
                 <div class="track-info">
                     <h3 class="track-name">${track.title || "Unknown Title"}</h3>
                     <p class="artist-name">${track.artist?.name || "Unknown Artist"}</p>
                     <p class="album-name">${track.album?.title || "Unknown Album"}</p>
                 </div>
-                <div class="progress-container">
-                    <div class="time-info">
-                        <span class="current-time">0:00</span>
-                        <span class="duration">-${formatTime(duration)}</span>
+                
+                <!-- Controls Section -->
+                <div class="track-controls">
+                    <div class="progress-container">
+                        <div class="time-info">
+                            <span class="current-time">0:00</span>
+                            <span class="duration">-${formattedDuration}</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress"></div>
+                        </div>
                     </div>
-                    <div class="progress-bar">
-                        <div class="progress"></div>
+                    <div class="track-actions">
+                        <button class="preview-button">Preview</button>
                     </div>
-                </div>
-                <div class="track-actions">
-                    <button class="preview-button" ${track.preview ? "" : "disabled"}>
-                        ${track.preview ? "Preview" : "No Preview Available"}
-                    </button>
                 </div>
             </div>`;
 
@@ -216,51 +204,32 @@ document.addEventListener("DOMContentLoaded", () => {
   // SETUP PREVIEW BUTTON FUNCTION
   function setupPreviewButtons() {
     let currentlyPlaying = null;
-    let loadingTimeout = null;
 
     document.querySelectorAll(".track-card").forEach((card) => {
       const playButton = card.querySelector(".preview-button");
       const playOverlay = card.querySelector(".play-overlay");
       const imageArea = card.querySelector(".track-image");
       const trackInfo = card.querySelector(".track-info");
-      const trackActions = card.querySelector(".track-actions");
-
-      // Only show preview button initially
-      trackActions.innerHTML = `
-            <button class="preview-button">Preview</button>
-        `;
 
       const handlePlayPause = async () => {
         const previewUrl = card.dataset.previewUrl;
-        const button = card.querySelector(".preview-button");
         const playIcon = card.querySelector(".play-icon");
         const progressContainer = card.querySelector(".progress-container");
         const progress = card.querySelector(".progress");
-
-        // Remove existing volume control if it exists
-        const existingVolumeControl = card.querySelector(".player-controls");
-        if (existingVolumeControl) {
-          existingVolumeControl.remove();
-        }
+        const timeInfo = card.querySelector(".time-info");
 
         // If there's already something playing, stop it
         if (currentlyPlaying) {
           currentlyPlaying.audio.pause();
           currentlyPlaying.card.classList.remove("playing", "loading");
 
-          // Recreate preview button for previously playing card
-          const oldTrackActions = currentlyPlaying.card.querySelector(".track-actions");
-          oldTrackActions.innerHTML = `
-                    <button class="preview-button">Preview</button>
-                `;
+          // Reset previous card's UI
+          const oldPlayIcon = currentlyPlaying.card.querySelector(".play-icon");
+          if (oldPlayIcon) oldPlayIcon.textContent = "▶";
 
-          currentlyPlaying.playIcon.textContent = "▶";
-          currentlyPlaying.progressContainer.classList.add("hidden");
-          currentlyPlaying.progress.style.width = "0%";
-
-          // Remove mute button from previously playing card
-          const oldMuteButton = currentlyPlaying.card.querySelector(".mute-button");
-          if (oldMuteButton) oldMuteButton.remove();
+          // Remove volume controls from previous card
+          const oldVolumeControl = currentlyPlaying.card.querySelector(".player-controls");
+          if (oldVolumeControl) oldVolumeControl.remove();
 
           if (currentlyPlaying.card === card) {
             currentlyPlaying = null;
@@ -268,54 +237,34 @@ document.addEventListener("DOMContentLoaded", () => {
           }
         }
 
-        if (loadingTimeout) {
-          clearTimeout(loadingTimeout);
-        }
-
-        loadingTimeout = setTimeout(() => {
-          card.classList.add("loading");
-        }, 200);
-
         try {
           const audio = new Audio(previewUrl);
           audio.volume = 0.5;
 
-          await new Promise((resolve) => {
-            audio.addEventListener("loadedmetadata", () => {
-              const duration = card.querySelector(".duration");
-              duration.textContent = `-${formatTime(audio.duration)}`;
-              resolve();
-            });
-          });
-
-          await audio.play();
-          clearTimeout(loadingTimeout);
-
-          // Remove preview button
-          const previewButton = card.querySelector(".preview-button");
-          if (previewButton) previewButton.remove();
-
-          // Create volume control
+          // Add volume controls
           const { controlsContainer, muteHandler } = createVolumeControl(audio);
-          card.querySelector(".progress-container").after(controlsContainer);
+          const existingControls = card.querySelector(".player-controls");
+          if (existingControls) existingControls.remove();
+          progressContainer.after(controlsContainer);
 
-          // Add mute button after successful play
+          // Add mute button
           const muteButton = document.createElement("button");
           muteButton.className = "mute-button";
           muteButton.textContent = "🔊";
-          trackActions.appendChild(muteButton);
+          controlsContainer.appendChild(muteButton);
 
-          // Set up mute button handler
           muteButton.addEventListener("click", (e) => {
             const newIcon = muteHandler(e);
             muteButton.textContent = newIcon;
           });
 
-          card.classList.remove("loading");
+          await audio.play();
+
+          // Update UI for playing state
           card.classList.add("playing");
           playIcon.textContent = "⏸";
-          progressContainer.classList.remove("hidden");
 
+          // Update time displays
           audio.addEventListener("timeupdate", () => {
             const percentage = (audio.currentTime / audio.duration) * 100;
             progress.style.width = `${percentage}%`;
@@ -336,54 +285,32 @@ document.addEventListener("DOMContentLoaded", () => {
             progress,
           };
 
+          // Handle track ending
           audio.onended = () => {
-            card.classList.remove("playing", "loading");
-
-            // Recreate preview button
-            trackActions.innerHTML = `
-                        <button class="preview-button">Preview</button>
-                    `;
-
+            card.classList.remove("playing");
             playIcon.textContent = "▶";
-            progressContainer.classList.add("hidden");
             progress.style.width = "0%";
 
-            const muteButton = card.querySelector(".mute-button");
-            if (muteButton) muteButton.remove();
+            // Reset time displays
+            const currentTime = card.querySelector(".current-time");
+            if (currentTime) currentTime.textContent = "0:00";
+
+            // Remove volume controls
+            const volumeControl = card.querySelector(".player-controls");
+            if (volumeControl) volumeControl.remove();
 
             currentlyPlaying = null;
-
-            // Add click handler to new preview button
-            const newPreviewButton = card.querySelector(".preview-button");
-            if (newPreviewButton) {
-              newPreviewButton.addEventListener("click", (e) => {
-                e.stopPropagation();
-                handlePlayPause();
-              });
-            }
           };
         } catch (error) {
           console.error("Playback failed:", error);
-          clearTimeout(loadingTimeout);
-          card.classList.remove("loading", "playing");
-
-          // Ensure preview button is present
-          if (!card.querySelector(".preview-button")) {
-            trackActions.innerHTML = `
-                        <button class="preview-button">Preview</button>
-                    `;
-          }
-
+          card.classList.remove("playing");
           playIcon.textContent = "▶";
-          progressContainer.classList.add("hidden");
           progress.style.width = "0%";
-
-          const muteButton = card.querySelector(".mute-button");
-          if (muteButton) muteButton.remove();
+          currentlyPlaying = null;
         }
       };
 
-      // Add click handlers
+      // Add click event listeners
       playButton.addEventListener("click", (e) => {
         e.stopPropagation();
         handlePlayPause();
@@ -406,7 +333,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Form submission handler
+  // FORM SUBMISSION HANDLER
   searchForm.addEventListener("submit", async (e) => {
     e.preventDefault();
 
