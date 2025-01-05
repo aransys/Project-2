@@ -44,6 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Utility function to format time
   function formatTime(seconds) {
+    if (!seconds || isNaN(seconds)) return "0:00";
     const mins = Math.floor(seconds / 60);
     const secs = Math.floor(seconds % 60);
     return `${mins}:${secs.toString().padStart(2, "0")}`;
@@ -146,44 +147,64 @@ document.addEventListener("DOMContentLoaded", () => {
     const sortContainer = document.querySelector(".sort-container");
     if (!resultsGrid) return;
 
+    // Log complete details of first track
+    if (tracks.length > 0) {
+      console.log("Detailed track info:", {
+        title: tracks[0].title,
+        artist: tracks[0].artist,
+        album: tracks[0].album,
+        preview: tracks[0].preview,
+        duration: tracks[0].duration,
+        complete_object: tracks[0], // Log the entire object
+      });
+    }
+
     resultsGrid.innerHTML = "";
     sortContainer.classList.remove("hidden");
 
     tracks.forEach((track) => {
-      console.log("Processing track:", track.title);
-
       const trackCard = document.createElement("article");
       trackCard.className = "track-card";
+
+      // Store preview URL and log it
       trackCard.dataset.previewUrl = track.preview || "";
+      console.log("Preview URL for", track.title, ":", track.preview);
+
+      // Calculate duration and log it
+      const duration = track.duration || 0;
+      console.log("Duration for", track.title, ":", duration, "seconds");
 
       trackCard.innerHTML = `
-  <div class="track-card-inner">
-      <div class="track-image">
-          <img src="${track.album.cover_medium || ""}" alt="${track.title} album art">
-          <div class="play-overlay">
-              <span class="play-icon">▶</span>
-              <div class="loading-ring"></div>
-          </div>
-      </div>
-      <div class="track-info">
-          <h3 class="track-name">${track.title}</h3>
-          <p class="artist-name">${track.artist.name}</p>
-          <p class="album-name">${track.album.title}</p>
-      </div>
-      <div class="progress-container hidden">
-          <div class="time-info">
-              <span class="current-time">0:00</span>
-              <span class="duration">-:--</span>
-          </div>
-          <div class="progress-bar">
-              <div class="progress"></div>
-          </div>
-      </div>
-      <div class="track-actions">
-          <button class="preview-button">Preview</button>
-      </div>
-  </div>
-`;
+            <div class="track-card-inner">
+                <div class="track-image">
+                    <img src="${track.album?.cover_medium || track.album?.cover || ""}" 
+                         alt="${track.title} album art"
+                         onerror="this.style.display='none'">
+                    <div class="play-overlay">
+                        <span class="play-icon">▶</span>
+                        <div class="loading-ring"></div>
+                    </div>
+                </div>
+                <div class="track-info">
+                    <h3 class="track-name">${track.title || "Unknown Title"}</h3>
+                    <p class="artist-name">${track.artist?.name || "Unknown Artist"}</p>
+                    <p class="album-name">${track.album?.title || "Unknown Album"}</p>
+                </div>
+                <div class="progress-container">
+                    <div class="time-info">
+                        <span class="current-time">0:00</span>
+                        <span class="duration">-${formatTime(duration)}</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress"></div>
+                    </div>
+                </div>
+                <div class="track-actions">
+                    <button class="preview-button" ${track.preview ? "" : "disabled"}>
+                        ${track.preview ? "Preview" : "No Preview Available"}
+                    </button>
+                </div>
+            </div>`;
 
       resultsGrid.appendChild(trackCard);
     });
