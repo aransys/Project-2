@@ -221,6 +221,24 @@ UI/UX Enhancements and Design System Implementation:
 - Maintained proper spacing and alignment
 - Implemented custom SVG arrow indicator
 
+### Day 11 (January 5, 2025)
+
+Search and Sort Layout Improvements:
+
+- Redesigned search and sort container layout
+- Fixed sorting element positioning on all screen sizes
+- Enhanced responsive design for search interface
+- Improved user experience on mobile devices
+
+Technical Challenges Overcome:
+
+- Resolved sort dropdown overlapping issues
+- Implemented flexible layout for search wrapper
+- Maintained centered search with right-aligned sorting
+- Created seamless responsive transitions between layouts
+- Fixed spacing issues in mobile view
+- Optimized component stacking for smaller screens
+
 ## Challenges & Solutions
 
 ### API Integration Journey
@@ -1238,6 +1256,120 @@ UI/UX Enhancements and Design System Implementation:
        }
      }
      ```
+
+     ### Search and Sort Layout Implementation
+
+6. Responsive Sort Element Positioning
+
+   - **Challenge**: Sort dropdown overlapping with search elements on smaller screens
+   - **Initial Code**:
+     ```css
+     .sort-container {
+       right: 1rem;
+       position: absolute;
+       max-width: 600px;
+       margin: 1rem auto;
+       padding: 0 1rem;
+     }
+     ```
+   - **Issues Faced**:
+     - Absolute positioning causing overlap on mobile
+     - Inconsistent spacing across screen sizes
+     - Layout breaking on very small screens
+   - **Solution**: Implemented flexible responsive layout:
+
+     ```css
+     .search-wrapper {
+       max-width: 1200px;
+       margin: 1rem auto;
+       padding: 0 1rem;
+       display: flex;
+       flex-direction: column;
+       align-items: center;
+       gap: 1rem;
+       width: 100%;
+       position: relative;
+     }
+
+     @media (min-width: 768px) {
+       .search-wrapper {
+         flex-direction: row;
+         justify-content: center;
+         align-items: center;
+         padding-right: 220px; /* Space for sort container */
+       }
+
+       .sort-container {
+         position: absolute;
+         right: 1rem;
+         top: 50%;
+         transform: translateY(-50%);
+         width: 200px;
+       }
+     }
+     ```
+
+   - **Learning**: Using flexbox with media queries provides more reliable layouts than absolute positioning alone
+
+7. Mobile-First Layout Organization
+
+   - **Challenge**: Maintaining usability across all screen sizes
+   - **Initial Mobile Issues**:
+     ```css
+     /* Original problematic mobile layout */
+     @media (max-width: 768px) {
+       .search-form {
+         width: 100%;
+       }
+       .sort-container {
+         position: static;
+         width: 100%;
+       }
+     }
+     ```
+   - **Improved Solution**:
+
+     ```css
+     /* Base mobile-first styles */
+     .search-wrapper {
+       flex-direction: column;
+       width: 100%;
+     }
+
+     .sort-container {
+       width: 100%;
+       max-width: 200px;
+       margin: 0;
+     }
+
+     /* Desktop enhancements */
+     @media (min-width: 768px) {
+       .search-wrapper {
+         flex-direction: row;
+       }
+
+       .sort-container {
+         position: absolute;
+         right: 1rem;
+       }
+     }
+
+     /* Very small screen optimizations */
+     @media (max-width: 480px) {
+       .search-form {
+         flex-direction: column;
+         gap: 0.5rem;
+       }
+
+       .search-input,
+       .search-button,
+       .sort-select {
+         width: 100%;
+       }
+     }
+     ```
+
+   - **Learning**: Starting with mobile-first design and progressively enhancing for larger screens leads to more maintainable code and better user experience
 
 Visual Improvements:
 

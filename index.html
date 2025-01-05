@@ -46,10 +46,20 @@
           <p>Search for your favorite songs and listen to previews!</p>
         </div>
 
-        <form id="search-form" class="search-form">
-          <input type="text" id="search-input" class="search-input" placeholder="Search for songs..." autocomplete="off" />
-          <button type="submit" class="search-button">Search</button>
-        </form>
+        <div class="search-wrapper">
+          <form id="search-form" class="search-form">
+            <input type="text" id="search-input" class="search-input" placeholder="Search for songs..." autocomplete="off" />
+            <button type="submit" class="search-button">Search</button>
+          </form>
+          <div class="sort-container hidden">
+            <select id="sort-select" class="sort-select">
+              <option value="default">Sort by...</option>
+              <option value="title">Title (A-Z)</option>
+              <option value="artist">Artist (A-Z)</option>
+              <option value="duration">Duration</option>
+            </select>
+          </div>
+        </div>
 
         <!-- Error message after search form -->
         <div class="error-message hidden" id="error-container">
@@ -57,14 +67,6 @@
           <button class="error-close">×</button>
         </div>
 
-        <div class="sort-container hidden">
-          <select id="sort-select" class="sort-select">
-            <option value="default">Sort by...</option>
-            <option value="title">Title (A-Z)</option>
-            <option value="artist">Artist (A-Z)</option>
-            <option value="duration">Duration</option>
-          </select>
-        </div>
         <div class="loading-spinner hidden">
           <div class="spinner"></div>
           <p>Searching for tracks...</p>

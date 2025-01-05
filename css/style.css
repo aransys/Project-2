@@ -150,11 +150,50 @@ nav {
   }
 }
 
-/* SORT SONG */
-.sort-container {
-  max-width: 600px;
+/* Search and Sort Container Styles */
+.search-wrapper {
+  max-width: 1200px;
   margin: 1rem auto;
   padding: 0 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  position: relative;
+}
+
+@media (min-width: 768px) {
+  .search-wrapper {
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding-right: 220px; /* Make room for sort container */
+  }
+}
+
+.search-form {
+  max-width: 500px;
+  margin: 0;
+  display: flex;
+  gap: 1rem;
+  width: 100%;
+}
+
+.sort-container {
+  width: 100%;
+  max-width: 200px;
+  margin: 0;
+}
+
+@media (min-width: 768px) {
+  .sort-container {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 200px;
+  }
 }
 
 .sort-container.hidden {
@@ -162,26 +201,54 @@ nav {
 }
 
 .sort-select {
-  width: 200px;
-  padding: 0.5rem 2.5rem 0.5rem 1rem;
-  border-radius: 20px;
-  background-color: var(--secondary-color);
-  color: var(--text-color);
-  border: 2px solid var(--primary-color);
+  width: 100%;
+  padding: 0.75rem 2.5rem 0.75rem 1rem;
+  border-radius: 25px;
+  color: var(--background-color);
+  border: 2px solid var(--background-color);
   cursor: pointer;
-  font-size: 0.9rem;
+  font-size: 1.1rem;
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
-  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23ffffff%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+  background-color: transparent;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2327296d' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
-  background-position: right 1rem top 50%;
-  background-size: 0.65rem auto;
+  background-position: right 0.75rem center;
+  background-size: 1em;
+  transition: all 0.15s ease-in;
+}
+
+.sort-select option {
+  background-color: var(--secondary-color);
+  color: var(--text-color);
+  padding: 10px;
+}
+
+.sort-select option:focus {
+  background-color: var(--background-color);
+  color: var(--text-color);
 }
 
 .sort-select:focus {
   outline: none;
-  box-shadow: 0 0 0 2px var(--primary-color);
+  border-color: var(--text-color);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+  color: var(--text-color);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+}
+
+.sort-select:hover {
+  border-color: var(--text-color);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+}
+
+.sort-select:focus:not(:hover) {
+  border-color: var(--background-color);
+  color: var(--background-color);
+  box-shadow: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2327296d' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
 }
 
 /* HAMBURGER MENU STYLES */
@@ -195,11 +262,11 @@ nav {
   border: none;
   cursor: pointer;
   padding: 0;
-  position: absolute; /* Add this */
-  right: 20px; /* Add this */
-  top: 50%; /* Add this */
-  transform: translateY(-50%); /* Add this */
-  z-index: 1001; /* Make sure it's above other elements */
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1001;
 }
 
 .hamburger span {
@@ -208,20 +275,10 @@ nav {
   background: var(--text-color);
   border-radius: 10px;
   transition: all 0.3s linear;
-  margin: 2px 0; /* Add spacing between lines */
+  margin: 2px 0;
 }
 
 /* SEARCH FORM */
-.search-form {
-  max-width: 500px;
-  margin: 1rem auto;
-  display: flex;
-  gap: 1rem;
-  padding: 0 1rem;
-  width: calc(100% - 2rem);
-  box-sizing: border-box;
-}
-
 .search-input {
   flex: 1;
   padding: 0.75rem 1rem;
@@ -230,8 +287,13 @@ nav {
   font-size: 1.1rem;
   background: none;
   color: var(--background-color);
-  transition: all 0.3s ease-in;
+  transition: all 0.15s ease-in;
   min-width: 0;
+}
+
+.search-input:hover {
+  border-color: var(--text-color);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
 }
 
 .search-input:focus {
@@ -243,7 +305,7 @@ nav {
 
 .search-input::placeholder {
   color: var(--background-color);
-  transition: color 0.3s ease-in;
+  transition: color 0.15s ease-in;
 }
 
 .search-input:focus::placeholder {
@@ -259,7 +321,7 @@ nav {
   color: var(--text-color);
   font-size: 1.1rem;
   cursor: pointer;
-  transition: all 0.2s ease-in;
+  transition: all 0.15s ease-in;
 }
 
 .search-button:hover {
@@ -293,7 +355,7 @@ nav {
   border-top: 3px solid white;
   border-radius: 50%;
   animation: spin 1s linear infinite;
-  display: none; /* Hidden by default */
+  display: none;
 }
 
 .spinner {
@@ -378,7 +440,7 @@ nav {
 
 /* Track Card */
 .track-card {
-  background: var(--secondary-color);
+  background: var(--background-color);
   border-radius: 8px;
   overflow: hidden;
   cursor: pointer;
@@ -454,6 +516,7 @@ nav {
   border-radius: 20px;
   cursor: pointer;
   transition: all 0.3s ease;
+  margin-bottom: 15px;
 }
 
 /* States */
@@ -472,7 +535,7 @@ nav {
 
 .track-card.playing .play-overlay {
   opacity: 1;
-  background: rgba(29, 185, 84, 0.4);
+  background: var(--secondary-color);
 }
 
 .track-card.playing .preview-button {
@@ -674,8 +737,7 @@ footer p {
   }
 }
 
-/* Responsive */
-
+/* Mobile Responsive */
 @media (max-width: 768px) {
   main {
     padding: var(--spacing-small);
@@ -704,10 +766,6 @@ footer p {
   }
 
   /* Hamburger animation */
-  .hamburger {
-    display: flex;
-  }
-
   .hamburger.active span:first-child {
     transform: rotate(45deg) translate(6px, 6px);
   }
@@ -744,8 +802,12 @@ footer p {
   }
 
   .search-form {
-    flex-direction: column; /* Stack on very small screens */
+    flex-direction: column;
     gap: 0.5rem;
+  }
+
+  .sort-select {
+    width: 100%;
   }
 
   .search-input,
