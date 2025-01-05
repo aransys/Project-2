@@ -216,7 +216,7 @@ nav {
   background-repeat: no-repeat;
   background-position: right 0.75rem center;
   background-size: 1em;
-  transition: all 0.15s ease-in;
+  transition: all 0.1s ease-in;
 }
 
 .sort-select option {
@@ -287,7 +287,7 @@ nav {
   font-size: 1.1rem;
   background: none;
   color: var(--background-color);
-  transition: all 0.15s ease-in;
+  transition: all 0.1s ease-in;
   min-width: 0;
 }
 
@@ -305,7 +305,7 @@ nav {
 
 .search-input::placeholder {
   color: var(--background-color);
-  transition: color 0.15s ease-in;
+  transition: color 0.1s ease-in;
 }
 
 .search-input:focus::placeholder {
@@ -321,7 +321,7 @@ nav {
   color: var(--text-color);
   font-size: 1.1rem;
   cursor: pointer;
-  transition: all 0.15s ease-in;
+  transition: all 0.1s ease-in;
 }
 
 .search-button:hover {
