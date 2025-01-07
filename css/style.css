@@ -953,7 +953,7 @@ footer p {
   }
 
   .track-card.playing .preview-button {
-    background-color: #e74c3c;
+    background-color: var(--secondary-color);
   }
 
   .track-card.playing .progress-container,
