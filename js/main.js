@@ -159,40 +159,37 @@ document.addEventListener("DOMContentLoaded", () => {
       const formattedDuration = formatTime(duration);
 
       trackCard.innerHTML = `
-            <div class="track-card-inner">
-                <!-- Image Section -->
-                <div class="track-image">
-                    <img src="${track.album?.cover_medium || track.album?.cover || ""}" 
-                         alt="${track.title} album art">
-                    <div class="play-overlay">
-                        <span class="play-icon">▶</span>
-                        <div class="loading-ring"></div>
-                    </div>
-                </div>
-                
-                <!-- Info Section -->
-                <div class="track-info">
-                    <h3 class="track-name">${track.title || "Unknown Title"}</h3>
-                    <p class="artist-name">${track.artist?.name || "Unknown Artist"}</p>
-                    <p class="album-name">${track.album?.title || "Unknown Album"}</p>
-                </div>
-                
-                <!-- Controls Section -->
-                <div class="track-controls">
-                    <div class="progress-container">
-                        <div class="time-info">
-                            <span class="current-time">0:00</span>
-                            <span class="duration">-${formattedDuration}</span>
-                        </div>
-                        <div class="progress-bar">
-                            <div class="progress"></div>
-                        </div>
-                    </div>
-                    <div class="track-actions">
-                        <button class="preview-button">Preview</button>
-                    </div>
-                </div>
-            </div>`;
+  <div class="track-card-inner">
+      <div class="track-image">
+          <img src="${track.album?.cover_medium || track.album?.cover || ""}" 
+               alt="${track.title} album art">
+          <div class="play-overlay">
+              <span class="play-icon">▶</span>
+              <div class="loading-ring"></div>
+          </div>
+      </div>
+      
+      <div class="track-info">
+          <h3 class="track-name">${track.title || "Unknown Title"}</h3>
+          <p class="artist-name">${track.artist?.name || "Unknown Artist"}</p>
+          <p class="album-name">${track.album?.title || "Unknown Album"}</p>
+          <div class="track-actions">
+              <button class="preview-button">Preview</button>
+          </div>
+      </div>
+      
+      <div class="track-controls">
+          <div class="progress-container">
+              <div class="time-info">
+                  <span class="current-time">0:00</span>
+                  <span class="duration">-${formattedDuration}</span>
+              </div>
+              <div class="progress-bar">
+                  <div class="progress"></div>
+              </div>
+          </div>
+      </div>
+  </div>`;
 
       resultsGrid.appendChild(trackCard);
     });
