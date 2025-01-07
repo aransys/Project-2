@@ -261,6 +261,26 @@ Technical Challenges Overcome:
 - Enhanced mobile view with proper control sizing
 - Implemented smooth transitions for player states
 
+### Day 13 (January 7, 2025)
+
+#### Track Card Animation and UI Improvements:
+
+- Removed choppy card pulse animation
+- Added smooth transitions for volume controls
+- Implemented subtle glow effects for playing state
+- Refined progress bar with shine animation
+- Relocated preview button for persistent visibility
+
+#### Technical Updates:
+
+- Optimized animation keyframes
+- Fixed preview button visibility issue
+- Adjusted sort container width
+- Enhanced track card transitions
+- Added CSS transforms for smoother animations
+- Created consistent interaction feedback
+- Improved mobile responsiveness
+
 ## Challenges & Solutions
 
 ### API Integration Journey
@@ -1549,6 +1569,74 @@ Technical Challenges Overcome:
       ```
 
     - **Learning**: Cross-browser styling for input elements requires vendor-specific selectors and careful consideration of touch interfaces
+
+    ### Track Card Animation and Performance
+
+11. Card Animation Enhancement
+
+- **Challenge**: Card pulsing animation causing choppy/laggy playback feedback
+- **Initial Issue**:
+  ```css
+  @keyframes cardPulse {
+    0%,
+    100% {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(29, 185, 84, 0.2);
+    }
+    50% {
+      transform: translateY(-7px);
+      box-shadow: 0 15px 30px rgba(29, 185, 84, 0.3);
+    }
+  }
+  ```
+- **Solution**: Replaced with smooth transitions and subtle glow effects
+
+  ```css
+  .track-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .track-card.playing {
+    box-shadow: 0 8px 24px rgba(94, 99, 182, 0.25);
+    border: 1px solid rgba(94, 99, 182, 0.3);
+  }
+  ```
+
+2. Volume Control Transitions
+
+- **Challenge**: Abrupt appearance of volume controls when track starts playing
+- **Solution**: Implemented smooth height and opacity transitions
+
+  ```css
+  .track-controls {
+    overflow: hidden;
+    transition: height 0.3s ease, opacity 0.3s ease;
+    height: 0;
+    opacity: 0;
+  }
+
+  .track-card.playing .track-controls {
+    height: auto;
+    opacity: 1;
+  }
+  ```
+
+3. Preview Button Visibility
+
+- **Challenge**: Preview button hidden until track card clicked
+- **Initial Issue**: Button nested inside hidden controls container
+- **Solution**: Relocated button outside of track-controls
+  ```javascript
+  <div class="track-info">
+      <h3 class="track-name">${track.title}</h3>
+      <div class="track-actions">
+          <button class="preview-button">Preview</button>
+      </div>
+  </div>
+  <div class="track-controls">
+      <!-- Progress and volume controls -->
+  </div>
+  ```
 
 Visual Improvements:
 
