@@ -15,7 +15,7 @@
 
 /* LIGHT THEME */
 [data-theme="light"] {
-  --primary-color: #1db954;
+  --primary-color: #ffffff;
   --secondary-color: #ffffff;
   --text-color: #191414;
   --background-color: #f5f5f5;
@@ -122,16 +122,54 @@ nav {
   transform: translateY(-50%);
   background: none;
   border: none;
-  font-size: 1.75rem;
   cursor: pointer;
   padding: 0.5rem;
   color: var(--text-color);
-  transition: transform 0.3s ease;
+  transition: all 0.3s ease;
   z-index: 10;
+  border-radius: 50%;
+  border: 2px solid var(--secondary-color);
+}
+
+@keyframes colorSwitchPulse {
+  0% {
+    box-shadow: 0 0 0 0 var(--primary-color), 0 0 0 0 var(--secondary-color);
+    transform: translateY(-50%);
+    color: var(--text-color);
+    border-color: var(--secondary-color);
+  }
+  30% {
+    box-shadow: 0 0 6px 2px var(--primary-color), 0 0 10px 4px var(--secondary-color);
+    transform: translateY(-50%) scale(1.05);
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+  }
+  100% {
+    box-shadow: 0 0 0 0 var(--primary-color), 0 0 0 0 var(--secondary-color);
+    transform: translateY(-50%);
+    color: var(--text-color);
+    border-color: var(--secondary-color);
+  }
 }
 
 .theme-toggle:hover {
-  transform: translateY(-50%) rotate(15deg);
+  animation: colorSwitchPulse 2s ease-out infinite;
+  border-color: var(--secondary-color);
+  box-shadow: 0 0 6px rgba(94, 99, 182, 0.8);
+}
+
+.theme-toggle svg {
+  width: 24px;
+  height: 24px;
+  transition: transform 0.5s ease;
+}
+
+.theme-toggle:hover svg {
+  transform: rotate(30deg);
+}
+
+.sun-moon-path {
+  transition: d 0.5s ease, opacity 0.5s ease;
 }
 
 @media (min-width: 769px) {
@@ -421,12 +459,18 @@ nav {
 
 /* Track Card */
 .track-card {
-  background: var(--background-color);
-  border-radius: 8px;
+  border-radius: 40px 40px 40px 40px;
   overflow: hidden;
   height: 100%;
   min-height: 400px;
   transition: transform 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 1;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1), 0 2px 2px rgba(0, 0, 0, 0.1), 0 4px 4px rgba(0, 0, 0, 0.1), 0 8px 8px rgba(0, 0, 0, 0.1), inset 0 -4px 8px rgba(0, 0, 0, 0.2);
+  background: linear-gradient(to bottom, var(--gradient-color-3), var(--gradient-color-4));
 }
 
 .track-card-inner {
@@ -441,6 +485,12 @@ nav {
   width: 100%;
   aspect-ratio: 1;
   background: var(--background-color);
+  border-radius: 40px 40px 0 0;
+  overflow: hidden;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.2), inset -2px 0 8px rgba(0, 0, 0, 0.2), inset 2px 0 8px rgba(0, 0, 0, 0.2);
 }
 
 .track-image img {
@@ -473,17 +523,17 @@ nav {
 .track-info {
   display: flex;
   flex-direction: column;
-  padding: 1rem;
+  padding: 1rem 1.5rem;
   flex: 1;
-  min-height: 0;
+  height: 140px;
 }
 
 .track-controls {
-  padding: 0 1rem 1rem 1rem;
   overflow: hidden;
-  transition: height 0.2s ease-in, opacity 0.2s ease-in;
+  transition: all 0.3s ease;
   height: 0;
   opacity: 0;
+  padding: 0 1rem;
 }
 
 .track-card.playing .track-controls {
@@ -509,6 +559,8 @@ nav {
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
+  flex: 0 0 68px;
+  padding-left: 0.5rem;
 }
 
 .artist-name,
@@ -521,11 +573,13 @@ nav {
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
+  flex: 0 0 46px;
+  padding-left: 0.5rem;
 }
 
 .track-actions {
   margin-top: auto;
-  padding-top: 1rem;
+  padding: 1rem;
   display: flex;
   justify-content: center;
 }
@@ -540,7 +594,11 @@ nav {
   transition: all 0.3s ease;
   width: 100%;
   max-width: 200px;
-  margin-top: 15px;
+  position: relative;
+}
+
+.preview-button:active {
+  transform: none;
 }
 
 .preview-button:hover {
@@ -590,11 +648,10 @@ nav {
 
 /* VOLUME CONTROL */
 .player-controls {
-  padding: 1rem;
   display: flex;
   flex-direction: column;
-  align-items: center;
   gap: 0.5rem;
+  padding-top: 1rem;
 }
 
 .time-container {
@@ -671,6 +728,12 @@ nav {
   padding: 0.5rem 1rem;
   border-radius: 20px;
   cursor: pointer;
+  width: 45px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
 }
 
 .current-time,
@@ -771,6 +834,29 @@ footer p {
 }
 
 /* Track card animations */
+@keyframes cardPulse {
+  0% {
+    box-shadow: 0 0 0 0 var(--primary-color), 0 0 0 0 var(--secondary-color);
+    transform: translateY(0);
+    border-color: transparent;
+  }
+  30% {
+    box-shadow: 0 0 15px 5px var(--primary-color), 0 0 25px 10px var(--secondary-color);
+    transform: translateY(-5px);
+    border-color: var(--primary-color);
+  }
+  100% {
+    box-shadow: 0 0 0 0 var(--primary-color), 0 0 0 0 var(--secondary-color);
+    transform: translateY(0);
+    border-color: transparent;
+  }
+}
+
+.track-card:hover {
+  transform: translateY(-5px);
+  animation: cardPulse 2s ease-out infinite;
+}
+
 .track-card {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }

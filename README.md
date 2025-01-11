@@ -299,6 +299,27 @@ Technical Challenges Overcome:
 - Added text clamping to prevent content from expanding irregularly
 - Ensured consistent margins and padding across all card elements
 
+### Day 15 (January 11, 2025)
+
+Theme Toggle and Track Card Visual Improvements:
+
+- Redesigned theme toggle button with animated double ring pulse effect
+- Added synchronized border effects to match navigation links design
+- Enhanced track cards with depth effects and gradient styling
+- Implemented consistent image container styling with inset shadows
+- Added smooth color transitions and hover effects
+
+Technical Challenges Overcome:
+
+- Resolved theme toggle animation timing for smooth transitions
+- Fixed border radius overflow issues in track card images
+- Implemented proper shadow layering for 3D depth effect
+- Optimized animation performance with proper timing functions
+- Ensured consistent border styling across different states
+- Fixed track image container border alignment with card borders
+- Added proper inset shadows for enhanced depth perception
+- Maintained responsive behavior while adding visual enhancements
+
 ## Challenges & Solutions
 
 ### API Integration Journey
@@ -1644,6 +1665,7 @@ Technical Challenges Overcome:
 - **Challenge**: Preview button hidden until track card clicked
 - **Initial Issue**: Button nested inside hidden controls container
 - **Solution**: Relocated button outside of track-controls
+
   ```javascript
   <div class="track-info">
       <h3 class="track-name">${track.title}</h3>
@@ -1655,6 +1677,117 @@ Technical Challenges Overcome:
       <!-- Progress and volume controls -->
   </div>
   ```
+
+  ### Theme Toggle and Track Card Styling Implementation
+
+## 1. Theme Toggle Animation
+
+### Challenge
+
+Creating smooth, engaging theme toggle animation
+
+### Initial Code
+
+```css
+.theme-toggle:hover {
+  transform: translateY(-50%) rotate(15deg);
+}
+```
+
+### Issues Faced
+
+- Basic rotation animation lacked visual interest
+- No transition between theme states
+- Missing hover feedback
+- No connection to overall design language
+
+### Solution
+
+Implemented pulsing animation with synchronized effects:
+
+```css
+@keyframes colorSwitchPulse {
+  0% {
+    box-shadow: 0 0 0 0 var(--primary-color), 0 0 0 0 var(--secondary-color);
+    transform: translateY(-50%);
+    border-color: transparent;
+  }
+  30% {
+    box-shadow: 0 0 15px 5px var(--primary-color), 0 0 25px 10px var(--secondary-color);
+    transform: translateY(-50%) scale(1.05);
+    border-color: var(--primary-color);
+  }
+  100% {
+    box-shadow: 0 0 0 0 var(--primary-color), 0 0 0 0 var(--secondary-color);
+    transform: translateY(-50%);
+    border-color: transparent;
+  }
+}
+```
+
+### Learning
+
+Using animation with proper timing functions creates more engaging user interactions
+
+## 2. Track Card Depth Enhancement
+
+### Challenge
+
+Adding visual depth to track cards
+
+### Initial Issues
+
+```css
+/* Original flat appearance */
+.track-card {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+```
+
+### Improved Solution
+
+```css
+.track-card {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5), 0 2px 4px rgba(0, 0, 0, 0.2), 0 4px 8px rgba(0, 0, 0, 0.2), 0 8px 16px rgba(0, 0, 0, 0.3);
+  background: linear-gradient(to bottom, rgba(39, 41, 109, 1), rgba(20, 21, 56, 0.95));
+}
+```
+
+### Learning
+
+Combining layered shadows with gradients creates more realistic depth perception
+
+## 3. Track Image Container Styling
+
+### Challenge
+
+Creating cohesive image container design
+
+### Initial Issues
+
+- Image container lacked proper border definition
+- Missing visual connection with card design
+- Inconsistent border radius with parent card
+- Flat appearance breaking depth effect
+
+### Solution
+
+```css
+.track-image {
+  border-radius: 40px 40px 0 0;
+  overflow: hidden;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.2), inset -2px 0 8px rgba(0, 0, 0, 0.2), inset 2px 0 8px rgba(0, 0, 0, 0.2);
+}
+```
+
+### Learning
+
+Consistent styling across components creates a more polished user interface
 
 Visual Improvements:
 
