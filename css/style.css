@@ -468,9 +468,8 @@ nav {
   flex-direction: column;
   position: relative;
   z-index: 1;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1), 0 2px 2px rgba(0, 0, 0, 0.1), 0 4px 4px rgba(0, 0, 0, 0.1), 0 8px 8px rgba(0, 0, 0, 0.1), inset 0 -4px 8px rgba(0, 0, 0, 0.2);
-  background: linear-gradient(to bottom, var(--gradient-color-3), var(--gradient-color-4));
+  border: 1px solid rgba(163, 147, 235, 0.1);
+  box-shadow: 0 0 0 1px rgba(94, 99, 182, 0.05), 0 1px 1px rgba(0, 0, 0, 0.1), 0 2px 2px rgba(0, 0, 0, 0.1), 0 4px 4px rgba(0, 0, 0, 0.1), 0 8px 8px rgba(0, 0, 0, 0.1), inset 0 0 15px rgba(163, 147, 235, 0.1);
 }
 
 .track-card-inner {
@@ -487,10 +486,8 @@ nav {
   background: var(--background-color);
   border-radius: 40px 40px 0 0;
   overflow: hidden;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  border-left: 1px solid rgba(255, 255, 255, 0.1);
-  border-right: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.2), inset -2px 0 8px rgba(0, 0, 0, 0.2), inset 2px 0 8px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(163, 147, 235, 0.1);
+  box-shadow: inset 0 0 15px rgba(163, 147, 235, 0.1);
 }
 
 .track-image img {
@@ -499,6 +496,16 @@ nav {
   object-fit: cover;
   position: relative;
   z-index: 1;
+}
+
+.track-card:hover .track-image {
+  border: 1px solid rgba(163, 147, 235, 0.3);
+  box-shadow: inset 0 0 20px rgba(163, 147, 235, 0.2);
+}
+
+.track-card.playing .track-image {
+  border: 1px solid rgba(163, 147, 235, 0.4);
+  box-shadow: inset 0 0 25px rgba(163, 147, 235, 0.2);
 }
 
 .play-overlay {
@@ -836,25 +843,24 @@ footer p {
 /* Track card animations */
 @keyframes cardPulse {
   0% {
-    box-shadow: 0 0 0 0 var(--primary-color), 0 0 0 0 var(--secondary-color);
-    transform: translateY(0);
-    border-color: transparent;
+    box-shadow: 0 0 0 1px rgba(94, 99, 182, 0.1), 0 8px 16px rgba(0, 0, 0, 0.1), inset 0 0 15px rgba(163, 147, 235, 0.1);
+    border-color: rgba(163, 147, 235, 0.1);
   }
   30% {
-    box-shadow: 0 0 15px 5px var(--primary-color), 0 0 25px 10px var(--secondary-color);
-    transform: translateY(-5px);
-    border-color: var(--primary-color);
+    box-shadow: 0 0 0 1px rgba(94, 99, 182, 0.3), 0 8px 16px rgba(94, 99, 182, 0.4), inset 0 0 30px rgba(163, 147, 235, 0.3);
+    border-color: rgba(163, 147, 235, 0.5);
   }
   100% {
-    box-shadow: 0 0 0 0 var(--primary-color), 0 0 0 0 var(--secondary-color);
-    transform: translateY(0);
-    border-color: transparent;
+    box-shadow: 0 0 0 1px rgba(94, 99, 182, 0.1), 0 8px 16px rgba(0, 0, 0, 0.1), inset 0 0 15px rgba(163, 147, 235, 0.1);
+    border-color: rgba(163, 147, 235, 0.1);
   }
 }
 
 .track-card:hover {
   transform: translateY(-5px);
   animation: cardPulse 2s ease-out infinite;
+  border: 1px solid rgba(163, 147, 235, 0.3);
+  box-shadow: 0 0 0 1px rgba(94, 99, 182, 0.1), 0 8px 16px rgba(0, 0, 0, 0.2), inset 0 0 20px rgba(163, 147, 235, 0.2);
 }
 
 .track-card {
@@ -867,8 +873,8 @@ footer p {
 }
 
 .track-card.playing {
-  box-shadow: 0 8px 24px rgba(94, 99, 182, 0.25);
-  border: 1px solid rgba(94, 99, 182, 0.3);
+  border: 1px solid rgba(163, 147, 235, 0.4);
+  box-shadow: 0 0 0 1px rgba(94, 99, 182, 0.2), 0 8px 24px rgba(94, 99, 182, 0.25), inset 0 0 25px rgba(163, 147, 235, 0.2);
 }
 
 .track-card.playing .progress {
