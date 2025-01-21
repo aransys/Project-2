@@ -468,6 +468,7 @@ nav {
   flex-direction: column;
   position: relative;
   z-index: 1;
+  background-color: rgba(39, 41, 109, 0.7);
   border: 1px solid rgba(163, 147, 235, 0.1);
   box-shadow: 0 0 0 1px rgba(94, 99, 182, 0.05), 0 1px 1px rgba(0, 0, 0, 0.1), 0 2px 2px rgba(0, 0, 0, 0.1), 0 4px 4px rgba(0, 0, 0, 0.1), 0 8px 8px rgba(0, 0, 0, 0.1), inset 0 0 15px rgba(163, 147, 235, 0.1);
 }
@@ -483,7 +484,7 @@ nav {
   position: relative;
   width: 100%;
   aspect-ratio: 1;
-  background: var(--background-color);
+  background: rgba(39, 41, 109, 1);
   border-radius: 40px 40px 0 0;
   overflow: hidden;
   border: 1px solid rgba(163, 147, 235, 0.1);
@@ -568,12 +569,13 @@ nav {
   -webkit-box-orient: vertical;
   flex: 0 0 68px;
   padding-left: 0.5rem;
+  color: #ffffff;
 }
 
 .artist-name,
 .album-name {
   margin: 0.2rem 0;
-  color: #888;
+  color: rgba(255, 255, 255, 0.7);
   font-size: 0.9rem;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -592,25 +594,30 @@ nav {
 }
 
 .preview-button {
-  background: var(--primary-color);
-  color: white;
-  border: none;
-  padding: 0.75rem 2rem;
+  border: 2px solid var(--background-color);
+  padding: 0.75rem 1.5rem;
+  flex-shrink: 0;
   border-radius: 25px;
+  background: var(--background-color);
+  color: var(--text-color);
+  font-size: 1.1rem;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.1s ease-in;
   width: 100%;
   max-width: 200px;
-  position: relative;
 }
 
 .preview-button:active {
-  transform: none;
+  transform: translateY(0);
 }
 
 .preview-button:hover {
+  color: var(--background-color);
+  outline: none;
+  border-color: var(--text-color);
+  background: var(--text-color);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
   transform: translateY(-1px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
 
 /* States */
@@ -631,9 +638,9 @@ nav {
   background: var(--secondary-color);
 }
 
-.track-card.playing .preview-button {
-  background-color: var(--secondary-color);
-}
+/* .track-card.playing .preview-button {
+  background-color: var(--background-color);
+} */
 
 .track-card.loading .play-icon {
   display: none;
@@ -696,7 +703,7 @@ nav {
   appearance: none;
   width: 12px;
   height: 12px;
-  background: var(--primary-color);
+  background: var(--text-color);
   border-radius: 50%;
   cursor: pointer;
   border: none;
@@ -707,7 +714,7 @@ nav {
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  background: var(--primary-color);
+  background: var(--text-color);
   cursor: pointer;
   border: none;
 }
@@ -723,15 +730,15 @@ nav {
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  background: var(--primary-color);
+  background: var(--text-color);
   cursor: pointer;
   border: none;
 }
 
 .mute-button {
-  background: var(--primary-color);
-  color: white;
-  border: none;
+  border: 2px solid var(--background-color);
+  background: var(--background-color);
+  color: var(--text-color);
   padding: 0.5rem 1rem;
   border-radius: 20px;
   cursor: pointer;
@@ -741,12 +748,13 @@ nav {
   align-items: center;
   justify-content: center;
   margin: 0 auto;
+  transition: all 0.1s ease-in;
 }
 
 .current-time,
 .duration {
   font-family: monospace;
-  color: #888;
+  color: rgba(255, 255, 255, 0.7);
   font-size: 0.9rem;
   display: inline-block;
 }
@@ -757,7 +765,16 @@ nav {
 }
 
 .mute-button:hover {
-  opacity: 0.8;
+  color: var(--primary-color);
+  outline: none;
+  border-color: var(--text-color);
+  background: var(--text-color);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+  transform: translateY(-1px);
+}
+
+.mute-button:active {
+  transform: translateY(0);
 }
 
 .volume-slider,
@@ -783,7 +800,7 @@ nav {
   left: 0;
   top: 0;
   height: 100%;
-  background: var(--primary-color);
+  background: var(--text-color);
   border-radius: 2px;
   width: 0;
 }
@@ -843,16 +860,16 @@ footer p {
 /* Track card animations */
 @keyframes cardPulse {
   0% {
-    box-shadow: 0 0 0 1px rgba(94, 99, 182, 0.1), 0 8px 16px rgba(0, 0, 0, 0.1), inset 0 0 15px rgba(163, 147, 235, 0.1);
-    border-color: rgba(163, 147, 235, 0.1);
+    box-shadow: 0 0 0 1px rgba(64, 69, 152, 0.2), 0 8px 16px rgba(0, 0, 0, 0.2), inset 0 0 15px rgba(133, 117, 205, 0.2);
+    border-color: rgba(133, 117, 205, 0.2);
   }
   30% {
-    box-shadow: 0 0 0 1px rgba(94, 99, 182, 0.3), 0 8px 16px rgba(94, 99, 182, 0.4), inset 0 0 30px rgba(163, 147, 235, 0.3);
-    border-color: rgba(163, 147, 235, 0.5);
+    box-shadow: 0 0 0 1px rgba(64, 69, 152, 0.4), 0 8px 16px rgba(64, 69, 152, 0.5), inset 0 0 30px rgba(133, 117, 205, 0.4);
+    border-color: rgba(133, 117, 205, 0.6);
   }
   100% {
-    box-shadow: 0 0 0 1px rgba(94, 99, 182, 0.1), 0 8px 16px rgba(0, 0, 0, 0.1), inset 0 0 15px rgba(163, 147, 235, 0.1);
-    border-color: rgba(163, 147, 235, 0.1);
+    box-shadow: 0 0 0 1px rgba(64, 69, 152, 0.2), 0 8px 16px rgba(0, 0, 0, 0.2), inset 0 0 15px rgba(133, 117, 205, 0.2);
+    border-color: rgba(133, 117, 205, 0.2);
   }
 }
 
@@ -906,6 +923,7 @@ footer p {
 .track-card.playing .preview-button {
   position: relative;
   overflow: hidden;
+  transition: all 0.3s ease;
 }
 
 .track-card.playing .preview-button::before {
@@ -915,16 +933,22 @@ footer p {
   left: -50%;
   width: 200%;
   height: 200%;
-  background: radial-gradient(circle at center, rgba(255, 255, 255, 0.1) 0%, transparent 60%);
+  background: radial-gradient(circle at center, rgba(133, 117, 205, 0.6) 0%, transparent 70%);
   animation: rotateGlow 3s linear infinite;
 }
 
 @keyframes rotateGlow {
-  from {
-    transform: rotate(0deg);
+  0% {
+    transform: rotate(0deg) scale(1);
+    opacity: 0.8;
   }
-  to {
-    transform: rotate(360deg);
+  50% {
+    transform: rotate(180deg) scale(1.1);
+    opacity: 0.6;
+  }
+  100% {
+    transform: rotate(360deg) scale(1);
+    opacity: 0.8;
   }
 }
 
