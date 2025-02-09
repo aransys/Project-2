@@ -36,7 +36,20 @@ body {
   position: relative;
   font-family: "Outfit", "Arial", sans-serif;
   line-height: 1.6;
-  background: radial-gradient(circle, rgba(163, 147, 235, 1) 0%, rgba(94, 99, 182, 1) 26%, rgba(39, 41, 109, 1) 76%, rgba(20, 21, 56, 1) 100%);
+  background: 
+    radial-gradient(circle,
+      rgba(163, 147, 235, 1) 0%,
+      rgba(94, 99, 182, 1) 26%,
+      rgba(39, 41, 109, 1) 76%,
+      rgba(20, 21, 56, 1) 100%
+    ),
+    repeating-linear-gradient(
+      45deg,
+      transparent 0,
+      transparent 10px,
+      rgba(163, 147, 235, 0.1) 10px,
+      rgba(163, 147, 235, 0.1) 20px
+    );
   background-attachment: fixed;
   color: var(--text-color);
   min-height: 100vh;
