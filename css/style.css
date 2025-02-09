@@ -13,15 +13,6 @@
   --spacing-large: 2rem;
 }
 
-/* LIGHT THEME */
-[data-theme="light"] {
-  --primary-color: #ffffff;
-  --secondary-color: #ffffff;
-  --text-color: #191414;
-  --background-color: #f5f5f5;
-  --error-color: #e74c3c;
-}
-
 /* Base Styles */
 * {
   box-sizing: border-box;
@@ -36,6 +27,14 @@ body {
   position: relative;
   font-family: "Outfit", "Arial", sans-serif;
   line-height: 1.6;
+  color: var(--text-color);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Default dark theme */
+body {
   background: 
     radial-gradient(circle,
       rgba(163, 147, 235, 1) 0%,
@@ -51,10 +50,33 @@ body {
       rgba(163, 147, 235, 0.1) 20px
     );
   background-attachment: fixed;
-  color: var(--text-color);
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
+}
+
+/* LIGHT THEME */
+[data-theme="light"] body {
+  background: 
+    radial-gradient(circle,
+      rgba(255, 255, 255, 1) 0%,
+      rgba(240, 240, 255, 1) 26%,
+      rgba(230, 230, 250, 1) 76%,
+      rgba(220, 220, 245, 1) 100%
+    ),
+    repeating-linear-gradient(
+      45deg,
+      transparent 0,
+      transparent 10px,
+      rgba(163, 147, 235, 0.05) 10px,
+      rgba(163, 147, 235, 0.05) 20px
+    );
+  background-attachment: fixed;
+}
+
+[data-theme="light"] {
+  --primary-color: #5e63b6;
+  --secondary-color: #a393eb;
+  --text-color: #27296d;
+  --background-color: #f8f8ff;
+  --error-color: #e74c3c;
 }
 
 /* Layout */
