@@ -1,4 +1,24 @@
 document.addEventListener("DOMContentLoaded", () => {
+  // Add search link functionality
+  document.querySelector('a[href="#search"]').addEventListener('click', (e) => {
+    e.preventDefault();
+    
+    // Find the search input
+    const searchInput = document.getElementById('search-input');
+    
+    // Scroll to the search input smoothly
+    searchInput.scrollIntoView({ behavior: 'smooth' });
+    
+    // Focus the input after scrolling
+    setTimeout(() => {
+      searchInput.focus();
+    }, 500);
+    
+    // Close mobile menu if open
+    hamburger.classList.remove("active");
+    navLinks.classList.remove("active");
+  });
+
   // Theme toggle functionality
   const themeToggle = document.querySelector(".theme-toggle");
   let isDarkTheme = true;
