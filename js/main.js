@@ -1,19 +1,14 @@
 document.addEventListener("DOMContentLoaded", () => {
   // Add search link functionality
-  document.querySelector('a[href="#search"]').addEventListener('click', (e) => {
+  document.querySelector('a[href="#search"]').addEventListener("click", (e) => {
     e.preventDefault();
-    
+
     // Find the search input
-    const searchInput = document.getElementById('search-input');
-    
-    // Scroll to the search input smoothly
-    searchInput.scrollIntoView({ behavior: 'smooth' });
-    
-    // Focus the input after scrolling
-    setTimeout(() => {
-      searchInput.focus();
-    }, 500);
-    
+    const searchInput = document.getElementById("search-input");
+
+    // Just focus the input without scrolling
+    searchInput.focus();
+
     // Close mobile menu if open
     hamburger.classList.remove("active");
     navLinks.classList.remove("active");
@@ -40,7 +35,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   themeToggle.addEventListener("click", () => {
     isDarkTheme = !isDarkTheme;
-    if (!isDarkTheme) { // If switching to light mode
+    if (!isDarkTheme) {
+      // If switching to light mode
       document.documentElement.setAttribute("data-theme", "light");
       // Show moon icon
       themeToggle.innerHTML = `
@@ -48,7 +44,8 @@ document.addEventListener("DOMContentLoaded", () => {
           <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
         </svg>
       `;
-    } else { // If switching to dark mode
+    } else {
+      // If switching to dark mode
       document.documentElement.removeAttribute("data-theme");
       // Show sun icon
       themeToggle.innerHTML = `
@@ -278,7 +275,8 @@ document.addEventListener("DOMContentLoaded", () => {
           if (oldPlayIcon) oldPlayIcon.textContent = "▶";
 
           // Remove volume controls from previous card
-          const oldVolumeControl = currentlyPlaying.card.querySelector(".player-controls");
+          const oldVolumeControl =
+            currentlyPlaying.card.querySelector(".player-controls");
           if (oldVolumeControl) oldVolumeControl.remove();
 
           if (currentlyPlaying.card === card) {
