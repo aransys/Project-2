@@ -433,7 +433,7 @@ nav {
 }
 
 .search-button:hover {
-  color: var(--primary-color);
+  color: var(--background-color);
   outline: none;
   border-color: var(--text-color);
   background: var(--text-color);
@@ -934,39 +934,221 @@ nav {
   margin-top: 1.5rem;
 }
 
+/* GET STARTED SECTION */
+#get-started {
+  max-width: 800px;
+  margin: 2rem auto;
+  border-radius: 40px;
+  overflow: hidden;
+  padding: 2rem;
+  transition: transform 0.3s ease;
+  position: relative;
+  z-index: 1;
+  background-color: rgba(39, 41, 109, 0.7);
+  border: 1px solid rgba(163, 147, 235, 0.1);
+  box-shadow: 0 0 0 1px rgba(94, 99, 182, 0.05), 0 1px 1px rgba(0, 0, 0, 0.1), 0 2px 2px rgba(0, 0, 0, 0.1), 0 4px 4px rgba(0, 0, 0, 0.1), 0 8px 8px rgba(0, 0, 0, 0.1), inset 0 0 15px rgba(163, 147, 235, 0.1);
+}
+
+#get-started:hover {
+  animation: cardPulse 2s ease-out infinite;
+  border: 1px solid rgba(163, 147, 235, 0.3);
+  box-shadow: 0 0 0 1px rgba(94, 99, 182, 0.1), 0 8px 16px rgba(0, 0, 0, 0.2), inset 0 0 20px rgba(163, 147, 235, 0.2);
+}
+
+/* Light theme adjustments */
+[data-theme="light"] #get-started {
+  background-color: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(94, 99, 182, 0.1);
+}
+
+[data-theme="light"] #get-started:hover {
+  border: 1px solid rgba(94, 99, 182, 0.3);
+  box-shadow: 0 0 0 1px rgba(94, 99, 182, 0.1), 0 8px 16px rgba(94, 99, 182, 0.1), inset 0 0 20px rgba(94, 99, 182, 0.1);
+}
+
+/* Get Started content styling */
+#get-started h2 {
+  color: var(--text-color);
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+#get-started .guide-content h3 {
+  color: var(--text-color);
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+#get-started .guide-content p {
+  color: var(--text-color);
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+/* ABOUT SECTION */
+#about {
+  max-width: 800px;
+  margin: 2rem auto;
+  border-radius: 40px;
+  overflow: hidden;
+  padding: 2rem;
+  transition: transform 0.3s ease;
+  position: relative;
+  z-index: 1;
+  background-color: rgba(39, 41, 109, 0.7);
+  border: 1px solid rgba(163, 147, 235, 0.1);
+  box-shadow: 0 0 0 1px rgba(94, 99, 182, 0.05), 0 1px 1px rgba(0, 0, 0, 0.1), 0 2px 2px rgba(0, 0, 0, 0.1), 0 4px 4px rgba(0, 0, 0, 0.1), 0 8px 8px rgba(0, 0, 0, 0.1), inset 0 0 15px rgba(163, 147, 235, 0.1);
+}
+
+#about:hover {
+  animation: cardPulse 2s ease-out infinite;
+  border: 1px solid rgba(163, 147, 235, 0.3);
+  box-shadow: 0 0 0 1px rgba(94, 99, 182, 0.1), 0 8px 16px rgba(0, 0, 0, 0.2), inset 0 0 20px rgba(163, 147, 235, 0.2);
+}
+
+/* Light theme adjustments */
+[data-theme="light"] #about {
+  background-color: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(94, 99, 182, 0.1);
+}
+
+[data-theme="light"] #about:hover {
+  border: 1px solid rgba(94, 99, 182, 0.3);
+  box-shadow: 0 0 0 1px rgba(94, 99, 182, 0.1), 0 8px 16px rgba(94, 99, 182, 0.1), inset 0 0 20px rgba(94, 99, 182, 0.1);
+}
+
+/* About section headings */
+#about h2 {
+  color: var(--text-color);
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+#about p {
+  color: var(--text-color);
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+/* CONTACT FORM */
 .contact-form {
-  margin-top: 2rem;
+  margin-top: 3rem;
+}
+
+.contact-form h3 {
+  color: var(--text-color);
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
 }
 
 .contact-form input,
 .contact-form textarea {
   width: 100%;
-  padding: 0.75rem;
-  margin: 0.5rem 0;
+  padding: 0.75rem 1rem;
   border: 2px solid var(--secondary-color);
-  border-radius: 10px;
-  background: transparent;
+  border-radius: 25px;
+  font-size: 1.1rem;
+  background: none;
   color: var(--text-color);
+  transition: all 0.1s ease-in;
+  margin-bottom: 1rem;
 }
 
-.contact-form textarea {
-  min-height: 150px;
+.contact-form textarea[placeholder="Your message"] {
+  min-height: 100px;
+  height: 100px;
   resize: vertical;
 }
 
-.contact-form button {
-  background: var(--secondary-color);
+.contact-form input::placeholder,
+.contact-form textarea::placeholder {
+  color: var(--secondary-color);
+  transition: color 0.1s ease-in;
+}
+
+.contact-form input:hover,
+.contact-form textarea:hover {
+  border-color: var(--text-color);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+  outline: none;
+  border-color: var(--text-color);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
   color: var(--text-color);
+}
+
+.contact-form input:focus::placeholder,
+.contact-form textarea:focus::placeholder {
+  color: var(--text-color);
+}
+
+/* Light theme adjustments */
+[data-theme="light"] .contact-form input,
+[data-theme="light"] .contact-form textarea {
+  border-color: var(--secondary-color);
+  color: var(--secondary-color);
+}
+
+[data-theme="light"] .contact-form input::placeholder,
+[data-theme="light"] .contact-form textarea::placeholder {
+  color: var(--secondary-color);
+}
+
+[data-theme="light"] .contact-form input:hover,
+[data-theme="light"] .contact-form textarea:hover,
+[data-theme="light"] .contact-form input:focus,
+[data-theme="light"] .contact-form textarea:focus {
+  border-color: var(--secondary-color);
+  box-shadow: 0 0 10px rgba(94, 99, 182, 0.8);
+  color: var(--text-color);
+}
+
+/* Submit button */
+.contact-form button {
+  border: 2px solid var(--secondary-color);
   padding: 0.75rem 1.5rem;
-  border: none;
+  flex-shrink: 0;
   border-radius: 25px;
+  background: var(--background-color);
+  color: var(--text-color);
+  font-size: 1.1rem;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.1s ease-in;
+  width: 25%;
+  margin: 0 auto;
+  margin-top: 1rem;
+  display: block;
 }
 
 .contact-form button:hover {
-  background: var(--primary-color);
-  transform: translateY(-2px);
+  color: var(--background-color);
+  outline: none;
+  border-color: var(--text-color);
+  background: var(--text-color);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+  transform: none;
+}
+
+[data-theme="light"] .contact-form button {
+  border-color: var(--secondary-color);
+  background: var(--secondary-color);
+  color: var(--text-color);
+}
+
+[data-theme="light"] .contact-form button:hover {
+  border-color: var(--text-color);
+  background: var(--text-color);
+  color: var(--primary-color);
+  box-shadow: 0 0 10px rgba(94, 99, 182, 0.8);
 }
 
 /* FOOTER */
