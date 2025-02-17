@@ -153,9 +153,33 @@ document.addEventListener("DOMContentLoaded", () => {
     navLinks.classList.toggle("active");
   });
 
-  // Close menu when clicking a link
+  // Handle navigation and menu closing
   document.querySelectorAll(".nav-links a").forEach((link) => {
-    link.addEventListener("click", () => {
+    link.addEventListener("click", (e) => {
+      e.preventDefault();
+
+      // Hide all sections first
+      document.querySelectorAll("section").forEach((section) => {
+        section.classList.add("hidden");
+      });
+
+      // Show the clicked section
+      const sectionId = e.target.getAttribute("href").substring(1);
+      const targetSection = document.getElementById(sectionId);
+
+      if (sectionId === "search") {
+        // For search link, show the results section
+        document.getElementById("results-section").classList.remove("hidden");
+        // Focus the search input
+        document.getElementById("search-input").focus();
+      } else {
+        // For other links, show their respective sections
+        if (targetSection) {
+          targetSection.classList.remove("hidden");
+        }
+      }
+
+      // Close mobile menu
       hamburger.classList.remove("active");
       navLinks.classList.remove("active");
     });
@@ -275,8 +299,7 @@ document.addEventListener("DOMContentLoaded", () => {
           if (oldPlayIcon) oldPlayIcon.textContent = "▶";
 
           // Remove volume controls from previous card
-          const oldVolumeControl =
-            currentlyPlaying.card.querySelector(".player-controls");
+          const oldVolumeControl = currentlyPlaying.card.querySelector(".player-controls");
           if (oldVolumeControl) oldVolumeControl.remove();
 
           if (currentlyPlaying.card === card) {
