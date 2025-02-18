@@ -1,19 +1,4 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // Add search link functionality
-  document.querySelector('a[href="#search"]').addEventListener("click", (e) => {
-    e.preventDefault();
-
-    // Find the search input
-    const searchInput = document.getElementById("search-input");
-
-    // Just focus the input without scrolling
-    searchInput.focus();
-
-    // Close mobile menu if open
-    hamburger.classList.remove("active");
-    navLinks.classList.remove("active");
-  });
-
   // Theme toggle functionality
   const themeToggle = document.querySelector(".theme-toggle");
   let isDarkTheme = true;
@@ -153,7 +138,7 @@ document.addEventListener("DOMContentLoaded", () => {
     navLinks.classList.toggle("active");
   });
 
-  // Handle navigation and menu closing
+  // Handle all navigation links including search
   document.querySelectorAll(".nav-links a").forEach((link) => {
     link.addEventListener("click", (e) => {
       e.preventDefault();
@@ -163,7 +148,7 @@ document.addEventListener("DOMContentLoaded", () => {
         section.classList.add("hidden");
       });
 
-      // Show the clicked section
+      // Get the target section id from the href
       const sectionId = e.target.getAttribute("href").substring(1);
       const targetSection = document.getElementById(sectionId);
 
@@ -172,11 +157,10 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("results-section").classList.remove("hidden");
         // Focus the search input
         document.getElementById("search-input").focus();
-      } else {
-        // For other links, show their respective sections
-        if (targetSection) {
-          targetSection.classList.remove("hidden");
-        }
+      } else if (targetSection) {
+        // For other links, show their section and scroll to it
+        targetSection.classList.remove("hidden");
+        targetSection.scrollIntoView({ behavior: "smooth" });
       }
 
       // Close mobile menu
