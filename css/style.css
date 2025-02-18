@@ -281,6 +281,10 @@ nav {
   .theme-toggle {
     right: 60px;
   }
+
+  .contact-form button {
+    font-size: 0.9rem;
+  }
 }
 
 /* Search and Sort Container Styles */
@@ -1122,7 +1126,7 @@ nav {
   font-size: 1.1rem;
   cursor: pointer;
   transition: all 0.1s ease-in;
-  width: 25%;
+  width: 30%;
   margin: 0 auto;
   margin-top: 1rem;
   display: block;
