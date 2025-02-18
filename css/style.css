@@ -83,30 +83,18 @@ body {
   transition: all 0.2s ease;
 }
 
-/* [data-theme="light"] .search-button {
-  border: 2px solid var(--background-color);
-  padding: 0.75rem 1.5rem;
-  flex-shrink: 0;
-  border-radius: 25px;
-  background: var(--background-color);
-  color: var(--text-color);
-  font-size: 1.1rem;
-  cursor: pointer;
-  transition: all 0.1s ease-in;
+[data-theme="light"] .search-button {
+  border: 2px solid var(--secondary-color);
+  background: var(--secondary-color);
+  color: var(--background-color);
 }
 
 [data-theme="light"] .search-button:hover {
-  color: var(--primary-color);
-  outline: none;
+  color: var(--background-color);
   border-color: var(--text-color);
   background: var(--text-color);
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
-  transform: none;
+  box-shadow: 0 0 10px rgba(94, 99, 182, 0.8);
 }
-
-[data-theme="light"] .search-button:active {
-  transform: none;
-} */
 
 [data-theme="light"] .sort-select {
   border-color: var(--secondary-color);
@@ -122,6 +110,24 @@ body {
   color: var(--text-color);
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23a393eb' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
   outline: none;
+}
+
+[data-theme="light"] .contact-form input:focus::placeholder,
+[data-theme="light"] .contact-form textarea:focus::placeholder {
+  color: var(--text-color);
+}
+
+[data-theme="light"] .contact-form button {
+  border: 2px solid var(--secondary-color);
+  background: var(--secondary-color);
+  color: var(--background-color) !important;
+}
+
+[data-theme="light"] .contact-form button:hover {
+  border-color: var(--text-color);
+  background: var(--text-color);
+  color: var(--background-color) !important;
+  box-shadow: 0 0 10px rgba(94, 99, 182, 0.8);
 }
 
 [data-theme="light"] footer p {
@@ -920,13 +926,6 @@ nav {
 
 .info-section.hidden {
   display: none;
-}
-
-.content-wrapper {
-  background-color: var(--background-color);
-  border-radius: 20px;
-  padding: 2rem;
-  box-shadow: 0 0 10px rgba(94, 99, 182, 0.2);
 }
 
 .guide-content,
