@@ -440,7 +440,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Get vertical scroll position
     const scrollPosition = window.scrollY || document.documentElement.scrollTop;
 
-    if (scrollPosition > 300) {
+    if (scrollPosition > 100) {
       backToTop.classList.add("visible");
     } else {
       backToTop.classList.remove("visible");
