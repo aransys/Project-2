@@ -35,7 +35,8 @@ body {
 
 /* Default dark theme */
 body {
-  background: radial-gradient(circle, rgba(163, 147, 235, 1) 0%, rgba(94, 99, 182, 1) 26%, rgba(39, 41, 109, 1) 76%, rgba(20, 21, 56, 1) 100%), repeating-linear-gradient(45deg, transparent 0, transparent 10px, rgba(163, 147, 235, 0.1) 10px, rgba(163, 147, 235, 0.1) 20px);
+  background: radial-gradient(circle at center, var(--gradient-color-1) 0%, var(--gradient-color-2) 30%, var(--gradient-color-3) 70%, var(--gradient-color-4) 100%), radial-gradient(circle at 50% 50%, rgba(163, 147, 235, 0.1) 1px, transparent 1px);
+  background-size: 100% 100%, 20px 20px;
   background-attachment: fixed;
 }
 
