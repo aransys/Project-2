@@ -290,6 +290,8 @@ nav {
 
   .contact-form button {
     font-size: 0.9rem;
+    width: 40%;
+    padding: 0.75rem 1rem;
   }
 }
 
@@ -1186,7 +1188,11 @@ nav {
   width: 25%;
   margin: 0 auto;
   margin-top: 1rem;
-  display: block;
+  /* Updated properties for better centering */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }
 
 .contact-form button:hover {
@@ -1367,6 +1373,10 @@ footer p {
   .search-button {
     width: 100%;
     box-sizing: border-box;
+  }
+
+  .contact-form button {
+    width: 60%;
   }
 }
 
