@@ -143,24 +143,36 @@ document.addEventListener("DOMContentLoaded", () => {
     link.addEventListener("click", (e) => {
       e.preventDefault();
 
-      // Hide all sections first
-      document.querySelectorAll("section").forEach((section) => {
-        section.classList.add("hidden");
-      });
-
       // Get the target section id from the href
       const sectionId = e.target.getAttribute("href").substring(1);
       const targetSection = document.getElementById(sectionId);
 
+      // Hide all sections
+      document.querySelectorAll("section").forEach((section) => {
+        section.classList.add("hidden");
+      });
+
       if (sectionId === "search") {
         // For search link, show the results section
-        document.getElementById("results-section").classList.remove("hidden");
-        // Focus the search input
+        const resultsSection = document.getElementById("results-section");
+        resultsSection.classList.remove("hidden");
         document.getElementById("search-input").focus();
       } else if (targetSection) {
-        // For other links, show their section and scroll to it
+        // First make it visible but with entering state
         targetSection.classList.remove("hidden");
-        targetSection.scrollIntoView({ behavior: "smooth" });
+        targetSection.classList.add("entering");
+
+        // Force reflow
+        void targetSection.offsetHeight;
+
+        // Remove entering class to trigger animation
+        targetSection.classList.remove("entering");
+
+        // Scroll to section
+        targetSection.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
       }
 
       // Close mobile menu
