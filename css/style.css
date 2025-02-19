@@ -3,10 +3,10 @@
   --secondary-color: #5e63b6;
   --text-color: #ffffff;
   --background-color: #27296d;
-  --gradient-color-1: rgba(163, 147, 235, 1);
-  --gradient-color-2: rgba(94, 99, 182, 1);
-  --gradient-color-3: rgba(39, 41, 109, 1);
-  --gradient-color-4: rgba(20, 21, 56, 1);
+  --gradient-color-1: rgba(183, 167, 255, 1);
+  --gradient-color-2: rgba(114, 119, 202, 1);
+  --gradient-color-3: rgba(59, 61, 129, 1);
+  --gradient-color-4: rgba(40, 41, 76, 1);
   --error-color: #e74c3c;
   --spacing-small: 0.5rem;
   --spacing-medium: 1rem;
@@ -35,8 +35,7 @@ body {
 
 /* Default dark theme */
 body {
-  background: radial-gradient(circle at center, var(--gradient-color-1) 0%, var(--gradient-color-2) 30%, var(--gradient-color-3) 70%, var(--gradient-color-4) 100%), radial-gradient(circle at 50% 50%, rgba(163, 147, 235, 0.1) 1px, transparent 1px);
-  background-size: 100% 100%, 20px 20px;
+  background: radial-gradient(circle, var(--gradient-color-1) 0%, var(--gradient-color-2) 30%, var(--gradient-color-3) 70%, var(--gradient-color-4) 100%), repeating-linear-gradient(45deg, transparent 0, transparent 10px, rgba(183, 167, 255, 0.08) 10px, rgba(183, 167, 255, 0.08) 20px);
   background-attachment: fixed;
 }
 
@@ -194,8 +193,9 @@ nav {
 }
 
 .nav-links a:hover {
-  border-color: var(--secondary-color);
-  box-shadow: 0 0 10px rgba(94, 99, 182, 0.8);
+  border-color: var(--primary-color);
+  box-shadow: 0 0 6px 2px var(--primary-color), 0 0 10px 4px var(--secondary-color);
+  color: var(--text-color);
 }
 
 .logo {
@@ -946,7 +946,6 @@ nav {
 }
 
 /* BACK TO TOP BUTTON */
-/* BACK TO TOP BUTTON */
 .back-to-top {
   position: fixed;
   bottom: 20px;
@@ -956,7 +955,7 @@ nav {
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  border: 2px solid var(--secondary-color);
+  border: none;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -981,15 +980,12 @@ nav {
 @keyframes backToTopPulse {
   0% {
     box-shadow: 0 0 0 0 var(--primary-color), 0 0 0 0 var(--secondary-color);
-    border-color: var(--secondary-color);
   }
   30% {
     box-shadow: 0 0 6px 2px var(--primary-color), 0 0 10px 4px var(--secondary-color);
-    border-color: var(--primary-color);
   }
   100% {
     box-shadow: 0 0 0 0 var(--primary-color), 0 0 0 0 var(--secondary-color);
-    border-color: var(--secondary-color);
   }
 }
 
