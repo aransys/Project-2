@@ -221,7 +221,35 @@ document.addEventListener("DOMContentLoaded", () => {
       const formattedDuration = formatTime(duration);
 
       // Create track card HTML
-      trackCard.innerHTML = `[Track card HTML structure]`;
+      trackCard.innerHTML = `
+  <div class="track-card-inner">
+    <div class="track-image">
+      <img src="${track.album.cover_medium || "https://via.placeholder.com/250"}" alt="${track.title}">
+      <div class="play-overlay">
+        <div class="play-icon">▶</div>
+      </div>
+    </div>
+    <div class="track-info">
+      <h3 class="track-name">${track.title}</h3>
+      <p class="artist-name">${track.artist.name}</p>
+      <p class="album-name">${track.album.title}</p>
+    </div>
+    <div class="track-controls">
+      <div class="progress-container">
+        <div class="time-info">
+          <span class="current-time">0:00</span>
+          <span class="duration">-${formattedDuration}</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress"></div>
+        </div>
+      </div>
+    </div>
+    <div class="track-actions">
+      <button class="preview-button">Preview</button>
+    </div>
+  </div>
+`;
 
       resultsGrid.appendChild(trackCard);
     });
