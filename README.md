@@ -40,6 +40,128 @@ Music Explorer serves as a comprehensive digital platform designed to connect mu
 - Implement visually consistent design language across all features
 - Enhance user engagement through thoughtful visual design
 
+## 🎨 UX Section
+
+### User Goals
+
+The primary goals for users of the Music Explorer website include:
+
+1. **Effortless Music Searching**
+
+   - Quick access to a search interface for finding favorite songs
+   - Immediate display of relevant search results
+   - Clear visual representation of track information
+
+2. **Seamless Audio Playback**
+
+   - One-click access to song previews
+   - Intuitive audio controls for playback management
+   - Real-time progress tracking during playback
+
+3. **Organized Content Exploration**
+
+   - Ability to sort search results by different criteria
+   - Clear visual distinction between tracks currently playing and others
+   - Responsive grid layout that adapts to different device screens
+
+4. **Visual Preference Customization**
+
+   - Option to switch between dark and light themes
+   - Consistent visual experience regardless of chosen theme
+   - Smooth transition when switching between themes
+
+5. **Intuitive Navigation**
+   - Clear, accessible navigation controls
+   - Logical content organization
+   - Back-to-top functionality for longer result sets
+
+### Developer Goals
+
+As a developer, the objectives for the website were:
+
+1. **Clean Code Architecture**
+
+   - Modular JavaScript structure with clear separation of concerns
+   - Consistent naming conventions and code organization
+   - Well-documented functions and code blocks
+   - Efficient state management without external libraries
+
+2. **Responsive Design Implementation**
+
+   - Mobile-first approach to ensure compatibility across devices
+   - Fluid layouts using CSS Grid and Flexbox
+   - Strategic use of media queries for breakpoint management
+   - Touch-friendly interface elements for mobile users
+
+3. **Performance Optimization**
+
+   - Efficient DOM manipulation to prevent layout thrashing
+   - Optimized event handling with proper event delegation
+   - Resource management for audio elements
+   - Smooth animations with GPU acceleration where appropriate
+
+4. **API Integration**
+
+   - Clean implementation of Deezer API via RapidAPI
+   - Robust error handling for API requests
+   - Efficient data processing and display
+   - User-friendly loading and error states
+
+5. **User Experience Enhancement**
+   - Meaningful animations and transitions
+   - Immediate visual feedback for user actions
+   - Intuitive control interfaces with proper affordances
+   - Consistent design language throughout the application
+
+### Design Choices
+
+#### Fonts
+
+- **Google Fonts - Outfit**: Selected for its clean, modern, and highly legible qualities across different weights. The font works well for both headings and body text, providing a consistent typographic experience.
+- **Font Hierarchy**:
+  - Headings: 4rem (welcome heading) to 1.2rem (track names)
+  - Body text: 1.1rem
+  - Secondary text: 0.9rem (artist names, duration)
+- **Reasoning**: The Outfit font family provides excellent readability while maintaining a contemporary aesthetic that aligns with the music discovery theme.
+
+#### Icons
+
+- **Font Awesome Icons**: Implemented for interactive elements and status indicators, providing consistent and recognizable visual cues.
+- **Custom SVG Icons**: Used for the theme toggle and back-to-top buttons, allowing for theme-specific styling and animation.
+- **Reasoning**: Icons enhance the user interface by providing intuitive visual cues for interactive elements, improving usability without cluttering the design.
+
+#### Colors
+
+- **Dark Theme (Default)**:
+
+  - Primary Palette:
+    - Purple/Blue Gradient: (#a393eb to #27296d) - Creates an immersive, music-themed environment
+    - White Text (#ffffff) - Ensures readability against the dark background
+    - Secondary Accent (#5e63b6) - Provides visual hierarchy for interactive elements
+  - Background: Radial gradient with subtle pattern overlay for depth
+
+- **Light Theme**:
+
+  - Light Background: Soft white to lavender gradient for a clean, airy feel
+  - Dark Text (#27296d) - Maintains readability while connecting to the brand color scheme
+  - Secondary Accent (#5e63b6) - Preserves brand identity across themes
+
+- **Reasoning**: The color scheme was chosen to create an immersive, music-focused environment while ensuring accessibility. The purple-blue palette evokes creativity and musical exploration while providing sufficient contrast for text readability.
+
+#### Styling
+
+- **Card Design**: Rounded corners with subtle shadows to create a modern, floating effect
+- **Button Styles**: Pill-shaped with hover animations for clear interactive feedback
+- **Animations**: Subtle transitions and feedback animations to enhance user experience
+- **Reasoning**: These styling choices create visual hierarchy, guide user attention, and provide immediate feedback for interactions.
+
+#### Backgrounds
+
+- **Gradient Backgrounds**: Dynamic radial gradients that create depth and visual interest
+- **Pattern Overlay**: Subtle diagonal pattern adds texture without distracting from content
+- **Card Backgrounds**: Semi-transparent backgrounds that integrate with the overall design while maintaining readability
+- **Reasoning**: The layered background approach creates a visually engaging environment that remains subtle enough not to compete with the primary content.
+
 ## Current Features
 
 - ✅ Interactive search functionality
