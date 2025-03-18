@@ -336,6 +336,16 @@ Music Explorer/
 | Loading States  | Loading indicator behavior    | 1. Submit search<br>2. Verify spinner appears<br>3. Check spinner animation<br>4. Verify spinner disappears after results<br>5. Test rapid consecutive searches | Loading spinner shows and hides appropriately      | All browsers     | 🟢 Pass |
 | Results Display | Track card rendering          | 1. Search for popular artist<br>2. Verify image loading<br>3. Check track info display<br>4. Verify artist name display<br>5. Check track duration format       | Track cards display with correct information       | All browsers     | 🟢 Pass |
 
+#### Audio Player Tests
+
+| Test Case         | Description                     | Test Steps                                                                                                                                                       | Expected Result                                     | Test Environment              | Status  |
+| ----------------- | ------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------- | ----------------------------- | ------- |
+| Audio Playback    | Basic play/pause functionality  | 1. Click track play button<br>2. Verify audio starts<br>3. Click again to pause<br>4. Verify visual indicators<br>5. Test multiple play/pause cycles             | Audio plays and pauses with correct visual feedback | All browsers                  | 🟢 Pass |
+| Track Switching   | Switching between tracks        | 1. Play first track<br>2. While playing, click second track<br>3. Verify first track stops<br>4. Verify second track plays<br>5. Check UI state updates          | Previous track stops when new track starts          | All browsers                  | 🟢 Pass |
+| Volume Control    | Volume adjustment               | 1. Play a track<br>2. Adjust volume slider<br>3. Verify volume changes<br>4. Test mute button<br>5. Verify volume restored on unmute                             | Volume adjusts correctly and mute works properly    | Chrome, Firefox, Safari, Edge | 🟢 Pass |
+| Progress Tracking | Progress bar functionality      | 1. Play a track fully<br>2. Check progress bar advancement<br>3. Verify time display updates<br>4. Check completion behavior<br>5. Verify UI reset on completion | Progress bar and time display update accurately     | All browsers                  | 🟢 Pass |
+| Playback States   | Visual feedback during playback | 1. Play a track<br>2. Verify card visual changes<br>3. Check play button state<br>4. Verify progress animation<br>5. Test completion state                       | Card visuals update to reflect playback state       | All browsers                  | 🟢 Pass |
+
 ## Current Features
 
 - ✅ Interactive search functionality
