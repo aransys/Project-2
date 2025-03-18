@@ -162,6 +162,44 @@ As a developer, the objectives for the website were:
 - **Card Backgrounds**: Semi-transparent backgrounds that integrate with the overall design while maintaining readability
 - **Reasoning**: The layered background approach creates a visually engaging environment that remains subtle enough not to compete with the primary content.
 
+## 📝 Wireframes
+
+The wireframes were created during the planning stage to guide the website's structure and layout across different device sizes.
+
+## Desktop View
+
+![Desktop Wireframe](assets/images/wireframes/desktop.png)
+
+- Full navigation bar with theme toggle
+- Search and sort controls
+- Three-column track grid layout
+- Audio controls within each track card
+
+## Tablet View
+
+![Tablet Wireframe](assets/images/wireframes/tablet.png)
+
+- Adjusted navigation for medium screens
+- Two-column track grid layout
+- Optimized search and sort positioning
+- Maintained audio control accessibility
+
+## Mobile View
+
+![Mobile Wireframe](assets/images/wireframes/mobile.png)
+
+- Hamburger menu for navigation
+- Single-column track layout
+- Stacked search and sort controls
+- Touch-optimized playback interface
+
+### Design Evolution:
+
+- Initial wireframes focused on basic layout structure
+- The design evolved to incorporate more immersive background elements
+- Audio controls were enhanced beyond initial plans based on testing feedback
+- Animation and transition effects were added incrementally during development
+
 ## Current Features
 
 - ✅ Interactive search functionality
