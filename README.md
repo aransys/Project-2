@@ -346,6 +346,16 @@ Music Explorer/
 | Progress Tracking | Progress bar functionality      | 1. Play a track fully<br>2. Check progress bar advancement<br>3. Verify time display updates<br>4. Check completion behavior<br>5. Verify UI reset on completion | Progress bar and time display update accurately     | All browsers                  | 🟢 Pass |
 | Playback States   | Visual feedback during playback | 1. Play a track<br>2. Verify card visual changes<br>3. Check play button state<br>4. Verify progress animation<br>5. Test completion state                       | Card visuals update to reflect playback state       | All browsers                  | 🟢 Pass |
 
+#### Sort Functionality Tests
+
+| Test Case            | Description                    | Test Steps                                                                                                                                                                                  | Expected Result                                 | Test Environment | Status  |
+| -------------------- | ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------- | ---------------- | ------- |
+| Title Sort           | Sorting by track title         | 1. Search for tracks<br>2. Select "Title (A-Z)" from sort dropdown<br>3. Verify alphabetical order<br>4. Check currently playing state maintained<br>5. Verify smooth reordering            | Tracks sort alphabetically by title             | All browsers     | 🟢 Pass |
+| Artist Sort          | Sorting by artist name         | 1. Search for tracks<br>2. Select "Artist (A-Z)" from sort dropdown<br>3. Verify alphabetical artist order<br>4. Check consistency across same artists<br>5. Verify playing state preserved | Tracks sort alphabetically by artist name       | All browsers     | 🟢 Pass |
+| Duration Sort        | Sorting by track length        | 1. Search for tracks<br>2. Select "Duration" from sort dropdown<br>3. Verify ascending duration order<br>4. Check time display consistency<br>5. Verify playing state maintained            | Tracks sort from shortest to longest duration   | All browsers     | 🟢 Pass |
+| Default Sort         | Resetting to default order     | 1. Apply a sort<br>2. Select "Sort by..." option<br>3. Verify return to original order<br>4. Check consistent behavior after multiple sorts<br>5. Verify playing state preserved            | Tracks return to API-provided default order     | All browsers     | 🟢 Pass |
+| Sort During Playback | Sorting while track is playing | 1. Play a track<br>2. Apply various sorts<br>3. Verify playback continues<br>4. Check visual indicators maintained<br>5. Verify volume settings preserved                                   | Playback continues uninterrupted during sorting | All browsers     | 🟢 Pass |
+
 ## Current Features
 
 - ✅ Interactive search functionality
