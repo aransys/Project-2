@@ -319,6 +319,13 @@ Music Explorer/
 
 #### User Interface Tests
 
+| Test Case         | Description                      | Test Steps                                                                                                                                                                    | Expected Result                                                 | Test Environment                      | Status  |
+| ----------------- | -------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------- | ------------------------------------- | ------- |
+| Theme Toggle      | Light/dark theme switching       | 1. Click theme toggle button<br>2. Verify color scheme changes<br>3. Verify text readability<br>4. Test toggle animation<br>5. Check persistent state                         | Theme switches with smooth transition and maintains readability | Chrome, Firefox, Safari, Edge, Mobile | 🟢 Pass |
+| Responsive Layout | Layout adaptation across devices | 1. Resize browser from 320px to 1440px<br>2. Check grid layout changes<br>3. Verify navigation transforms<br>4. Test search form resizing<br>5. Verify sort dropdown position | Layout adjusts fluidly with proper spacing at all sizes         | All devices and browsers              | 🟢 Pass |
+| Navigation Menu   | Mobile menu functionality        | 1. View on mobile viewport<br>2. Click hamburger icon<br>3. Verify menu opens<br>4. Test nav links<br>5. Close menu via X and outside click                                   | Menu opens/closes smoothly with working navigation              | Mobile devices and emulators          | 🟢 Pass |
+| Back to Top       | Scroll restoration               | 1. Scroll down page<br>2. Verify button appears<br>3. Click button<br>4. Verify smooth scroll to top<br>5. Verify button disappears                                           | Button appears when scrolled and returns to top when clicked    | All browsers and devices              | 🟢 Pass |
+
 ## Current Features
 
 - ✅ Interactive search functionality
