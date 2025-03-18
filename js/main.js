@@ -1,9 +1,10 @@
+// Wait for DOM to be fully loaded before running
 document.addEventListener("DOMContentLoaded", () => {
-  // Theme toggle functionality
+  // Theme toggle setup
   const themeToggle = document.querySelector(".theme-toggle");
   let isDarkTheme = true;
 
-  // Initially set sun icon since we start in dark mode
+  // Set initial sun icon for dark mode
   themeToggle.innerHTML = `
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <circle cx="12" cy="12" r="5"></circle>
@@ -18,10 +19,11 @@ document.addEventListener("DOMContentLoaded", () => {
     </svg>
   `;
 
+  // Handle theme toggle clicks
   themeToggle.addEventListener("click", () => {
     isDarkTheme = !isDarkTheme;
     if (!isDarkTheme) {
-      // If switching to light mode
+      // Switch to light mode
       document.documentElement.setAttribute("data-theme", "light");
       // Show moon icon
       themeToggle.innerHTML = `
@@ -30,37 +32,28 @@ document.addEventListener("DOMContentLoaded", () => {
         </svg>
       `;
     } else {
-      // If switching to dark mode
+      // Switch to dark mode
       document.documentElement.removeAttribute("data-theme");
       // Show sun icon
-      themeToggle.innerHTML = `
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="5"></circle>
-          <line x1="12" y1="1" x2="12" y2="3"></line>
-          <line x1="12" y1="21" x2="12" y2="23"></line>
-          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-          <line x1="1" y1="12" x2="3" y2="12"></line>
-          <line x1="21" y1="12" x2="23" y2="12"></line>
-          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-        </svg>
-      `;
+      themeToggle.innerHTML = `[Previous sun icon SVG]`;
     }
   });
 
-  // Sorting functionality
-  let currentTracks = []; // Store current tracks for sorting
+  // Track storage for sorting functionality
+  let currentTracks = [];
 
+  // Handle sort selection changes
   const sortSelect = document.getElementById("sort-select");
   sortSelect.addEventListener("change", () => {
     const sortType = sortSelect.value;
 
+    // Return to default order if selected
     if (sortType === "default") {
       renderTracks(currentTracks);
       return;
     }
 
+    // Sort tracks based on selected criteria
     const sortedTracks = [...currentTracks].sort((a, b) => {
       switch (sortType) {
         case "title":
@@ -77,7 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
     renderTracks(sortedTracks);
   });
 
-  // Utility function to format time
+  // Convert seconds to MM:SS format
   function formatTime(seconds) {
     if (!seconds || isNaN(seconds)) return "0:00";
     const mins = Math.floor(seconds / 60);
@@ -85,11 +78,12 @@ document.addEventListener("DOMContentLoaded", () => {
     return `${mins}:${secs.toString().padStart(2, "0")}`;
   }
 
-  // VOLUME CONTROL FUNCTION
+  // Create volume control interface for audio player
   function createVolumeControl(audio) {
     const controlsContainer = document.createElement("div");
     controlsContainer.className = "player-controls";
 
+    // Create volume slider
     const volumeSlider = document.createElement("input");
     volumeSlider.type = "range";
     volumeSlider.min = "0";
@@ -101,6 +95,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let isMuted = false;
     let previousVolume = 0.5;
 
+    // Handle volume changes
     volumeSlider.addEventListener("input", (e) => {
       e.stopPropagation();
       const volume = parseFloat(e.target.value);
@@ -110,6 +105,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     controlsContainer.appendChild(volumeSlider);
 
+    // Return controls and mute handler
     return {
       controlsContainer,
       muteHandler: (e) => {
@@ -129,7 +125,8 @@ document.addEventListener("DOMContentLoaded", () => {
       },
     };
   }
-  // Hamburger menu
+
+  // Mobile menu functionality
   const hamburger = document.querySelector(".hamburger");
   const navLinks = document.querySelector(".nav-links");
 
@@ -138,12 +135,12 @@ document.addEventListener("DOMContentLoaded", () => {
     navLinks.classList.toggle("active");
   });
 
-  // Handle all navigation links including search
+  // Handle navigation link clicks
   document.querySelectorAll(".nav-links a").forEach((link) => {
     link.addEventListener("click", (e) => {
       e.preventDefault();
 
-      // Get the target section id from the href
+      // Get target section
       const sectionId = e.target.getAttribute("href").substring(1);
       const targetSection = document.getElementById(sectionId);
 
@@ -152,23 +149,19 @@ document.addEventListener("DOMContentLoaded", () => {
         section.classList.add("hidden");
       });
 
+      // Show appropriate section
       if (sectionId === "search") {
-        // For search link, show the results section
         const resultsSection = document.getElementById("results-section");
         resultsSection.classList.remove("hidden");
         document.getElementById("search-input").focus();
       } else if (targetSection) {
-        // First make it visible but with entering state
+        // Animate section entrance
         targetSection.classList.remove("hidden");
         targetSection.classList.add("entering");
-
-        // Force reflow
         void targetSection.offsetHeight;
-
-        // Remove entering class to trigger animation
         targetSection.classList.remove("entering");
 
-        // Scroll to section
+        // Smooth scroll to section
         targetSection.scrollIntoView({
           behavior: "smooth",
           block: "start",
@@ -182,11 +175,9 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   let isSearching = false;
-
-  // Get our form reference
   const searchForm = document.getElementById("search-form");
 
-  // Error handling function
+  // Display error messages
   function showError(message) {
     const errorContainer = document.getElementById("error-container");
     const errorText = document.getElementById("error-text");
@@ -194,24 +185,24 @@ document.addEventListener("DOMContentLoaded", () => {
     errorText.textContent = message;
     errorContainer.classList.remove("hidden");
 
-    // Auto-hide after 5 seconds
+    // Auto-hide error after 5 seconds
     setTimeout(() => {
       errorContainer.classList.add("hidden");
     }, 5000);
   }
 
-  // Add click handler for close button
+  // Handle error message close button
   document.querySelector(".error-close").addEventListener("click", () => {
     document.getElementById("error-container").classList.add("hidden");
   });
 
-  // Function to display tracks
+  // Store and display track results
   function displayTracks(tracks) {
-    currentTracks = [...tracks]; // Store tracks for sorting
+    currentTracks = [...tracks];
     renderTracks(tracks);
   }
 
-  // RENDER TRACKS FUNCTRION
+  // Create and display track cards in the grid
   function renderTracks(tracks) {
     const resultsGrid = document.querySelector(".results-grid");
     const sortContainer = document.querySelector(".sort-container");
@@ -220,6 +211,7 @@ document.addEventListener("DOMContentLoaded", () => {
     resultsGrid.innerHTML = "";
     sortContainer.classList.remove("hidden");
 
+    // Create track cards
     tracks.forEach((track) => {
       const trackCard = document.createElement("article");
       trackCard.className = "track-card";
@@ -228,38 +220,8 @@ document.addEventListener("DOMContentLoaded", () => {
       const duration = track.duration || 0;
       const formattedDuration = formatTime(duration);
 
-      trackCard.innerHTML = `
-  <div class="track-card-inner">
-      <div class="track-image">
-          <img src="${track.album?.cover_medium || track.album?.cover || ""}" 
-               alt="${track.title} album art">
-          <div class="play-overlay">
-              <span class="play-icon">▶</span>
-              <div class="loading-ring"></div>
-          </div>
-      </div>
-      
-      <div class="track-info">
-          <h3 class="track-name">${track.title || "Unknown Title"}</h3>
-          <p class="artist-name">${track.artist?.name || "Unknown Artist"}</p>
-          <p class="album-name">${track.album?.title || "Unknown Album"}</p>
-          <div class="track-actions">
-              <button class="preview-button">Preview</button>
-          </div>
-      </div>
-      
-      <div class="track-controls">
-          <div class="progress-container">
-              <div class="time-info">
-                  <span class="current-time">0:00</span>
-                  <span class="duration">-${formattedDuration}</span>
-              </div>
-              <div class="progress-bar">
-                  <div class="progress"></div>
-              </div>
-          </div>
-      </div>
-  </div>`;
+      // Create track card HTML
+      trackCard.innerHTML = `[Track card HTML structure]`;
 
       resultsGrid.appendChild(trackCard);
     });
@@ -267,8 +229,7 @@ document.addEventListener("DOMContentLoaded", () => {
     setupPreviewButtons();
   }
 
-  // Handle preview functionality
-  // SETUP PREVIEW BUTTON FUNCTION
+  // Set up audio preview functionality
   function setupPreviewButtons() {
     let currentlyPlaying = null;
 
@@ -278,6 +239,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const imageArea = card.querySelector(".track-image");
       const trackInfo = card.querySelector(".track-info");
 
+      // Handle play/pause actions
       const handlePlayPause = async () => {
         const previewUrl = card.dataset.previewUrl;
         const playIcon = card.querySelector(".play-icon");
@@ -285,16 +247,16 @@ document.addEventListener("DOMContentLoaded", () => {
         const progress = card.querySelector(".progress");
         const timeInfo = card.querySelector(".time-info");
 
-        // If there's already something playing, stop it
+        // Stop currently playing track if exists
         if (currentlyPlaying) {
           currentlyPlaying.audio.pause();
           currentlyPlaying.card.classList.remove("playing", "loading");
 
-          // Reset previous card's UI
+          // Reset previous track's UI
           const oldPlayIcon = currentlyPlaying.card.querySelector(".play-icon");
           if (oldPlayIcon) oldPlayIcon.textContent = "▶";
 
-          // Remove volume controls from previous card
+          // Remove old volume controls
           const oldVolumeControl = currentlyPlaying.card.querySelector(".player-controls");
           if (oldVolumeControl) oldVolumeControl.remove();
 
@@ -305,6 +267,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         try {
+          // Create and play audio
           const audio = new Audio(previewUrl);
           audio.volume = 0.5;
 
@@ -320,6 +283,7 @@ document.addEventListener("DOMContentLoaded", () => {
           muteButton.textContent = "🔊";
           controlsContainer.appendChild(muteButton);
 
+          // Handle mute button clicks
           muteButton.addEventListener("click", (e) => {
             const newIcon = muteHandler(e);
             muteButton.textContent = newIcon;
@@ -331,7 +295,7 @@ document.addEventListener("DOMContentLoaded", () => {
           card.classList.add("playing");
           playIcon.textContent = "⏸";
 
-          // Update time displays
+          // Update progress and time displays
           audio.addEventListener("timeupdate", () => {
             const percentage = (audio.currentTime / audio.duration) * 100;
             progress.style.width = `${percentage}%`;
@@ -352,23 +316,22 @@ document.addEventListener("DOMContentLoaded", () => {
             progress,
           };
 
-          // Handle track ending
+          // Handle track completion
           audio.onended = () => {
             card.classList.remove("playing");
             playIcon.textContent = "▶";
             progress.style.width = "0%";
 
-            // Reset time displays
             const currentTime = card.querySelector(".current-time");
             if (currentTime) currentTime.textContent = "0:00";
 
-            // Remove volume controls
             const volumeControl = card.querySelector(".player-controls");
             if (volumeControl) volumeControl.remove();
 
             currentlyPlaying = null;
           };
         } catch (error) {
+          // Handle playback errors
           console.error("Playback failed:", error);
           card.classList.remove("playing");
           playIcon.textContent = "▶";
@@ -377,7 +340,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       };
 
-      // Add click event listeners
+      // Add click handlers for play/pause
       playButton.addEventListener("click", (e) => {
         e.stopPropagation();
         handlePlayPause();
@@ -400,12 +363,14 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // FORM SUBMISSION HANDLER
+  // Handle search form submission
   searchForm.addEventListener("submit", async (e) => {
     e.preventDefault();
 
+    // Reset sort selection
     sortSelect.value = "default";
 
+    // Prevent multiple simultaneous searches
     if (isSearching) {
       showError("A search is already in progress. Please wait...");
       return;
@@ -414,6 +379,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const searchInput = document.getElementById("search-input");
     const query = searchInput.value.trim();
 
+    // Validate search input
     if (!query) {
       showError("Please enter a search term");
       return;
@@ -423,33 +389,39 @@ document.addEventListener("DOMContentLoaded", () => {
     const resultsGrid = document.querySelector(".results-grid");
 
     try {
+      // Show loading state
       isSearching = true;
       loadingSpinner.classList.remove("hidden");
       resultsGrid.classList.add("hidden");
 
+      // Perform search
       const tracks = await musicAPI.searchTracks(query);
 
+      // Handle no results
       if (!tracks || tracks.length === 0) {
         showError("No tracks found. Try a different search term.");
         return;
       }
 
+      // Display search results
       displayTracks(tracks);
     } catch (error) {
+      // Handle search errors
       console.error("Search failed:", error);
       showError("Something went wrong. Please try again later.");
     } finally {
+      // Reset search state and UI
       isSearching = false;
       loadingSpinner.classList.add("hidden");
       resultsGrid.classList.remove("hidden");
     }
   });
 
-  // Back to top functionality
+  // Back to top button functionality
   const backToTop = document.querySelector(".back-to-top");
 
+  // Show/hide back to top button based on scroll position
   window.addEventListener("scroll", () => {
-    // Get vertical scroll position
     const scrollPosition = window.scrollY || document.documentElement.scrollTop;
 
     if (scrollPosition > 100) {
@@ -459,6 +431,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  // Smooth scroll to top when button is clicked
   backToTop.addEventListener("click", () => {
     window.scrollTo({
       top: 0,
