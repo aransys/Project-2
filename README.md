@@ -326,6 +326,16 @@ Music Explorer/
 | Navigation Menu   | Mobile menu functionality        | 1. View on mobile viewport<br>2. Click hamburger icon<br>3. Verify menu opens<br>4. Test nav links<br>5. Close menu via X and outside click                                   | Menu opens/closes smoothly with working navigation              | Mobile devices and emulators          | 🟢 Pass |
 | Back to Top       | Scroll restoration               | 1. Scroll down page<br>2. Verify button appears<br>3. Click button<br>4. Verify smooth scroll to top<br>5. Verify button disappears                                           | Button appears when scrolled and returns to top when clicked    | All browsers and devices              | 🟢 Pass |
 
+#### Search Functionality Tests
+
+| Test Case       | Description                   | Test Steps                                                                                                                                                      | Expected Result                                    | Test Environment | Status  |
+| --------------- | ----------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------- | ---------------- | ------- |
+| Basic Search    | Search submission and results | 1. Enter search term<br>2. Submit search<br>3. Verify loading spinner<br>4. Check results display<br>5. Verify grid layout                                      | Search executes and displays relevant results      | All browsers     | 🟢 Pass |
+| Empty Search    | Empty query handling          | 1. Submit with empty input<br>2. Clear input and submit<br>3. Submit with only spaces<br>4. Check error message<br>5. Verify error dismissal                    | Appropriate error message shown for empty searches | All browsers     | 🟢 Pass |
+| Error States    | API error handling            | 1. Disconnect internet<br>2. Submit search<br>3. Check error display<br>4. Test error dismissal<br>5. Verify recovery on reconnection                           | User-friendly error message with recovery options  | All browsers     | 🟢 Pass |
+| Loading States  | Loading indicator behavior    | 1. Submit search<br>2. Verify spinner appears<br>3. Check spinner animation<br>4. Verify spinner disappears after results<br>5. Test rapid consecutive searches | Loading spinner shows and hides appropriately      | All browsers     | 🟢 Pass |
+| Results Display | Track card rendering          | 1. Search for popular artist<br>2. Verify image loading<br>3. Check track info display<br>4. Verify artist name display<br>5. Check track duration format       | Track cards display with correct information       | All browsers     | 🟢 Pass |
+
 ## Current Features
 
 - ✅ Interactive search functionality
