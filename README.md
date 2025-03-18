@@ -168,7 +168,7 @@ The wireframes were created during the planning stage to guide the website's str
 
 ## Desktop View
 
-![Desktop Wireframe](assets/images/wireframes/desktop.png)
+![Desktop Wireframe](assets/images/wireframes/desktop.svg)
 
 - Full navigation bar with theme toggle
 - Search and sort controls
@@ -177,7 +177,7 @@ The wireframes were created during the planning stage to guide the website's str
 
 ## Tablet View
 
-![Tablet Wireframe](assets/images/wireframes/tablet.png)
+![Tablet Wireframe](assets/images/wireframes/tablet.svg)
 
 - Adjusted navigation for medium screens
 - Two-column track grid layout
@@ -186,7 +186,7 @@ The wireframes were created during the planning stage to guide the website's str
 
 ## Mobile View
 
-![Mobile Wireframe](assets/images/wireframes/mobile.png)
+![Mobile Wireframe](assets/images/wireframes/mobile.svg)
 
 - Hamburger menu for navigation
 - Single-column track layout

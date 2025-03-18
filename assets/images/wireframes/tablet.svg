@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1100">
+  <!-- Background -->
+  <rect width="800" height="1100" fill="#3D3D8A"/>
+  
+  <!-- Header Navigation -->
+  <text x="40" y="60" font-family="Arial" font-size="28" font-weight="bold" fill="white">ME</text>
+  
+  <!-- Navigation Links -->
+  <rect x="500" y="30" width="90" height="40" rx="20" ry="20" fill="rgba(255,255,255,0.2)" stroke="none"/>
+  <text x="545" y="57" font-family="Arial" font-size="16" text-anchor="middle" fill="white">Search</text>
+  
+  <rect x="600" y="30" width="120" height="40" rx="20" ry="20" fill="rgba(255,255,255,0.2)" stroke="none"/>
+  <text x="660" y="57" font-family="Arial" font-size="16" text-anchor="middle" fill="white">Get Started</text>
+  
+  <rect x="730" y="30" width="50" height="40" rx="20" ry="20" fill="rgba(255,255,255,0.2)" stroke="none"/>
+  <text x="755" y="57" font-family="Arial" font-size="16" text-anchor="middle" fill="white">About</text>
+  
+  <!-- Theme Toggle -->
+  <circle cx="755" cy="100" r="20" fill="rgba(255,255,255,0.2)" stroke="none"/>
+  <text x="755" y="106" font-family="Arial" font-size="18" text-anchor="middle" fill="white">☀</text>
+  
+  <!-- Music Note Icon -->
+  <path d="M370 300 C380 280, 400 260, 400 260 C420 260, 440 280, 450 300 L450 400 C450 430, 420 450, 400 450 C380 450, 350 430, 350 400 L350 300" fill="none" stroke="white" stroke-width="6"/>
+  <line x1="450" y1="300" x2="450" y2="210" stroke="white" stroke-width="6"/>
+  <circle cx="450" cy="210" r="15" fill="white" stroke="white" stroke-width="3"/>
+  
+  <!-- Welcome Text -->
+  <text x="400" y="550" font-family="Arial" font-size="40" text-anchor="middle" font-weight="bold" fill="white">Welcome to</text>
+  <text x="400" y="600" font-family="Arial" font-size="40" text-anchor="middle" font-weight="bold" fill="white">Music Explorer</text>
+  
+  <text x="400" y="670" font-family="Arial" font-size="22" text-anchor="middle" fill="white">Search for your favorite songs</text>
+  <text x="400" y="705" font-family="Arial" font-size="22" text-anchor="middle" fill="white">and listen to previews!</text>
+  
+  <!-- Search Bar -->
+  <rect x="200" y="780" width="330" height="55" rx="27" ry="27" fill="rgba(255,255,255,0.8)" stroke="none"/>
+  <text x="225" y="818" font-family="Arial" font-size="20" fill="#555">Search for songs...</text>
+  
+  <rect x="540" y="780" width="90" height="55" rx="27" ry="27" fill="#2A2A5A" stroke="none"/>
+  <text x="585" y="818" font-family="Arial" font-size="20" text-anchor="middle" fill="white">Search</text>
+  
+  <!-- Footer -->
+  <text x="400" y="1050" font-family="Arial" font-size="16" text-anchor="middle" fill="white">Created by Aurimas Ransys - Powered by Deezer</text>
+</svg>

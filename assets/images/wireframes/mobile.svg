@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 800">
+  <!-- Background -->
+  <rect width="400" height="800" fill="#3D3D8A"/>
+  
+  <!-- Header Navigation -->
+  <text x="30" y="50" font-family="Arial" font-size="26" font-weight="bold" fill="white">ME</text>
+  
+  <!-- Mobile Menu Button -->
+  <rect x="340" y="35" width="24" height="4" fill="white" stroke="none"/>
+  <rect x="340" y="45" width="24" height="4" fill="white" stroke="none"/>
+  <rect x="340" y="55" width="24" height="4" fill="white" stroke="none"/>
+  
+  <!-- Theme Toggle -->
+  <circle cx="370" cy="100" r="18" fill="rgba(255,255,255,0.2)" stroke="none"/>
+  <text x="370" y="106" font-family="Arial" font-size="16" text-anchor="middle" fill="white">☀</text>
+  
+  <!-- Music Note Icon -->
+  <path d="M180 200 C190 180, 200 170, 200 170 C210 170, 220 180, 230 200 L230 270 C230 290, 215 305, 200 305 C185 305, 170 290, 170 270 L170 200" fill="none" stroke="white" stroke-width="5"/>
+  <line x1="230" y1="200" x2="230" y2="140" stroke="white" stroke-width="5"/>
+  <circle cx="230" cy="140" r="12" fill="white" stroke="white" stroke-width="2"/>
+  
+  <!-- Welcome Text -->
+  <text x="200" y="370" font-family="Arial" font-size="32" text-anchor="middle" font-weight="bold" fill="white">Welcome to</text>
+  <text x="200" y="410" font-family="Arial" font-size="32" text-anchor="middle" font-weight="bold" fill="white">Music</text>
+  <text x="200" y="450" font-family="Arial" font-size="32" text-anchor="middle" font-weight="bold" fill="white">Explorer</text>
+  
+  <text x="200" y="520" font-family="Arial" font-size="16" text-anchor="middle" fill="white">Search for your favorite songs</text>
+  <text x="200" y="545" font-family="Arial" font-size="16" text-anchor="middle" fill="white">and listen to previews!</text>
+  
+  <!-- Search Bar -->
+  <rect x="50" y="600" width="300" height="50" rx="25" ry="25" fill="rgba(255,255,255,0.8)" stroke="none"/>
+  <text x="75" y="630" font-family="Arial" font-size="16" fill="#555">Search for songs...</text>
+  
+  <rect x="50" y="670" width="300" height="50" rx="25" ry="25" fill="#2A2A5A" stroke="none"/>
+  <text x="200" y="700" font-family="Arial" font-size="16" text-anchor="middle" fill="white">Search</text>
+  
+  <!-- Footer -->
+  <text x="200" y="770" font-family="Arial" font-size="12" text-anchor="middle" fill="white">Created by Aurimas Ransys - Powered by Deezer</text>
+</svg>
