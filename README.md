@@ -356,6 +356,15 @@ Music Explorer/
 | Default Sort         | Resetting to default order     | 1. Apply a sort<br>2. Select "Sort by..." option<br>3. Verify return to original order<br>4. Check consistent behavior after multiple sorts<br>5. Verify playing state preserved            | Tracks return to API-provided default order     | All browsers     | 🟢 Pass |
 | Sort During Playback | Sorting while track is playing | 1. Play a track<br>2. Apply various sorts<br>3. Verify playback continues<br>4. Check visual indicators maintained<br>5. Verify volume settings preserved                                   | Playback continues uninterrupted during sorting | All browsers     | 🟢 Pass |
 
+#### Accessibility Tests
+
+| Test Case           | Description                 | Test Steps                                                                                                                                                                       | Expected Result                                 | Test Environment                  | Status  |
+| ------------------- | --------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------- | --------------------------------- | ------- |
+| Keyboard Navigation | Keyboard accessibility      | 1. Navigate with Tab key<br>2. Test all interactive elements<br>3. Verify focus indicators<br>4. Check operation with Enter/Space<br>5. Test audio controls via keyboard         | All functions accessible via keyboard           | All browsers                      | 🟢 Pass |
+| Color Contrast      | Text readability            | 1. Check light theme text contrast<br>2. Check dark theme text contrast<br>3. Verify button label contrast<br>4. Test error message text<br>5. Check focus indicators            | All text meets WCAG AA contrast standards       | Chrome DevTools, Contrast Checker | 🟢 Pass |
+| Screen Reader       | Screen reader compatibility | 1. Test with screen reader<br>2. Navigate search functionality<br>3. Check track information reading<br>4. Verify audio control descriptions<br>5. Test theme toggle description | All content properly announced by screen reader | NVDA, VoiceOver                   | 🟢 Pass |
+| Focus Management    | Focus handling              | 1. Check tab order logic<br>2. Verify focus trap in modals<br>3. Test focus return after interactions<br>4. Check focus visibility<br>5. Verify no keyboard traps                | Focus moves logically with clear indicators     | All browsers                      | 🟢 Pass |
+
 ## Current Features
 
 - ✅ Interactive search functionality
