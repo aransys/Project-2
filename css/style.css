@@ -524,7 +524,7 @@ nav {
 
 .welcome-message h2 {
   font-size: 4rem;
-  margin-bottom: 1rem 0;
+  margin-bottom: 1rem;
 }
 
 .welcome-message p {
@@ -1404,7 +1404,7 @@ footer p {
   /* Search wrapper specific rules */
   .search-wrapper {
     display: grid;
-    grid-template-columns: 2, 1fr;
+    grid-template-columns: 1fr 1fr;
     align-items: center;
     padding: 0 220px 0 1rem;
   }
