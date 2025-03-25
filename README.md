@@ -168,7 +168,7 @@ The wireframes were created during the planning stage to guide the website's str
 
 ## Desktop View
 
-![Desktop Wireframe](assets/images/wireframes/desktop.svg)
+![Desktop Wireframe](assets/images/wireframes/desktop.png)
 
 - Full navigation bar with theme toggle
 - Search and sort controls
@@ -177,7 +177,7 @@ The wireframes were created during the planning stage to guide the website's str
 
 ## Tablet View
 
-![Tablet Wireframe](assets/images/wireframes/tablet.svg)
+![Tablet Wireframe](assets/images/wireframes/tablet.png)
 
 - Adjusted navigation for medium screens
 - Two-column track grid layout
@@ -186,7 +186,7 @@ The wireframes were created during the planning stage to guide the website's str
 
 ## Mobile View
 
-![Mobile Wireframe](assets/images/wireframes/mobile.svg)
+![Mobile Wireframe](assets/images/wireframes/mobile.png)
 
 - Hamburger menu for navigation
 - Single-column track layout
@@ -507,6 +507,16 @@ Music Explorer/
 - **Date Tested**: March 1, 2025
 
 ![JavaScript Validation Results](assets/images/testing/js-validation.png)
+
+### Accessibility Assessment
+
+#### WAVE Web Accessibility Evaluation
+
+- **Status**: Passed with 0 errors
+- **Tool**: [WAVE Web Accessibility Evaluation Tool](https://wave.webaim.org/)
+- **Date Tested**: March 1, 2025
+
+![WAVE Evaluation Results](assets/images/testing/wave-results.png)
 
 ## Current Features
 
