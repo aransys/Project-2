@@ -440,13 +440,13 @@ Music Explorer/
 
 #### Browser Compatibility Tests
 
-| Browser | Version       | Desktop Results | Mobile Results | Notes                                                   |
-| ------- | ------------- | --------------- | -------------- | ------------------------------------------------------- |
-| Chrome  | 131.0.6525.0  | ✅ Pass         | ✅ Pass        | Optimal performance across all features                 |
-| Firefox | 133.0         | ✅ Pass         | ✅ Pass        | Volume slider styling slightly different but functional |
-| Safari  | 17.0          | ✅ Pass         | ✅ Pass        | Auto-play requires explicit user interaction            |
-| Edge    | 131.0.2478.54 | ✅ Pass         | ✅ Pass        | Consistent with Chrome experience                       |
-| Opera   | 106.0.4998.70 | ✅ Pass         | ✅ Pass        | Full functionality with minor styling variations        |
+| Browser | Version       | Desktop Results | Mobile Results | Notes                                   |
+| ------- | ------------- | --------------- | -------------- | --------------------------------------- |
+| Chrome  | 131.0.6525.0  | ✅ Pass         | ✅ Pass        | Optimal performance across all features |
+| Firefox | 133.0         | ✅ Pass         | ✅ Pass        | Optimal performance across all features |
+| Safari  | 17.0          | ✅ Pass         | ✅ Pass        | Optimal performance across all features |
+| Edge    | 131.0.2478.54 | ✅ Pass         | ✅ Pass        | Optimal performance across all features |
+| Opera   | 106.0.4998.70 | ✅ Pass         | ✅ Pass        | Optimal performance across all features |
 
 ![Browser Compatibility Testing - Chrome](assets/images/testing/chrome.png)
 ![Browser Compatibility Testing - Edge](assets/images/testing/edge.png)
