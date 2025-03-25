@@ -476,6 +476,30 @@ Music Explorer/
 | Best Practices | 100/100 |
 | SEO            | 100/100 |
 
+### Code Validation Results
+
+#### HTML Validation (W3C Markup Validator)
+
+- **Status**: Passed with no errors
+- **Validation URL**: [W3C Markup Validator](https://validator.w3.org/)
+- **Date Tested**: March 1, 2025
+
+![HTML Validation Results](assets/images/testing/html-validation.png)
+
+#### CSS Validation (W3C CSS Validator)
+
+- **Status**: Passed with no errors after fixing identified issues
+- **Warnings**: The validator shows numerous warnings related to:
+  - Vendor prefixes (`-webkit-`, `-moz-`) which are necessary for cross-browser compatibility
+  - CSS custom properties (variables) in the Font Awesome CDN file
+  - Same color for background-color and border-color in hover states (design choice)
+- **Validation URL**: [W3C CSS Validator](https://jigsaw.w3.org/css-validator/)
+- **Date Tested**: March 1, 2025
+
+![CSS Validation Results](assets/images/testing/css-validation.png)
+
+**Note**: The warnings do not affect the functionality of the site and many are related to industry-standard practices for ensuring cross-browser compatibility. All actual errors have been identified and fixed.
+
 ## Current Features
 
 - ✅ Interactive search functionality
