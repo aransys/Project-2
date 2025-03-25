@@ -454,6 +454,28 @@ Music Explorer/
 ![Browser Compatibility Testing - Opera](assets/images/testing/opera.png)
 ![Browser Compatibility Testing - Safari](assets/images/testing/safari.png)
 
+### Performance Testing Results
+
+#### Lighthouse Scores
+
+![Lighthouse Score (mobile)](assets/images/testing/lighthouse-mobile.png)
+
+| Metric         | Score   |
+| -------------- | ------- |
+| Performance    | 94/100  |
+| Accessibility  | 93/100  |
+| Best Practices | 100/100 |
+| SEO            | 100/100 |
+
+![Lighthouse Score (desktop)](assets/images/testing/lighthouse-desktop.png)
+
+| Metric         | Score   |
+| -------------- | ------- |
+| Performance    | 100/100 |
+| Accessibility  | 93/100  |
+| Best Practices | 100/100 |
+| SEO            | 100/100 |
+
 ## Current Features
 
 - ✅ Interactive search functionality
