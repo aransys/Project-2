@@ -365,7 +365,7 @@ Music Explorer/
 | Screen Reader       | Screen reader compatibility | 1. Test with screen reader<br>2. Navigate search functionality<br>3. Check track information reading<br>4. Verify audio control descriptions<br>5. Test theme toggle description | All content properly announced by screen reader | NVDA, VoiceOver                   | 🔴 **Fail**<br>✓ Basic page structure works<br>✗ Missing alt text for controls<br>✗ No ARIA for dynamic content<br>✗ Theme toggle lacks description |
 | Focus Management    | Focus handling              | 1. Check tab order logic<br>2. Verify focus trap in modals<br>3. Test focus return after interactions<br>4. Check focus visibility<br>5. Verify no keyboard traps                | Focus moves logically with clear indicators     | All browsers                      | 🟡 **Partial**<br>✓ Basic tab navigation works<br>✗ Illogical focus order in places<br>✗ Weak focus indicators<br>✗ No focus trap in mobile menu    |
 
-### Future Accessibility Improvement
+### Future Accessibility Improvements
 
 1. **Keyboard Navigation:**
 
@@ -440,16 +440,19 @@ Music Explorer/
 
 #### Browser Compatibility Tests
 
-| Browser          | Version       | Desktop Results | Mobile Results | Notes                                                   |
-| ---------------- | ------------- | --------------- | -------------- | ------------------------------------------------------- |
-| Chrome           | 131.0.6525.0  | ✅ Pass         | ✅ Pass        | Optimal performance across all features                 |
-| Firefox          | 133.0         | ✅ Pass         | ✅ Pass        | Volume slider styling slightly different but functional |
-| Safari           | 17.0          | ✅ Pass         | ✅ Pass        | Auto-play requires explicit user interaction            |
-| Edge             | 131.0.2478.54 | ✅ Pass         | ✅ Pass        | Consistent with Chrome experience                       |
-| Opera            | 106.0.4998.70 | ✅ Pass         | ✅ Pass        | Full functionality with minor styling variations        |
-| Samsung Internet | 23.0.1.1      | N/A             | ✅ Pass        | Touch targets work well on Samsung devices              |
+| Browser | Version       | Desktop Results | Mobile Results | Notes                                                   |
+| ------- | ------------- | --------------- | -------------- | ------------------------------------------------------- |
+| Chrome  | 131.0.6525.0  | ✅ Pass         | ✅ Pass        | Optimal performance across all features                 |
+| Firefox | 133.0         | ✅ Pass         | ✅ Pass        | Volume slider styling slightly different but functional |
+| Safari  | 17.0          | ✅ Pass         | ✅ Pass        | Auto-play requires explicit user interaction            |
+| Edge    | 131.0.2478.54 | ✅ Pass         | ✅ Pass        | Consistent with Chrome experience                       |
+| Opera   | 106.0.4998.70 | ✅ Pass         | ✅ Pass        | Full functionality with minor styling variations        |
 
-![Browser Compatibility Testing](assets/images/testing/browser-compatibility.png)
+![Browser Compatibility Testing - Chrome](assets/images/testing/chrome.png)
+![Browser Compatibility Testing - Edge](assets/images/testing/edge.png)
+![Browser Compatibility Testing - Firefox](assets/images/testing/firefox.png)
+![Browser Compatibility Testing - Opera](assets/images/testing/opera.png)
+![Browser Compatibility Testing - Safari](assets/images/testing/safari.png)
 
 ## Current Features
 
