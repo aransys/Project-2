@@ -37,13 +37,13 @@
             <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
           </svg>
         </button>
-        <button class="hamburger">
+        <button class="hamburger" aria-label="Toggle menu">
           <span></span>
           <span></span>
           <span></span>
         </button>
         <ul class="nav-links">
-          <li><a href="#search">Search</a></li>
+          <li><a href="#results-section">Search</a></li>
           <li><a href="#get-started">Get Started</a></li>
           <li><a href="#about">About</a></li>
         </ul>
@@ -53,17 +53,19 @@
     <main>
       <section id="results-section">
         <div class="welcome-message">
-          <div class="welcome-icon"><i class="fas fa-music"></i></div>
+          <div class="welcome-icon"><i class="fas fa-music" aria-hidden="true"></i></div>
           <h2>Welcome to Music Explorer</h2>
           <p>Search for your favorite songs and listen to previews!</p>
         </div>
 
         <div class="search-wrapper">
           <form id="search-form" class="search-form">
+            <label for="search-input" class="visually-hidden">Search for songs</label>
             <input type="text" id="search-input" class="search-input" placeholder="Search for songs..." autocomplete="off" />
             <button type="submit" class="search-button">Search</button>
           </form>
           <div class="sort-container hidden">
+            <label for="sort-select" class="visually-hidden">Sort results by</label>
             <select id="sort-select" class="sort-select">
               <option value="default">Sort by...</option>
               <option value="title">Title (A-Z)</option>
@@ -74,26 +76,28 @@
         </div>
 
         <!-- Error message after search form -->
-        <div class="error-message hidden" id="error-container">
+        <div class="error-message hidden" id="error-container" role="alert">
           <p id="error-text"></p>
-          <button class="error-close">×</button>
+          <button class="error-close" aria-label="Close error message">×</button>
         </div>
 
-        <div class="loading-spinner hidden">
+        <div class="loading-spinner hidden" aria-hidden="true">
           <div class="spinner"></div>
           <p>Searching for tracks...</p>
         </div>
-        <div class="results-grid"></div>
+        <div class="results-grid" aria-live="polite"></div>
       </section>
 
       <section id="get-started" class="info-section hidden">
         <h2>Get Started</h2>
         <div class="guide-content">
           <h3>How to use Music Explorer:</h3>
-          <p>1. Use the search bar to find your favorite songs</p>
-          <p>2. Click on any track to play a preview</p>
-          <p>3. Adjust volume using the controls that appear during playback</p>
-          <p>4. Use the sort options to organize your search results</p>
+          <ol>
+            <li>Use the search bar to find your favorite songs</li>
+            <li>Click on any track to play a preview</li>
+            <li>Adjust volume using the controls that appear during playback</li>
+            <li>Use the sort options to organize your search results</li>
+          </ol>
         </div>
       </section>
 
@@ -104,17 +108,26 @@
           <div class="contact-form">
             <h3>Get in Touch</h3>
             <form id="contact-form">
-              <input type="text" placeholder="Your name" required />
-              <input type="email" placeholder="Your email" required />
-              <textarea placeholder="Your message" required></textarea>
+              <div class="form-group">
+                <label for="name-input" class="visually-hidden">Your name</label>
+                <input id="name-input" type="text" placeholder="Your name" required />
+              </div>
+              <div class="form-group">
+                <label for="email-input" class="visually-hidden">Your email</label>
+                <input id="email-input" type="email" placeholder="Your email" required />
+              </div>
+              <div class="form-group">
+                <label for="message-input" class="visually-hidden">Your message</label>
+                <textarea id="message-input" placeholder="Your message" required></textarea>
+              </div>
               <button type="submit">Send</button>
             </form>
           </div>
         </div>
       </section>
     </main>
-    <button class="back-to-top hidden">
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <button class="back-to-top hidden" aria-label="Back to top">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <path d="M18 15l-6-6-6 6" />
       </svg>
     </button>

@@ -1555,3 +1555,35 @@ footer p {
     grid-template-columns: repeat(3, 1fr);
   }
 }
+
+/* Accessibility styles */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+/* Style for the ordered list in the guide-content */
+.guide-content ol {
+  list-style-position: inside;
+  padding-left: 0;
+  margin: 0;
+}
+
+.guide-content ol li {
+  color: var(--text-color);
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+/* Form group styling */
+.form-group {
+  margin-bottom: 1rem;
+  width: 100%;
+}
