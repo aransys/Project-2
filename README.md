@@ -594,7 +594,7 @@ The Music Explorer application is deployed using GitHub Pages, providing a relia
 
 ### Current Deployment
 
-**URL:** [Music Explorer](https://aransys.github.io/Project-1/)  
+**URL:** [Music Explorer](https://aransys.github.io/Project-2 /)  
 **Last Deployment:** March 2025  
 **Status:** ✅ Active
 
@@ -626,7 +626,7 @@ If you'd like to deploy your own instance of Music Explorer, follow these steps:
 
 1. **Fork the Repository**
 
-   - Visit the [Music Explorer repository](https://github.com/aransys/Project-1)
+   - Visit the [Music Explorer repository](https://github.com/aransys/Project-2)
    - Click the "Fork" button in the top-right corner
    - This creates your own copy of the repository
 
@@ -649,7 +649,7 @@ If you'd like to deploy your own instance of Music Explorer, follow these steps:
 4. **Access Your Deployment**
 
    - Wait a few minutes for GitHub to build your site
-   - Access your site at `https://[your-username].github.io/Project-1/`
+   - Access your site at `https://[your-username].github.io/Project-2/`
    - Verify all functionality works correctly
 
 5. **Optional: Custom Domain**
