@@ -588,6 +588,100 @@ To ensure mobile optimization, additional tests focused on mobile-specific funct
 - 📝 Social sharing integration
 - 📝 Offline mode support
 
+## 🚀 Deployment
+
+The Music Explorer application is deployed using GitHub Pages, providing a reliable and cost-effective hosting solution with automatic HTTPS.
+
+### Current Deployment
+
+**URL:** [Music Explorer](https://aransys.github.io/Project-1/)  
+**Last Deployment:** March 2025  
+**Status:** ✅ Active
+
+### Deployment Process
+
+1. **Repository Setup**
+
+   - Created dedicated GitHub repository for the project
+   - Initialized with properly structured HTML, CSS, and JavaScript files
+   - Set up proper directory organization (separate folders for CSS/JS)
+
+2. **GitHub Pages Configuration**
+
+   - Navigated to repository Settings > Pages
+   - Selected main branch as the deployment source
+   - Configured root directory (/) as the publishing source
+   - Enabled GitHub Pages for public access
+
+3. **Deployment Verification**
+   - Performed comprehensive cross-browser testing in production environment
+   - Verified all static assets (CSS, JavaScript, fonts, icons) load correctly
+   - Confirmed API connectivity with Deezer through RapidAPI
+   - Checked responsive layouts across multiple device viewports
+   - Validated console for absence of errors or warnings
+
+### How to Deploy Your Own Version
+
+If you'd like to deploy your own instance of Music Explorer, follow these steps:
+
+1. **Fork the Repository**
+
+   - Visit the [Music Explorer repository](https://github.com/aransys/Project-1)
+   - Click the "Fork" button in the top-right corner
+   - This creates your own copy of the repository
+
+2. **API Setup**
+
+   - Create a [RapidAPI account](https://rapidapi.com/)
+   - Subscribe to the [Deezer API](https://rapidapi.com/deezerdevs/api/deezer-1)
+   - Copy your API key from the RapidAPI dashboard
+   - In your forked repository, open `js/api.js`
+   - Replace the existing API key with your own key in the headers section
+
+3. **Enable GitHub Pages**
+
+   - Go to your repository on GitHub
+   - Navigate to Settings > Pages
+   - Under "Source", select "main" branch
+   - Select root folder (/) as the source
+   - Click "Save"
+
+4. **Access Your Deployment**
+
+   - Wait a few minutes for GitHub to build your site
+   - Access your site at `https://[your-username].github.io/Project-1/`
+   - Verify all functionality works correctly
+
+5. **Optional: Custom Domain**
+   - In GitHub Pages settings, enter your custom domain
+   - Update DNS records at your domain registrar
+   - Add a CNAME file to your repository with your domain name
+   - GitHub will provision an SSL certificate automatically
+
+### Continuous Deployment
+
+The repository is configured for automatic deployment. When changes are pushed to the main branch, GitHub Pages automatically rebuilds and deploys the updated version within minutes.
+
+For local development before deployment, simply open the `index.html` file in your browser or use a local development server like Live Server in VS Code.
+
+## 🤝 Contributors
+
+<table>
+  <tr>
+    <td align="center">
+      <img src="https://github.com/aransys.png" width="100px;" alt="Aurimas Ransys"/>
+      <br />
+      <sub><b>Aurimas Ransys</b></sub>
+      <br />
+      <sub>Developer & Designer</sub>
+    </td>
+  </tr>
+</table>
+
+## 📜 License
+
+This project is licensed under the MIT License.
+
 ## Technologies
 
 - HTML5
@@ -595,13 +689,6 @@ To ensure mobile optimization, additional tests focused on mobile-specific funct
 - JavaScript (ES6+)
 - Deezer API via RapidAPI
 - Git & GitHub
-
-## Quick Start
-
-1. Clone the repository
-2. Set up RapidAPI key in config.js
-3. Open `index.html` in your browser
-4. Search for your favorite music!
 
 ## Development Log
 
@@ -2384,7 +2471,3 @@ Technical Improvements Achieved:
 - Design inspired by modern music platforms
 - Card layout patterns from MDN Web Docs
 - Loading animation patterns from CSS-Tricks
-
-## License
-
-MIT License
