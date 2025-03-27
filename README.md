@@ -518,6 +518,36 @@ Music Explorer/
 
 ![WAVE Evaluation Results](assets/images/testing/wave-results.png)
 
+### Keyboard Navigation Testing
+
+| Task                            | Result     | Notes                                                                        |
+| ------------------------------- | ---------- | ---------------------------------------------------------------------------- |
+| Navigate all menu items         | ✅ Pass    | Menu links are properly focusable                                            |
+| Use search functionality        | ✅ Pass    | Form submission works with Enter key                                         |
+| Play/pause audio                | ❌ Fail    | Play buttons are focusable, but image and overlay areas lack keyboard access |
+| Adjust volume                   | ❌ Fail    | Volume sliders don't have keyboard handlers for arrow keys                   |
+| Navigate search results         | ⚠️ Partial | Basic tab navigation works but focus order isn't optimized                   |
+| Change theme                    | ✅ Pass    | Theme toggle is accessible via keyboard                                      |
+| Access all interactive elements | ❌ Fail    | Multiple interaction points in track cards not keyboard accessible           |
+
+### Cross-browser Functionality Testing
+
+A comprehensive cross-browser test was conducted to ensure consistent functionality across major browsers.
+
+| Feature              | Chrome | Firefox | Safari | Edge | Opera |
+| -------------------- | ------ | ------- | ------ | ---- | ----- |
+| Search Functionality | ✅     | ✅      | ✅     | ✅   | ✅    |
+| Results Display      | ✅     | ✅      | ✅\*   | ✅   | ✅    |
+| Audio Playback       | ✅     | ✅      | ✅\*   | ✅   | ✅    |
+| Volume Control       | ✅     | ✅      | ✅     | ✅   | ✅    |
+| Progress Tracking    | ✅     | ✅      | ✅     | ✅   | ✅    |
+| Sorting              | ✅     | ✅      | ✅     | ✅   | ✅    |
+| Theme Toggle         | ✅     | ✅      | ✅     | ✅   | ✅    |
+| Responsive Design    | ✅     | ✅      | ✅     | ✅   | ✅    |
+
+*Safari requires explicit user interaction before audio will play, as expected due to browser policy
+*Some CSS Grid implementations may have inconsistencies in older Safari versions
+
 ## Current Features
 
 - ✅ Interactive search functionality
