@@ -1,3 +1,60 @@
+## Table of Contents
+
+### Project Fundamentals
+
+- [📌 Project Overview](#-project-overview)
+- [🎵 Project Vision](#-project-vision)
+- [💡 Core Concept](#-core-concept)
+- [🛠️ Technical Foundation](#️-technical-foundation)
+
+### Project Details
+
+- [🌟 Key Features Highlights](#-key-features-highlights)
+- [🎯 Purpose of the Website](#-purpose-of-the-website)
+  - [1. Music Discovery](#1-music-discovery)
+  - [2. Audio Previewing](#2-audio-previewing)
+  - [3. Interactive User Experience](#3-interactive-user-experience)
+  - [4. Responsive Access](#4-responsive-access)
+  - [5. Visual Customization](#5-visual-customization)
+
+### Design and User Experience
+
+- [🎨 UX Section](#-ux-section)
+  - [User Goals](#user-goals)
+  - [Developer Goals](#developer-goals)
+  - [Design Choices](#design-choices)
+- [📝 Wireframes](#-wireframes)
+- [📸 Application Screenshots](#-application-screenshots)
+
+### User Interaction
+
+- [👤 User Journey](#-user-journey)
+- [🔄 Application Flow](#-application-flow)
+- [📋 Features](#-features)
+
+### Technical Specifications
+
+- [🚀 Technologies Stack](#-technologies-stack)
+- [📂 Project Structure](#-project-structure)
+- [⚙️ Installation and Setup](#️-installation-and-setup)
+- [📡 API Reference](#-api-reference)
+- [🔒 Security Considerations](#-security-considerations)
+
+### Development and Implementation
+
+- [💻 Code Examples and Implementation](#-code-examples-and-implementation)
+- [🧪 Testing Documentation](#-testing-documentation)
+- [🌐 Accessibility Compliance](#-accessibility-compliance)
+- [🚀 Deployment](#-deployment)
+- [🧩 Code Architecture](#-code-architecture)
+
+### Project Management
+
+- [⚠️ Known Limitations and Technical Debt](#️-known-limitations-and-technical-debt)
+- [🤝 Contributors](#-contributors)
+- [📜 License](#-license)
+- [📅 Development Journey](#-development-journey)
+
 # 📌 Music Explorer: Project Overview
 
 Music Explorer is a modern, responsive web application designed to transform how users discover and interact with music. This project demonstrates advanced front-end development techniques while delivering an engaging user experience focused on music discovery and preview.
