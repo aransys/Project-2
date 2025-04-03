@@ -2331,217 +2331,284 @@ This section highlights key implementation details with properly formatted code 
 
 ### API Integration Implementation
 
-The application connects to the Deezer API through RapidAPI using a modular approach:
+The application connects to the Deezer API through RapidAPI using a straightforward implementation:
 
 ```javascript
-// api.js - API integration module
+// MusicAPI class for handling Deezer API requests
 class MusicAPI {
-  constructor(apiKey) {
-    this.apiKey = apiKey;
-    this.baseUrl = "https://deezerdevs-deezer.p.rapidapi.com";
-    this.headers = {
-      "X-RapidAPI-Key": this.apiKey,
-      "X-RapidAPI-Host": "deezerdevs-deezer.p.rapidapi.com",
-    };
-  }
-
-  /**
-   * Search for tracks based on query string
-   * @param {string} query - Search term
-   * @param {number} limit - Maximum results to return
-   * @returns {Promise<Array>} - Array of track objects
-   */
-  async searchTracks(query, limit = 25) {
+  // Search for tracks using Deezer API
+  async searchTracks(query, limit = 10) {
     try {
-      const response = await fetch(`${this.baseUrl}/search?q=${encodeURIComponent(query)}`, { headers: this.headers });
+      console.log("Starting API request...");
 
+      // Make API request to Deezer through RapidAPI
+      const response = await fetch(`https://deezerdevs-deezer.p.rapidapi.com/search?q=${encodeURIComponent(query)}`, {
+        headers: {
+          "X-RapidAPI-Key": "YOUR_RAPIDAPI_KEY_HERE", // Replace with your actual RapidAPI key
+          "X-RapidAPI-Host": "deezerdevs-deezer.p.rapidapi.com",
+        },
+      });
+
+      // Check if request was successful
       if (!response.ok) {
-        throw new Error(`API error: ${response.status}`);
+        throw new Error("HTTP status " + response.status);
       }
 
+      // Parse and return the track data
       const data = await response.json();
-      return data.data.slice(0, limit);
+      return data.data;
     } catch (error) {
-      console.error("Search failed:", error);
+      console.error("Detailed error:", error);
       throw error;
     }
   }
 }
 
-// Usage
-const musicAPI = new MusicAPI(config.RAPID_API_KEY);
+// Create global instance of MusicAPI
+const musicAPI = new MusicAPI();
 ```
 
 ### Track Card Creation
 
-Track cards are dynamically generated using a factory pattern:
+The application dynamically creates track cards with a comprehensive UI representation:
 
 ```javascript
-/**
- * Creates a track card element from track data
- * @param {Object} track - Track data from API
- * @returns {HTMLElement} - DOM element for track card
- */
-function createTrackCard(track) {
-  // Create card container
-  const card = document.createElement("div");
-  card.className = "track-card";
-  card.dataset.trackId = track.id;
+function renderTracks(tracks) {
+  const resultsGrid = document.querySelector(".results-grid");
+  const sortContainer = document.querySelector(".sort-container");
+  if (!resultsGrid) return;
 
-  // Format duration for display
-  const duration = formatTime(track.duration);
+  resultsGrid.innerHTML = "";
+  sortContainer.classList.remove("hidden");
 
-  // Generate card HTML structure
-  card.innerHTML = `
-        <div class="track-card-inner">
-            <div class="track-image">
-                <img src="${track.album.cover_medium}" alt="${track.title} album cover">
-                <div class="play-overlay">
-                    <span class="play-icon">▶</span>
-                </div>
-            </div>
-            <div class="track-info">
-                <h3 class="track-name">${track.title}</h3>
-                <p class="track-artist">${track.artist.name}</p>
-                <p class="track-duration">${duration}</p>
-                <div class="track-actions">
-                    <button class="preview-button">Preview</button>
-                </div>
-            </div>
+  // Create track cards dynamically
+  tracks.forEach((track) => {
+    const trackCard = document.createElement("article");
+    trackCard.className = "track-card";
+    trackCard.dataset.previewUrl = track.preview || "";
+
+    const duration = track.duration || 0;
+    const formattedDuration = formatTime(duration);
+
+    // Detailed track card HTML structure
+    trackCard.innerHTML = `
+  <div class="track-card-inner">
+    <div class="track-image">
+      <img src="${track.album.cover_medium || "https://via.placeholder.com/250"}" alt="${track.title}">
+      <div class="play-overlay">
+        <div class="play-icon">▶</div>
+      </div>
+    </div>
+    <div class="track-info">
+      <h3 class="track-name">${track.title}</h3>
+      <p class="artist-name">${track.artist.name}</p>
+      <p class="album-name">${track.album.title}</p>
+    </div>
+    <div class="track-controls">
+      <div class="progress-container">
+        <div class="time-info">
+          <span class="current-time">0:00</span>
+          <span class="duration">-${formattedDuration}</span>
         </div>
-    `;
+        <div class="progress-bar">
+          <div class="progress"></div>
+        </div>
+      </div>
+    </div>
+    <div class="track-actions">
+      <button class="preview-button">Preview</button>
+    </div>
+  </div>
+`;
 
-  return card;
+    resultsGrid.appendChild(trackCard);
+  });
+
+  setupPreviewButtons();
 }
 ```
 
 ### Audio Playback Implementation
 
-The application manages audio playback with state tracking and UI synchronization:
+The application manages audio playback with a sophisticated, state-aware approach:
 
 ```javascript
-// Global state for currently playing audio
-let currentlyPlaying = null;
+function setupPreviewButtons() {
+  let currentlyPlaying = null;
 
-/**
- * Handles play/pause functionality for a track
- * @param {HTMLElement} card - The track card element
- * @param {string} previewUrl - URL to the audio preview
- */
-async function handlePlayback(card, previewUrl) {
-  // If already playing this track, pause it
-  if (currentlyPlaying && currentlyPlaying.card === card) {
-    currentlyPlaying.audio.pause();
-    updateUIState(card, UIStates.IDLE);
-    currentlyPlaying = null;
-    return;
-  }
+  document.querySelectorAll(".track-card").forEach((card) => {
+    const playButton = card.querySelector(".preview-button");
+    const playOverlay = card.querySelector(".play-overlay");
+    const imageArea = card.querySelector(".track-image");
+    const trackInfo = card.querySelector(".track-info");
 
-  // Stop any currently playing track
-  if (currentlyPlaying) {
-    currentlyPlaying.audio.pause();
-    updateUIState(currentlyPlaying.card, UIStates.IDLE);
-  }
+    // Comprehensive play/pause handler
+    const handlePlayPause = async () => {
+      const previewUrl = card.dataset.previewUrl;
+      const playIcon = card.querySelector(".play-icon");
+      const progressContainer = card.querySelector(".progress-container");
+      const progress = card.querySelector(".progress");
 
-  // Start loading indicator with delay
-  let loadingTimeout = setTimeout(() => {
-    updateUIState(card, UIStates.LOADING);
-  }, 200);
+      // Stop currently playing track if exists
+      if (currentlyPlaying) {
+        currentlyPlaying.audio.pause();
+        currentlyPlaying.card.classList.remove("playing", "loading");
 
-  try {
-    // Create and play new audio
-    const audio = new Audio(previewUrl);
+        // Reset previous track's UI
+        const oldPlayIcon = currentlyPlaying.card.querySelector(".play-icon");
+        if (oldPlayIcon) oldPlayIcon.textContent = "▶";
 
-    // Set up UI elements
-    const progressContainer = createProgressContainer();
-    const volumeControl = createVolumeControl(audio);
+        // Remove old volume controls
+        const oldVolumeControl = currentlyPlaying.card.querySelector(".player-controls");
+        if (oldVolumeControl) oldVolumeControl.remove();
 
-    // Add controls to card
-    const trackControls = card.querySelector(".track-controls");
-    trackControls.appendChild(progressContainer);
-    trackControls.appendChild(volumeControl);
+        if (currentlyPlaying.card === card) {
+          currentlyPlaying = null;
+          return;
+        }
+      }
 
-    // Wait for metadata before playing
-    await new Promise((resolve) => {
-      audio.addEventListener("loadedmetadata", resolve);
-      // Set timeout to handle errors
-      setTimeout(resolve, 3000);
-    });
+      try {
+        // Create and play audio
+        const audio = new Audio(previewUrl);
+        audio.volume = 0.5;
 
-    // Start playback
-    await audio.play();
-    clearTimeout(loadingTimeout);
+        // Add volume controls
+        const { controlsContainer, muteHandler } = createVolumeControl(audio);
+        const existingControls = card.querySelector(".player-controls");
+        if (existingControls) existingControls.remove();
+        progressContainer.after(controlsContainer);
 
-    // Update global state
-    currentlyPlaying = {
-      audio,
-      card,
-      progressContainer,
-      volumeControl,
+        // Add mute button
+        const muteButton = document.createElement("button");
+        muteButton.className = "mute-button";
+        muteButton.textContent = "🔊";
+        controlsContainer.appendChild(muteButton);
+
+        // Handle mute button clicks
+        muteButton.addEventListener("click", (e) => {
+          const newIcon = muteHandler(e);
+          muteButton.textContent = newIcon;
+        });
+
+        await audio.play();
+
+        // Update UI for playing state
+        card.classList.add("playing");
+        playIcon.textContent = "⏸";
+
+        // Update progress and time displays
+        audio.addEventListener("timeupdate", () => {
+          const percentage = (audio.currentTime / audio.duration) * 100;
+          progress.style.width = `${percentage}%`;
+
+          const currentTime = card.querySelector(".current-time");
+          const duration = card.querySelector(".duration");
+
+          currentTime.textContent = formatTime(audio.currentTime);
+          const remainingTime = audio.duration - audio.currentTime;
+          duration.textContent = `-${formatTime(remainingTime)}`;
+        });
+
+        currentlyPlaying = {
+          audio,
+          card,
+          playIcon,
+          progressContainer,
+          progress,
+        };
+
+        // Handle track completion
+        audio.onended = () => {
+          card.classList.remove("playing");
+          playIcon.textContent = "▶";
+          progress.style.width = "0%";
+
+          const currentTime = card.querySelector(".current-time");
+          if (currentTime) currentTime.textContent = "0:00";
+
+          const volumeControl = card.querySelector(".player-controls");
+          if (volumeControl) volumeControl.remove();
+
+          currentlyPlaying = null;
+        };
+      } catch (error) {
+        // Handle playback errors
+        console.error("Playback failed:", error);
+        card.classList.remove("playing");
+        playIcon.textContent = "▶";
+        progress.style.width = "0%";
+        currentlyPlaying = null;
+      }
     };
 
-    // Update UI to playing state
-    updateUIState(card, UIStates.PLAYING);
-
-    // Set up audio event listeners
-    setupAudioEvents(audio, card);
-  } catch (error) {
-    clearTimeout(loadingTimeout);
-    console.error("Playback error:", error);
-    updateUIState(card, UIStates.ERROR);
-  }
+    // Add click handlers for play/pause
+    [playButton, playOverlay, imageArea, trackInfo].forEach((element) => {
+      element.addEventListener("click", (e) => {
+        e.stopPropagation();
+        handlePlayPause();
+      });
+    });
+  });
 }
 ```
 
 ### Theme Switching Implementation
 
-The theme system uses CSS variables with smooth transitions:
+The application implements theme switching with custom SVG icons and localStorage persistence:
 
 ```javascript
-/**
- * Toggle between light and dark themes
- */
-function toggleTheme() {
-  const root = document.documentElement;
+document.addEventListener("DOMContentLoaded", () => {
   const themeToggle = document.querySelector(".theme-toggle");
+  let isDarkTheme = true;
 
-  // Check current theme
-  const isDarkTheme = !root.hasAttribute("data-theme");
+  // Initial sun icon for dark mode
+  themeToggle.innerHTML = `
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  `;
 
-  if (isDarkTheme) {
-    // Switch to light theme
-    root.setAttribute("data-theme", "light");
-    themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
-    localStorage.setItem("theme", "light");
-  } else {
-    // Switch to dark theme
-    root.removeAttribute("data-theme");
-    themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-    localStorage.setItem("theme", "dark");
-  }
-
-  // Add animation class
-  themeToggle.classList.add("theme-toggle-animation");
-
-  // Remove animation class after animation completes
-  setTimeout(() => {
-    themeToggle.classList.remove("theme-toggle-animation");
-  }, 1000);
-}
-
-// Initialize theme from localStorage if available
-function initializeTheme() {
-  const savedTheme = localStorage.getItem("theme");
-  const themeToggle = document.querySelector(".theme-toggle");
-
-  if (savedTheme === "light") {
-    document.documentElement.setAttribute("data-theme", "light");
-    themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
-  } else {
-    document.documentElement.removeAttribute("data-theme");
-    themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-  }
-}
+  // Theme toggle click handler
+  themeToggle.addEventListener("click", () => {
+    isDarkTheme = !isDarkTheme;
+    if (!isDarkTheme) {
+      // Switch to light mode
+      document.documentElement.setAttribute("data-theme", "light");
+      // Moon icon for light mode
+      themeToggle.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+      `;
+    } else {
+      // Switch to dark mode
+      document.documentElement.removeAttribute("data-theme");
+      // Sun icon for dark mode
+      themeToggle.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="5"></circle>
+          <line x1="12" y1="1" x2="12" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="23"></line>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+          <line x1="1" y1="12" x2="3" y2="12"></line>
+          <line x1="21" y1="12" x2="23" y2="12"></line>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+      `;
+    }
+  });
+});
 ```
 
 ### CSS Variables for Theming
@@ -2549,46 +2616,19 @@ function initializeTheme() {
 The styling system uses CSS variables to enable theme switching:
 
 ```css
-/* Base theme variables (dark theme) */
 :root {
-  /* Colors */
   --primary-color: #a393eb;
   --secondary-color: #5e63b6;
   --text-color: #ffffff;
   --background-color: #27296d;
-  --card-background: rgba(39, 41, 109, 0.8);
-  --input-background: rgba(255, 255, 255, 0.1);
-  --shadow-color: rgba(0, 0, 0, 0.3);
-
-  /* Gradients */
-  --gradient-color-1: rgba(163, 147, 235, 1);
-  --gradient-color-2: rgba(94, 99, 182, 1);
-  --gradient-color-3: rgba(39, 41, 109, 1);
-  --gradient-color-4: rgba(20, 21, 56, 1);
-
-  /* Spacing */
+  --gradient-color-1: rgba(183, 167, 255, 1);
+  --gradient-color-2: rgba(114, 119, 202, 1);
+  --gradient-color-3: rgba(59, 61, 129, 1);
+  --gradient-color-4: rgba(40, 41, 76, 1);
+  --error-color: #e74c3c;
   --spacing-small: 0.5rem;
   --spacing-medium: 1rem;
   --spacing-large: 2rem;
-
-  /* Typography */
-  --font-family: "Outfit", sans-serif;
-  --font-size-small: 0.9rem;
-  --font-size-medium: 1rem;
-  --font-size-large: 1.2rem;
-  --font-size-xlarge: 1.5rem;
-  --font-size-xxlarge: 2rem;
-
-  /* Transitions */
-  --transition-fast: 0.2s ease;
-  --transition-medium: 0.3s ease;
-  --transition-slow: 0.5s ease;
-
-  /* Border radius */
-  --border-radius-small: 4px;
-  --border-radius-medium: 8px;
-  --border-radius-large: 16px;
-  --border-radius-xlarge: 24px;
 }
 
 /* Light theme overrides */
@@ -2596,137 +2636,68 @@ The styling system uses CSS variables to enable theme switching:
   --primary-color: #5e63b6;
   --secondary-color: #a393eb;
   --text-color: #27296d;
-  --background-color: #f5f5f7;
-  --card-background: rgba(255, 255, 255, 0.9);
-  --input-background: rgba(0, 0, 0, 0.05);
-  --shadow-color: rgba(0, 0, 0, 0.1);
-
-  /* Light theme gradient */
-  --gradient-color-1: rgba(245, 245, 247, 1);
-  --gradient-color-2: rgba(233, 231, 250, 1);
-  --gradient-color-3: rgba(209, 204, 248, 1);
-  --gradient-color-4: rgba(187, 182, 241, 1);
+  --background-color: #f8f8ff;
+  --error-color: #e74c3c;
 }
 ```
 
 ### Sort Functionality Implementation
 
-The application implements dynamic sorting without disrupting playback:
+The application implements dynamic sorting of track results:
 
 ```javascript
-/**
- * Set up sorting functionality
- * @param {HTMLElement} sortSelect - The sort dropdown element
- */
-function setupSorting(sortSelect) {
-  sortSelect.addEventListener("change", () => {
-    const sortType = sortSelect.value;
+// Sort selection event listener
+const sortSelect = document.getElementById("sort-select");
+sortSelect.addEventListener("change", () => {
+  const sortType = sortSelect.value;
 
-    if (sortType === "default") {
-      renderTracks(currentTracks);
-      return;
-    }
+  // Return to default order if selected
+  if (sortType === "default") {
+    renderTracks(currentTracks);
+    return;
+  }
 
-    // Create a copy for sorting to avoid modifying original data
-    const sortedTracks = [...currentTracks];
-
-    // Apply sorting based on selected type
-    sortedTracks.sort((a, b) => {
-      switch (sortType) {
-        case "title":
-          return a.title.localeCompare(b.title);
-
-        case "artist":
-          return a.artist.name.localeCompare(b.artist.name);
-
-        case "duration":
-          return a.duration - b.duration;
-
-        default:
-          return 0;
-      }
-    });
-
-    // Remember currently playing track
-    const playingTrackId = currentlyPlaying?.card?.dataset.trackId;
-
-    // Render sorted tracks
-    renderTracks(sortedTracks);
-
-    // Restore playing state if applicable
-    if (playingTrackId && currentlyPlaying) {
-      const newCard = document.querySelector(`.track-card[data-track-id="${playingTrackId}"]`);
-      if (newCard) {
-        newCard.classList.add("playing");
-        // Update currentlyPlaying reference
-        currentlyPlaying.card = newCard;
-      }
+  // Sort tracks based on selected criteria
+  const sortedTracks = [...currentTracks].sort((a, b) => {
+    switch (sortType) {
+      case "title":
+        return a.title.localeCompare(b.title);
+      case "artist":
+        return a.artist.name.localeCompare(b.artist.name);
+      case "duration":
+        return a.duration - b.duration;
+      default:
+        return 0;
     }
   });
-}
+
+  renderTracks(sortedTracks);
+});
 ```
 
 ### Error Handling System
 
-The application implements a comprehensive error handling system:
+The application implements a straightforward error messaging system:
 
 ```javascript
-// Error message display timeout reference
-let errorTimeout = null;
-
-/**
- * Display error message to user
- * @param {string} message - Error message to display
- * @param {number} duration - How long to show the error in ms
- */
-function showError(message, duration = 5000) {
+// Display error messages
+function showError(message) {
   const errorContainer = document.getElementById("error-container");
   const errorText = document.getElementById("error-text");
 
-  // Clear any existing timeout
-  if (errorTimeout) {
-    clearTimeout(errorTimeout);
-  }
-
-  // Set error message
   errorText.textContent = message;
-
-  // Show error container
   errorContainer.classList.remove("hidden");
 
-  // Automatically hide after duration
-  errorTimeout = setTimeout(() => {
+  // Auto-hide error after 5 seconds
+  setTimeout(() => {
     errorContainer.classList.add("hidden");
-  }, duration);
-
-  // Allow manual dismissal
-  const dismissButton = document.getElementById("error-dismiss");
-  dismissButton.addEventListener(
-    "click",
-    () => {
-      errorContainer.classList.add("hidden");
-      clearTimeout(errorTimeout);
-    },
-    { once: true }
-  );
+  }, 5000);
 }
 
-/**
- * Handle API errors with appropriate messaging
- * @param {Error} error - The error object
- */
-function handleApiError(error) {
-  console.error("API Error:", error);
-
-  // Determine error type for appropriate messaging
-  if (error.message.includes("429")) {
-    showError("Too many requests. Please try again later.", 8000);
-  } else if (error.message.includes("Network") || error.message.includes("Failed to fetch")) {
-    showError("Network error. Please check your connection.", 8000);
-  } else {
-    showError("Something went wrong. Please try again later.", 5000);
-  }
-}
+// Handle error message close button
+document.querySelector(".error-close").addEventListener("click", () => {
+  document.getElementById("error-container").classList.add("hidden");
+});
 ```
 
 These code examples demonstrate the core implementation patterns used throughout the Music Explorer application. The modular approach and clear separation of concerns enable maintainable development and future enhancements.
@@ -2957,14 +2928,6 @@ Music Explorer is designed with accessibility as a core consideration. While the
    - Achieve WCAG 2.1 AA compliance across all criteria
    - Implement user testing with individuals who use assistive technologies
    - Create accessibility statement and documentation
-
-#### WAVE Web Accessibility Evaluation
-
-- **Status**: Passed with 0 errors
-- **Tool**: [WAVE Web Accessibility Evaluation Tool](https://wave.webaim.org/)
-- **Date Tested**: March 1, 2025
-
-![WAVE Evaluation Results](assets/images/testing/wave-results.png)
 
 ### Keyboard Navigation Testing
 
