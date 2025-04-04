@@ -914,54 +914,79 @@ When the application first loads, the following sequence occurs:
          │
          ▼
 ┌─────────────────┐
+│  Set Initial    │
+│  Theme (Dark)   │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│  Set Theme      │
+│  Toggle Icon    │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
 │  Initialize     │
 │  Event Listeners│
-└────────┬────────┘
-         │
-         ▼
-┌─────────────────┐
-│  Check Local    │
-│  Storage        │
-└────────┬────────┘
-         │
-         ▼
-┌─────────────────┐
-│  Apply Saved    │
-│  Theme          │
-└────────┬────────┘
-         │
-         ▼
-┌─────────────────┐
-│  Display Welcome│
-│  Screen         │
 └─────────────────┘
 ```
 
 **Key Implementation:**
 
 ```javascript
+// Wait for DOM to be fully loaded before running
 document.addEventListener("DOMContentLoaded", () => {
-  // Initialize event listeners
-  setupEventListeners();
+  // Theme toggle setup
+  const themeToggle = document.querySelector(".theme-toggle");
+  let isDarkTheme = true;
 
-  // Load saved theme from localStorage
-  initializeTheme();
+  // Set initial sun icon for dark mode
+  themeToggle.innerHTML = `
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  `;
 
-  // Show welcome screen
-  displayWelcomeScreen();
+  // Handle theme toggle clicks
+  themeToggle.addEventListener("click", () => {
+    isDarkTheme = !isDarkTheme;
+    if (!isDarkTheme) {
+      // Switch to light mode
+      document.documentElement.setAttribute("data-theme", "light");
+      // Show moon icon
+      themeToggle.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+      `;
+    } else {
+      // Switch to dark mode
+      document.documentElement.removeAttribute("data-theme");
+      // Show sun icon (same as initial icon)
+      themeToggle.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="5"></circle>
+          <line x1="12" y1="1" x2="12" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="23"></line>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+          <line x1="1" y1="12" x2="3" y2="12"></line>
+          <line x1="21" y1="12" x2="23" y2="12"></line>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+      `;
+    }
+  });
 });
-
-function initializeTheme() {
-  const savedTheme = localStorage.getItem("theme");
-
-  if (savedTheme === "light") {
-    document.documentElement.setAttribute("data-theme", "light");
-    document.querySelector(".theme-toggle").innerHTML = '<i class="fas fa-moon"></i>';
-  } else {
-    document.documentElement.removeAttribute("data-theme");
-    document.querySelector(".theme-toggle").innerHTML = '<i class="fas fa-sun"></i>';
-  }
-}
 ```
 
 #### 2. Search and Results Flow
@@ -1028,37 +1053,57 @@ When a user performs a search, this sequence processes the request and displays 
 **Key Implementation:**
 
 ```javascript
+// Handle search form submission
 searchForm.addEventListener("submit", async (e) => {
   e.preventDefault();
+
+  // Reset sort selection
+  sortSelect.value = "default";
+
+  // Prevent multiple simultaneous searches
+  if (isSearching) {
+    showError("A search is already in progress. Please wait...");
+    return;
+  }
+
+  const searchInput = document.getElementById("search-input");
   const query = searchInput.value.trim();
 
+  // Validate search input
   if (!query) {
     showError("Please enter a search term");
     return;
   }
 
-  // Show loading state
-  showLoading();
+  const loadingSpinner = document.querySelector(".loading-spinner");
+  const resultsGrid = document.querySelector(".results-grid");
 
   try {
-    // API request
+    // Show loading state
+    isSearching = true;
+    loadingSpinner.classList.remove("hidden");
+    resultsGrid.classList.add("hidden");
+
+    // Perform search
     const tracks = await musicAPI.searchTracks(query);
 
-    // Check if results exist
+    // Handle no results
     if (!tracks || tracks.length === 0) {
-      hideLoading();
-      showNoResultsMessage(query);
+      showError("No tracks found. Try a different search term.");
       return;
     }
 
-    // Process and display results
-    currentTracks = [...tracks];
-    hideLoading();
-    renderTracks(tracks);
-    showSortOptions();
+    // Display search results
+    displayTracks(tracks);
   } catch (error) {
-    hideLoading();
-    handleApiError(error);
+    // Handle search errors
+    console.error("Search failed:", error);
+    showError("Something went wrong. Please try again later.");
+  } finally {
+    // Reset search state and UI
+    isSearching = false;
+    loadingSpinner.classList.add("hidden");
+    resultsGrid.classList.remove("hidden");
   }
 });
 ```
@@ -1140,62 +1185,137 @@ When a user interacts with track playback, the following sequence occurs:
 **Key Implementation:**
 
 ```javascript
-async function handlePlayback(card, previewUrl) {
-  // If already playing this track, pause it
-  if (currentlyPlaying && currentlyPlaying.card === card) {
-    currentlyPlaying.audio.pause();
-    updateUIState(card, UIStates.IDLE);
-    currentlyPlaying = null;
-    return;
-  }
+// Set up audio preview functionality
+function setupPreviewButtons() {
+  let currentlyPlaying = null;
 
-  // Stop any currently playing track
-  if (currentlyPlaying) {
-    currentlyPlaying.audio.pause();
-    updateUIState(currentlyPlaying.card, UIStates.IDLE);
-  }
+  document.querySelectorAll(".track-card").forEach((card) => {
+    const playButton = card.querySelector(".preview-button");
+    const playOverlay = card.querySelector(".play-overlay");
+    const imageArea = card.querySelector(".track-image");
+    const trackInfo = card.querySelector(".track-info");
 
-  // Start loading indicator with delay
-  let loadingTimeout = setTimeout(() => {
-    updateUIState(card, UIStates.LOADING);
-  }, 200);
+    // Handle play/pause actions
+    const handlePlayPause = async () => {
+      const previewUrl = card.dataset.previewUrl;
+      const playIcon = card.querySelector(".play-icon");
+      const progressContainer = card.querySelector(".progress-container");
+      const progress = card.querySelector(".progress");
 
-  try {
-    // Create and play new audio
-    const audio = new Audio(previewUrl);
+      // Stop currently playing track if exists
+      if (currentlyPlaying) {
+        currentlyPlaying.audio.pause();
+        currentlyPlaying.card.classList.remove("playing", "loading");
 
-    // Set up UI elements
-    const progressContainer = createProgressContainer();
-    const volumeControl = createVolumeControl(audio);
+        // Reset previous track's UI
+        const oldPlayIcon = currentlyPlaying.card.querySelector(".play-icon");
+        if (oldPlayIcon) oldPlayIcon.textContent = "▶";
 
-    // Wait for metadata before playing
-    await new Promise((resolve) => {
-      audio.addEventListener("loadedmetadata", resolve);
-      setTimeout(resolve, 3000); // Timeout fallback
-    });
+        // Remove old volume controls
+        const oldVolumeControl = currentlyPlaying.card.querySelector(".player-controls");
+        if (oldVolumeControl) oldVolumeControl.remove();
 
-    // Start playback
-    await audio.play();
-    clearTimeout(loadingTimeout);
+        if (currentlyPlaying.card === card) {
+          currentlyPlaying = null;
+          return;
+        }
+      }
 
-    // Update global state
-    currentlyPlaying = {
-      audio,
-      card,
-      progressContainer,
-      volumeControl,
+      try {
+        // Create and play audio
+        const audio = new Audio(previewUrl);
+        audio.volume = 0.5;
+
+        // Add volume controls
+        const { controlsContainer, muteHandler } = createVolumeControl(audio);
+        const existingControls = card.querySelector(".player-controls");
+        if (existingControls) existingControls.remove();
+        progressContainer.after(controlsContainer);
+
+        // Add mute button
+        const muteButton = document.createElement("button");
+        muteButton.className = "mute-button";
+        muteButton.textContent = "🔊";
+        controlsContainer.appendChild(muteButton);
+
+        // Handle mute button clicks
+        muteButton.addEventListener("click", (e) => {
+          const newIcon = muteHandler(e);
+          muteButton.textContent = newIcon;
+        });
+
+        await audio.play();
+
+        // Update UI for playing state
+        card.classList.add("playing");
+        playIcon.textContent = "⏸";
+
+        // Update progress and time displays
+        audio.addEventListener("timeupdate", () => {
+          const percentage = (audio.currentTime / audio.duration) * 100;
+          progress.style.width = `${percentage}%`;
+
+          const currentTime = card.querySelector(".current-time");
+          const duration = card.querySelector(".duration");
+
+          currentTime.textContent = formatTime(audio.currentTime);
+          const remainingTime = audio.duration - audio.currentTime;
+          duration.textContent = `-${formatTime(remainingTime)}`;
+        });
+
+        currentlyPlaying = {
+          audio,
+          card,
+          playIcon,
+          progressContainer,
+          progress,
+        };
+
+        // Handle track completion
+        audio.onended = () => {
+          card.classList.remove("playing");
+          playIcon.textContent = "▶";
+          progress.style.width = "0%";
+
+          const currentTime = card.querySelector(".current-time");
+          if (currentTime) currentTime.textContent = "0:00";
+
+          const volumeControl = card.querySelector(".player-controls");
+          if (volumeControl) volumeControl.remove();
+
+          currentlyPlaying = null;
+        };
+      } catch (error) {
+        // Handle playback errors
+        console.error("Playback failed:", error);
+        card.classList.remove("playing");
+        playIcon.textContent = "▶";
+        progress.style.width = "0%";
+        currentlyPlaying = null;
+      }
     };
 
-    // Update UI to playing state
-    updateUIState(card, UIStates.PLAYING);
+    // Add click handlers for play/pause
+    playButton.addEventListener("click", (e) => {
+      e.stopPropagation();
+      handlePlayPause();
+    });
 
-    // Set up audio events
-    setupAudioEvents(audio, card);
-  } catch (error) {
-    clearTimeout(loadingTimeout);
-    console.error("Playback error:", error);
-    updateUIState(card, UIStates.ERROR);
-  }
+    playOverlay.addEventListener("click", (e) => {
+      e.stopPropagation();
+      handlePlayPause();
+    });
+
+    imageArea.addEventListener("click", (e) => {
+      e.stopPropagation();
+      handlePlayPause();
+    });
+
+    trackInfo.addEventListener("click", (e) => {
+      e.stopPropagation();
+      handlePlayPause();
+    });
+  });
 }
 ```
 
@@ -1211,73 +1331,104 @@ When a user changes the application theme:
          │
          ▼
 ┌─────────────────┐
-│  Check Current  │
-│  Theme          │
+│  Toggle         │
+│  isDarkTheme    │
 └────────┬────────┘
          │
          ▼
 ┌─────────────────┐     ┌─────────────────┐
-│                 │     │  Apply Light    │
-│  Is Dark Theme? │─Yes─►  Theme          │
+│                 │     │ Add data-theme  │
+│ isDarkTheme     │─No─►│ ="light"        │
+│ Flag?           │     │ attribute       │
 │                 │     │                 │
 └────────┬────────┘     └────────┬────────┘
-         │ No                   │
+         │ Yes                  │
          ▼                      │
 ┌─────────────────┐             │
-│  Apply Dark     │◄────────────┘
-│  Theme          │
+│ Remove data-     │◄────────────┘
+│ theme attribute  │
 └────────┬────────┘
          │
          ▼
 ┌─────────────────┐
 │  Update Toggle  │
-│  Icon           │
-└────────┬────────┘
-         │
-         ▼
-┌─────────────────┐
-│  Save Preference│
-│  To LocalStorage│
-└────────┬────────┘
-         │
-         ▼
-┌─────────────────┐
-│  Apply Toggle   │
-│  Animation      │
+│  Icon with SVG  │
 └─────────────────┘
 ```
 
 **Key Implementation:**
 
+##### JS Implementation:
+
 ```javascript
-function toggleTheme() {
-  const root = document.documentElement;
-  const themeToggle = document.querySelector(".theme-toggle");
+// Theme toggle setup
+const themeToggle = document.querySelector(".theme-toggle");
+let isDarkTheme = true;
 
-  // Check current theme
-  const isDarkTheme = !root.hasAttribute("data-theme");
-
-  if (isDarkTheme) {
-    // Switch to light theme
-    root.setAttribute("data-theme", "light");
-    themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
-    localStorage.setItem("theme", "light");
+// Handle theme toggle clicks
+themeToggle.addEventListener("click", () => {
+  isDarkTheme = !isDarkTheme;
+  if (!isDarkTheme) {
+    // Switch to light mode
+    document.documentElement.setAttribute("data-theme", "light");
+    // Show moon icon
+    themeToggle.innerHTML = `
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+      </svg>
+    `;
   } else {
-    // Switch to dark theme
-    root.removeAttribute("data-theme");
-    themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-    localStorage.setItem("theme", "dark");
+    // Switch to dark mode
+    document.documentElement.removeAttribute("data-theme");
+    // Show sun icon (same as initial icon)
+    themeToggle.innerHTML = `
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="5"></circle>
+        <line x1="12" y1="1" x2="12" y2="3"></line>
+        <line x1="12" y1="21" x2="12" y2="23"></line>
+        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+        <line x1="1" y1="12" x2="3" y2="12"></line>
+        <line x1="21" y1="12" x2="23" y2="12"></line>
+        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+      </svg>
+    `;
   }
+});
+```
 
-  // Add animation class
-  themeToggle.classList.add("theme-toggle-animation");
+##### CSS Implementation:
 
-  // Remove animation class after animation completes
-  setTimeout(() => {
-    themeToggle.classList.remove("theme-toggle-animation");
-  }, 1000);
+The theme switching is supported by CSS that uses the `[data-theme="light"]` attribute selector to apply different styles when light theme is active:
+
+```css
+/* Base (dark) theme variables */
+:root {
+  --primary-color: #a393eb;
+  --secondary-color: #5e63b6;
+  --text-color: #ffffff;
+  --background-color: #27296d;
+  --error-color: #e74c3c;
+}
+
+/* Light theme overrides using data attribute */
+[data-theme="light"] {
+  --primary-color: #5e63b6;
+  --secondary-color: #a393eb;
+  --text-color: #27296d;
+  --background-color: #f8f8ff;
+  --error-color: #e74c3c;
+}
+
+/* Light theme specific background gradient */
+[data-theme="light"] body {
+  background: radial-gradient(circle, rgba(255, 255, 255, 1) 0%, rgba(240, 240, 255, 1) 26%, rgba(230, 230, 250, 1) 76%, rgba(220, 220, 245, 1) 100%), repeating-linear-gradient(45deg, transparent 0, transparent 10px, rgba(163, 147, 235, 0.05) 10px, rgba(163, 147, 235, 0.05) 20px);
+  background-attachment: fixed;
 }
 ```
+
+The theme system uses CSS variables (custom properties) to create a consistent color scheme that can be toggled between light and dark themes. When the user clicks the theme toggle button, JavaScript adds or removes the `data-theme="light"` attribute on the document's root element, which triggers the CSS to apply the appropriate variable values throughout the application.
 
 #### 5. Results Sorting Flow
 
@@ -1310,39 +1461,27 @@ When a user sorts search results:
          │
          ▼
 ┌─────────────────┐
-│  Save State of  │
-│  Playing Track  │
-└────────┬────────┘
-         │
-         ▼
-┌─────────────────┐
 │  Recreate       │
 │  Track Cards    │
-└────────┬────────┘
-         │
-         ▼
-┌─────────────────┐
-│  Restore        │
-│  Playing State  │
 └─────────────────┘
 ```
 
 **Key Implementation:**
 
 ```javascript
+// Handle sort selection changes
+const sortSelect = document.getElementById("sort-select");
 sortSelect.addEventListener("change", () => {
   const sortType = sortSelect.value;
 
+  // Return to default order if selected
   if (sortType === "default") {
     renderTracks(currentTracks);
     return;
   }
 
-  // Create a copy for sorting to avoid modifying original data
-  const sortedTracks = [...currentTracks];
-
-  // Apply sorting based on selected type
-  sortedTracks.sort((a, b) => {
+  // Sort tracks based on selected criteria
+  const sortedTracks = [...currentTracks].sort((a, b) => {
     switch (sortType) {
       case "title":
         return a.title.localeCompare(b.title);
@@ -1355,20 +1494,7 @@ sortSelect.addEventListener("change", () => {
     }
   });
 
-  // Remember currently playing track
-  const playingTrackId = currentlyPlaying?.card?.dataset.trackId;
-
-  // Render sorted tracks
   renderTracks(sortedTracks);
-
-  // Restore playing state if applicable
-  if (playingTrackId && currentlyPlaying) {
-    const newCard = document.querySelector(`.track-card[data-track-id="${playingTrackId}"]`);
-    if (newCard) {
-      newCard.classList.add("playing");
-      currentlyPlaying.card = newCard;
-    }
-  }
 });
 ```
 
@@ -1386,15 +1512,15 @@ The application maintains several key state objects that influence UI presentati
 │  Theme State  │  Search State     │  Playback State   │
 │               │                   │                   │
 │ ┌───────────┐ │ ┌───────────────┐ │ ┌───────────────┐ │
-│ │ Dark/Light│ │ │ Query String  │ │ │ Current Track │ │
+│ │ isDarkTheme│ │ │ isSearching  │ │ │currentlyPlaying│
 │ └───────────┘ │ └───────────────┘ │ └───────────────┘ │
 │               │                   │                   │
 │               │ ┌───────────────┐ │ ┌───────────────┐ │
-│               │ │ Loading Status│ │ │ Playing Status│ │
+│               │ │ Loading Spinner│ │ │ Playing Status│ │
 │               │ └───────────────┘ │ └───────────────┘ │
 │               │                   │                   │
 │               │ ┌───────────────┐ │ ┌───────────────┐ │
-│               │ │ Search Results│ │ │ Volume Level  │ │
+│               │ │currentTracks  │ │ │ Volume Level  │ │
 │               │ └───────────────┘ │ └───────────────┘ │
 │               │                   │                   │
 │               │ ┌───────────────┐ │ ┌───────────────┐ │
@@ -1404,26 +1530,27 @@ The application maintains several key state objects that influence UI presentati
 └───────────────┴───────────────────┴───────────────────┘
 ```
 
-**Key Global State Variables:**
+### Key State Variables:
 
 ```javascript
-// Global state for currently playing audio
-let currentlyPlaying = null;
+// Global theme state
+// Initialized in DOMContentLoaded event handler
+let isDarkTheme = true;
 
-// Global state for current track data
+// Track storage for sorting functionality
 let currentTracks = [];
 
-// Error message display timeout reference
-let errorTimeout = null;
+// Search state
+let isSearching = false;
 
-// UI States enum
-const UIStates = {
-  IDLE: "idle",
-  LOADING: "loading",
-  PLAYING: "playing",
-  ERROR: "error",
-};
+// Audio playback state (local to setupPreviewButtons function)
+function setupPreviewButtons() {
+  let currentlyPlaying = null;
+  // ...
+}
 ```
+
+Unlike a more formal state management architecture, the application uses a mix of global variables and function-scoped variables to manage state. Theme state is managed globally with the `isDarkTheme` variable, search results are tracked with `currentTracks`, and the search process state is managed with `isSearching`. Audio playback state is handled locally within the `setupPreviewButtons` function through the `currentlyPlaying` variable.
 
 ### Event Flow
 
@@ -1444,11 +1571,21 @@ The application uses an event-based architecture for many interactions:
          ▼
 ┌─────────────────┐
 │                 │
-│  Audio Events   │
+│Direct Listeners │
 │                 │
 ├─────────────────┤
-│ - play          │
-│ - pause         │
+│ - themeToggle   │
+│ - sortSelect    │
+│ - searchForm    │
+│ - backToTop     │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│                 │
+│ Audio Events    │
+│                 │
+├─────────────────┤
 │ - timeupdate    │
 │ - ended         │
 │ - error         │
@@ -1457,64 +1594,63 @@ The application uses an event-based architecture for many interactions:
          ▼
 ┌─────────────────┐
 │                 │
-│ Event Handlers  │
-│                 │
-├─────────────────┤
-│ - handlePlay    │
-│ - handleSearch  │
-│ - handleSort    │
-│ - handleTheme   │
-└────────┬────────┘
-         │
-         ▼
-┌─────────────────┐
-│                 │
-│  State Updates  │
-│                 │
-├─────────────────┤
-│ - updateUIState │
-│ - updateProgress│
-│ - showLoading   │
-└────────┬────────┘
-         │
-         ▼
-┌─────────────────┐
-│                 │
-│   DOM Updates   │
+│  DOM Updates    │
 │                 │
 ├─────────────────┤
 │ - classList     │
 │ - innerHTML     │
-│ - createElement │
+│ - style changes │
 └─────────────────┘
 ```
 
 **Key Event Bindings:**
 
 ```javascript
-function setupEventListeners() {
-  // Search form submission
-  searchForm.addEventListener("submit", handleSearch);
+// Theme toggle event binding
+themeToggle.addEventListener("click", () => {
+  isDarkTheme = !isDarkTheme;
+  if (!isDarkTheme) {
+    // Switch to light mode
+    document.documentElement.setAttribute("data-theme", "light");
+    // Show moon icon
+    themeToggle.innerHTML = `<svg>...</svg>`;
+  } else {
+    // Switch to dark mode
+    document.documentElement.removeAttribute("data-theme");
+    // Show sun icon
+    themeToggle.innerHTML = `<svg>...</svg>`;
+  }
+});
 
-  // Theme toggle
-  document.querySelector(".theme-toggle").addEventListener("click", toggleTheme);
+// Sort selection event binding
+sortSelect.addEventListener("change", () => {
+  const sortType = sortSelect.value;
+  // Sort implementation...
+});
 
-  // Sort selection
-  document.getElementById("sort-select").addEventListener("change", handleSort);
+// Search form submission event binding
+searchForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  // Search implementation...
+});
 
-  // Back to top button
-  document.querySelector(".back-to-top").addEventListener("click", scrollToTop);
+// Back to top button event binding
+backToTop.addEventListener("click", () => {
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth",
+  });
+});
 
-  // Mobile menu toggle
-  document.querySelector(".menu-toggle").addEventListener("click", toggleMobileMenu);
-
-  // Results grid for delegate event handling
-  resultsGrid.addEventListener("click", handleTrackInteraction);
-
-  // Window scroll event for showing/hiding back to top button
-  window.addEventListener("scroll", handleScroll);
-}
+// Playback event binding (in setupPreviewButtons)
+audio.addEventListener("timeupdate", () => {
+  const percentage = (audio.currentTime / audio.duration) * 100;
+  progress.style.width = `${percentage}%`;
+  // Time display updates...
+});
 ```
+
+The application uses direct event binding with inline anonymous functions rather than a central event handling system. Events are bound where they are relevant, and handlers are implemented directly at the point of binding. Audio-related events are set up dynamically when playback begins.
 
 ### User Interaction Points
 
@@ -1573,8 +1709,8 @@ The application implements comprehensive error handling throughout the user flow
 ├─────────────────┤
 │ - API Error     │
 │ - Empty Search  │
-│ - Playback Error│
-│ - No Results    │
+│ - Duplicate     │
+│   Search        │
 └────────┬────────┘
          │
          ▼
@@ -1584,17 +1720,6 @@ The application implements comprehensive error handling throughout the user flow
 │                 │
 ├─────────────────┤
 │ - Console Error │
-│ - Error Details │
-└────────┬────────┘
-         │
-         ▼
-┌─────────────────┐
-│                 │
-│  Error Analysis │
-│                 │
-├─────────────────┤
-│ - Error Type    │
-│ - User Impact   │
 └────────┬────────┘
          │
          ▼
@@ -1604,7 +1729,6 @@ The application implements comprehensive error handling throughout the user flow
 │                 │
 ├─────────────────┤
 │ - Error Display │
-│ - User Guidance │
 └────────┬────────┘
          │
          ▼
@@ -1613,70 +1737,54 @@ The application implements comprehensive error handling throughout the user flow
 │ Auto-Dismissal  │
 │                 │
 ├─────────────────┤
-│ - Timeout       │
+│ - 5s Timeout    │
 │ - Manual Close  │
-└────────┬────────┘
-         │
-         ▼
-┌─────────────────┐
-│                 │
-│  Recovery       │
-│                 │
-├─────────────────┤
-│ - State Reset   │
-│ - Ready for New │
-│   Interaction   │
 └─────────────────┘
 ```
 
 **Key Error Handling Implementation:**
 
 ```javascript
-function handleApiError(error) {
-  console.error("API Error:", error);
-
-  // Determine error type for appropriate messaging
-  if (error.message.includes("429")) {
-    showError("Too many requests. Please try again later.", 8000);
-  } else if (error.message.includes("Network") || error.message.includes("Failed to fetch")) {
-    showError("Network error. Please check your connection.", 8000);
-  } else {
-    showError("Something went wrong. Please try again later.", 5000);
-  }
-}
-
-function showError(message, duration = 5000) {
+// Display error messages
+function showError(message) {
   const errorContainer = document.getElementById("error-container");
   const errorText = document.getElementById("error-text");
 
-  // Clear any existing timeout
-  if (errorTimeout) {
-    clearTimeout(errorTimeout);
-  }
-
-  // Set error message
   errorText.textContent = message;
-
-  // Show error container
   errorContainer.classList.remove("hidden");
 
-  // Automatically hide after duration
-  errorTimeout = setTimeout(() => {
+  // Auto-hide error after 5 seconds
+  setTimeout(() => {
     errorContainer.classList.add("hidden");
-  }, duration);
+  }, 5000);
+}
 
-  // Allow manual dismissal
-  const dismissButton = document.getElementById("error-dismiss");
-  dismissButton.addEventListener(
-    "click",
-    () => {
-      errorContainer.classList.add("hidden");
-      clearTimeout(errorTimeout);
-    },
-    { once: true }
-  );
+// Handle error message close button
+document.querySelector(".error-close").addEventListener("click", () => {
+  document.getElementById("error-container").classList.add("hidden");
+});
+
+// Example of error handling in search
+try {
+  // Perform search
+  const tracks = await musicAPI.searchTracks(query);
+
+  // Handle no results
+  if (!tracks || tracks.length === 0) {
+    showError("No tracks found. Try a different search term.");
+    return;
+  }
+
+  // Display search results
+  displayTracks(tracks);
+} catch (error) {
+  // Handle search errors
+  console.error("Search failed:", error);
+  showError("Something went wrong. Please try again later.");
 }
 ```
+
+The implementation uses a straightforward approach to error handling. A centralized `showError` function displays error messages to the user, with a fixed 5-second auto-dismissal timeout. Errors can also be manually dismissed via a close button. The application checks for specific error conditions (empty search, duplicate search, no results) and provides appropriate messaging, while also handling unexpected errors with a generic message.
 
 By visualizing and documenting these core application flows, developers can better understand the architecture, behavior, and interaction patterns within Music Explorer.
 
