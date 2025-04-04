@@ -1877,22 +1877,22 @@ graph TD
   root[Music Explorer]
 
   root --> index[index.html]
-  root --> css[css]
-  root --> js[js]
-  root --> assets[assets]
+  root --> cssDir[css]
+  root --> jsDir[js]
+  root --> assetsDir[assets]
   root --> readme[README.md]
 
-  css --> style[style.css]
+  cssDir --> styleFile[style.css]
 
-  js --> api[api.js]
-  js --> main[main.js]
+  jsDir --> apiFile[api.js]
+  jsDir --> mainFile[main.js]
 
-  assets --> images[images]
-  assets --> favicon[favicon]
+  assetsDir --> imagesDir[images]
+  assetsDir --> faviconDir[favicon]
 
-  images --> wireframes[wireframes]
-  images --> testing[testing]
-  images --> screenshots[screenshots]
+  imagesDir --> wireframesDir[wireframes]
+  imagesDir --> testingDir[testing]
+  imagesDir --> screenshotsDir[screenshots]
 ```
 
 ### Directory Tree
