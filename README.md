@@ -347,7 +347,7 @@ _The initial welcome screen invites users to search for music with a clean, focu
 #### Search Results (Dark Theme)
 
 ![Search Results Dark Theme](assets/images/screenshots/results-dark.png)
-_Search results are displayed in a responsive grid layout with clear artist information, track details, and prominent play buttons._
+_Search results are displayed in a responsive grid layout with clear artist information, track details, and album name._
 
 ### Playing State
 
@@ -367,6 +367,11 @@ _The light theme maintains the same functionality with a brighter color palette 
 
 ![Search Results Light Theme](assets/images/screenshots/results-light.png)
 _Search results in light theme demonstrate the consistent experience across theme preferences._
+
+#### Track Playback (Light Theme)
+
+![Playing Track Dark Theme](assets/images/screenshots/playing-light.png)
+_When a track is playing, visual indicators highlight the active card, and playback controls appear with progress tracking and volume adjustment._
 
 ### Mobile Experience
 
