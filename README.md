@@ -1870,6 +1870,33 @@ By visualizing and documenting these core application flows, developers can bett
 
 ## 📂 Project Structure
 
+### Visual Structure
+
+```mermaid
+graph TD
+  root[Music Explorer]
+
+  root --> index[index.html]
+  root --> css[css]
+  root --> js[js]
+  root --> assets[assets]
+  root --> readme[README.md]
+
+  css --> style[style.css]
+
+  js --> api[api.js]
+  js --> main[main.js]
+
+  assets --> images[images]
+  assets --> favicon[favicon]
+
+  images --> wireframes[wireframes]
+  images --> testing[testing]
+  images --> screenshots[screenshots]
+```
+
+### Directory Tree
+
 ```
 Music Explorer/
 │
@@ -1884,7 +1911,8 @@ Music Explorer/
 ├── assets/
 │   ├── images/                # Project images and icons
 │   │   ├── wireframes/        # Project wireframes
-│   │   └── testing/           # Testing screenshots
+│   │   ├── testing/           # Testing screenshots
+│   │   └── screenshots/       # Various screenshots of the website for documentation
 │   └── favicon/               # Favicon files
 │
 └── README.md                  # Project documentation
