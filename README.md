@@ -3450,11 +3450,11 @@ If your custom domain doesn't work:
 
 ## 🧩 Code Architecture
 
-Music Explorer follows a modular code architecture with clear separation of concerns to maintain scalability, readability, and maintainability. This section details the architectural approach and key design decisions.
+Music Explorer follows a modular code organization with separation of user interface, audio functionality, and API integration. This section details the actual structure and key design decisions in the codebase.
 
 ### Architectural Overview
 
-The application is built on a clean architecture that separates the user interface, business logic, and external data access:
+The application is built with a clear separation between HTML structure, CSS styling, and JavaScript functionality:
 
 ```
 ┌─────────────────────────────────────────────────────────┐
@@ -3484,20 +3484,25 @@ The application is built on a clean architecture that separates the user interfa
 └─────────────────────┘           └─────────────────────┘
 ```
 
-### Core Design Patterns
+### Implementation Patterns
 
-The application implements several established design patterns to enhance maintainability and scalability:
+The application implements several patterns to organize functionality:
 
-#### 1. Module Pattern
+### 1. API Encapsulation
 
-The API functionality is encapsulated in a dedicated class using the module pattern:
+The API functionality is encapsulated in a dedicated class:
 
 ```javascript
 // MusicAPI class for handling Deezer API requests
 class MusicAPI {
   // Search for tracks using Deezer API
   async searchTracks(query, limit = 10) {
-    // Implementation...
+    try {
+      // API implementation...
+    } catch (error) {
+      console.error("Detailed error:", error);
+      throw error;
+    }
   }
 }
 
@@ -3505,213 +3510,124 @@ class MusicAPI {
 const musicAPI = new MusicAPI();
 ```
 
-This pattern:
+This approach keeps the API interaction separate from the UI code and provides a clean interface for making requests.
 
-- Encapsulates API-related code
-- Provides a clean interface for making requests
-- Isolates API implementation details
-- Allows for easy expansion with additional API endpoints
+### 2. Direct DOM Manipulation
 
-#### 2. Factory Pattern
-
-Track cards are created using a factory function pattern:
-
-```javascript
-function createTrackCard(track) {
-  // Create card container
-  const card = document.createElement("div");
-  card.className = "track-card";
-  card.dataset.trackId = track.id;
-
-  // Format duration for display
-  const duration = formatTime(track.duration);
-
-  // Generate card HTML structure
-  card.innerHTML = `
-    <div class="track-card-inner">
-        <!-- Card content -->
-    </div>
-  `;
-
-  return card;
-}
-```
-
-This approach:
-
-- Centralizes card creation logic
-- Ensures consistency across all track representations
-- Simplifies updates to card structure
-- Separates creation from usage
-
-#### 3. Observer Pattern
-
-The application utilizes the observer pattern for audio event handling:
-
-```javascript
-function setupAudioEvents(audio, card) {
-  audio.addEventListener("play", () => {
-    updateUIState(card, UIStates.PLAYING);
-  });
-
-  audio.addEventListener("pause", () => {
-    updateUIState(card, UIStates.IDLE);
-  });
-
-  audio.addEventListener("ended", () => {
-    updateUIState(card, UIStates.IDLE);
-    currentlyPlaying = null;
-  });
-
-  audio.addEventListener("timeupdate", () => {
-    const percentage = (audio.currentTime / audio.duration) * 100;
-    updateProgressBar(percentage);
-    updateTimeDisplay(audio.currentTime, audio.duration);
-  });
-}
-```
-
-This implementation:
-
-- Creates a reactive UI that responds to audio state changes
-- Decouples audio state from UI updates
-- Provides clear points for behavior extension
-
-### State Management
-
-The application uses a centralized approach to state management without external libraries:
-
-#### 1. Global State Tracking
-
-```javascript
-// Global state variables
-let currentlyPlaying = null;
-let currentTracks = [];
-let errorTimeout = null;
-```
-
-#### 2. State Updates via Functions
-
-```javascript
-// UI state management
-const UIStates = {
-  IDLE: "idle",
-  LOADING: "loading",
-  PLAYING: "playing",
-  ERROR: "error",
-};
-
-function updateUIState(card, state) {
-  // Remove all state classes
-  card.classList.remove("loading", "playing", "error");
-
-  // Update based on state
-  switch (state) {
-    case UIStates.LOADING:
-      card.classList.add("loading");
-      // Additional loading state updates...
-      break;
-    case UIStates.PLAYING:
-      card.classList.add("playing");
-      // Additional playing state updates...
-      break;
-    // Other states...
-  }
-}
-```
-
-This approach:
-
-- Centralizes state management logic
-- Creates predictable UI behavior
-- Simplifies debugging by isolating state changes
-- Prevents state inconsistencies
-
-### DOM Interaction Strategy
-
-The application follows efficient DOM interaction patterns to enhance performance:
-
-#### 1. Event Delegation
-
-```javascript
-// Add event listener to parent container
-resultsGrid.addEventListener("click", (e) => {
-  // Find the closest track card if any
-  const trackCard = e.target.closest(".track-card");
-
-  if (!trackCard) return;
-
-  // Handle based on what was clicked
-  if (e.target.matches(".preview-button") || e.target.matches(".play-overlay")) {
-    handlePlayback(trackCard);
-  } else if (e.target.matches(".volume-slider")) {
-    handleVolumeChange(e, trackCard);
-  }
-});
-```
-
-This pattern:
-
-- Reduces the number of event listeners
-- Handles dynamically added elements without additional listeners
-- Improves performance with large numbers of track cards
-
-#### 2. Efficient DOM Updates
+The application creates and updates DOM elements using direct manipulation and template literals:
 
 ```javascript
 function renderTracks(tracks) {
-  // Clear existing content in a single operation
+  const resultsGrid = document.querySelector(".results-grid");
   resultsGrid.innerHTML = "";
 
-  // Create document fragment for batch DOM operations
-  const fragment = document.createDocumentFragment();
-
-  // Add all cards to fragment (out of live DOM)
+  // Create track cards
   tracks.forEach((track) => {
-    const card = createTrackCard(track);
-    fragment.appendChild(card);
+    const trackCard = document.createElement("article");
+    trackCard.className = "track-card";
+    trackCard.dataset.previewUrl = track.preview || "";
+
+    // Create track card HTML using template literals
+    trackCard.innerHTML = `
+      <div class="track-card-inner">
+        <!-- Card content -->
+      </div>
+    `;
+
+    resultsGrid.appendChild(trackCard);
   });
 
-  // Append all cards in a single DOM operation
-  resultsGrid.appendChild(fragment);
+  setupPreviewButtons();
 }
 ```
 
-This approach:
+This direct approach allows for clear HTML templating and straightforward DOM updates.
 
-- Minimizes DOM reflows and repaints
-- Batches DOM operations for better performance
-- Reduces visual flicker during updates
+### 3. Event-Based Audio Control
 
-### CSS Architecture
+The application handles audio playback through events:
 
-The styling follows a methodical organization using CSS variables and a clear hierarchy:
+```javascript
+audio.addEventListener("timeupdate", () => {
+  const percentage = (audio.currentTime / audio.duration) * 100;
+  progress.style.width = `${percentage}%`;
 
-#### 1. Theme Variables
+  const currentTime = card.querySelector(".current-time");
+  const duration = card.querySelector(".duration");
+
+  currentTime.textContent = formatTime(audio.currentTime);
+  const remainingTime = audio.duration - audio.currentTime;
+  duration.textContent = `-${formatTime(remainingTime)}`;
+});
+
+// Handle track completion
+audio.onended = () => {
+  card.classList.remove("playing");
+  playIcon.textContent = "▶";
+  progress.style.width = "0%";
+  // Reset UI elements
+};
+```
+
+This creates a responsive UI that updates based on audio playback state.
+
+## State Management
+
+The application manages state through global variables and CSS classes:
+
+### 1. Global State Variables
+
+```javascript
+// Track storage for sorting functionality
+let currentTracks = [];
+
+// Current audio playback tracking
+let currentlyPlaying = null;
+
+// Search state
+let isSearching = false;
+```
+
+### 2. Class-Based UI State
+
+The application uses CSS classes to represent and update UI states:
+
+```javascript
+// Playing state
+card.classList.add("playing");
+playIcon.textContent = "⏸";
+
+// Idle state
+card.classList.remove("playing");
+playIcon.textContent = "▶";
+
+// Hidden state
+loadingSpinner.classList.add("hidden");
+resultsGrid.classList.remove("hidden");
+```
+
+This approach keeps the visual state tied to CSS, making it easier to maintain and update.
+
+## CSS Architecture
+
+The styling follows a consistent organization using CSS variables and a clear structure:
+
+### 1. Theme Variables
 
 ```css
 :root {
-  /* Colors */
   --primary-color: #a393eb;
   --secondary-color: #5e63b6;
   --text-color: #ffffff;
   --background-color: #27296d;
-
-  /* Spacing */
+  --gradient-color-1: rgba(183, 167, 255, 1);
+  --gradient-color-2: rgba(114, 119, 202, 1);
+  --gradient-color-3: rgba(59, 61, 129, 1);
+  --gradient-color-4: rgba(40, 41, 76, 1);
+  --error-color: #e74c3c;
   --spacing-small: 0.5rem;
   --spacing-medium: 1rem;
   --spacing-large: 2rem;
-
-  /* Typography */
-  --font-family: "Outfit", sans-serif;
-  --font-size-small: 0.9rem;
-  --font-size-medium: 1rem;
-  --font-size-large: 1.2rem;
-
-  /* Transitions */
-  --transition-fast: 0.2s ease;
-  --transition-medium: 0.3s ease;
-  --transition-slow: 0.5s ease;
 }
 
 /* Light theme overrides */
@@ -3719,216 +3635,223 @@ The styling follows a methodical organization using CSS variables and a clear hi
   --primary-color: #5e63b6;
   --secondary-color: #a393eb;
   --text-color: #27296d;
-  --background-color: #f5f5f7;
+  --background-color: #f8f8ff;
   /* Other light theme variables */
 }
 ```
 
-This system:
+This system enables theme switching and maintains consistent styling throughout the application.
 
-- Centralizes design tokens for consistency
-- Enables seamless theme switching
-- Simplifies future design updates
-- Creates a self-documenting color system
+### 2. Component-Based Organization
 
-#### 2. Component-Based Style Organization
-
-The CSS is organized by component functionality, with global styles at the top and increasingly specific styles below:
+The CSS is organized by component functionality:
 
 ```css
-/* Global styles */
+/* Base Styles */
 * {
   box-sizing: border-box;
-}
-body {
-  font-family: var(--font-family);
+  margin: 0;
+  padding: 0;
 }
 
-/* Layout components */
-.container {
-  /* ... */
+/* NAVIGATION */
+nav {
+  background-color: var(--background-color-top);
+  padding: 0.4rem var(--spacing-medium);
+  /* Navigation styles */
 }
+
+/* Search and Sort Container Styles */
 .search-wrapper {
-  /* ... */
-}
-.results-grid {
-  /* ... */
+  max-width: 1200px;
+  margin: 1rem auto;
+  /* Search styles */
 }
 
-/* UI components */
+/* Track Card */
 .track-card {
-  /* ... */
-}
-.progress-bar {
-  /* ... */
-}
-.volume-control {
-  /* ... */
+  border-radius: 40px 40px 40px 40px;
+  overflow: hidden;
+  /* Track card styles */
 }
 
 /* State variations */
+.track-card:hover {
+  transform: translateY(-5px);
+  /* Hover state styles */
+}
+
 .track-card.playing {
-  /* ... */
-}
-.track-card.loading {
-  /* ... */
-}
-.track-card.error {
-  /* ... */
+  animation: cardPulse 2s ease-in-out infinite;
+  /* Playing state styles */
 }
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-  /* ... */
-}
-@media (max-width: 480px) {
-  /* ... */
+  /* Mobile styles */
 }
 ```
 
-This approach:
+This structure makes styles easy to find and maintain.
 
-- Creates logical style groupings
-- Simplifies maintenance and updates
-- Reduces style conflicts
-- Makes debugging visual issues easier
+## Error Handling
 
-### Error Handling Architecture
-
-The application implements a comprehensive error handling system:
+The application implements straightforward error handling with automatic dismissal:
 
 ```javascript
-// Error message display with timeout management
-function showError(message, duration = 5000) {
+function showError(message) {
   const errorContainer = document.getElementById("error-container");
   const errorText = document.getElementById("error-text");
 
-  // Clear any existing timeout
-  if (errorTimeout) {
-    clearTimeout(errorTimeout);
-  }
-
-  // Set error message
   errorText.textContent = message;
-
-  // Show error container
   errorContainer.classList.remove("hidden");
 
-  // Automatically hide after duration
-  errorTimeout = setTimeout(() => {
+  // Auto-hide error after 5 seconds
+  setTimeout(() => {
     errorContainer.classList.add("hidden");
-  }, duration);
-
-  // Allow manual dismissal
-  const dismissButton = document.getElementById("error-dismiss");
-  dismissButton.addEventListener(
-    "click",
-    () => {
-      errorContainer.classList.add("hidden");
-      clearTimeout(errorTimeout);
-    },
-    { once: true }
-  );
+  }, 5000);
 }
+
+// Handle error message close button
+document.querySelector(".error-close").addEventListener("click", () => {
+  document.getElementById("error-container").classList.add("hidden");
+});
 ```
 
-This creates:
+This provides user-friendly error messaging with both automatic and manual dismissal options.
 
-- Consistent error handling throughout the application
-- User-friendly error messaging
-- Automatic recovery from temporary issues
-- Clear guidance for resolving problems
+## Helper Functions
 
-### Code Organization Principles
-
-The project follows several key principles that enhance maintainability:
-
-#### 1. Single Responsibility
-
-Each function performs one specific task:
+The application includes several utility functions that enhance code readability:
 
 ```javascript
-// Format time in seconds to MM:SS format
+// Convert seconds to MM:SS format
 function formatTime(seconds) {
+  if (!seconds || isNaN(seconds)) return "0:00";
   const mins = Math.floor(seconds / 60);
   const secs = Math.floor(seconds % 60);
   return `${mins}:${secs.toString().padStart(2, "0")}`;
 }
 
-// Update progress bar based on percentage
-function updateProgressBar(percentage) {
-  if (!currentlyPlaying) return;
-  const progressBar = currentlyPlaying.progressBar;
-  progressBar.style.width = `${percentage}%`;
+// Create volume control interface for audio player
+function createVolumeControl(audio) {
+  const controlsContainer = document.createElement("div");
+  controlsContainer.className = "player-controls";
+
+  // Creates and returns volume controls with event handling
+  // ...
 }
 ```
 
-#### 2. DRY (Don't Repeat Yourself)
+These functions keep the code DRY (Don't Repeat Yourself) by centralizing common functionality.
 
-Common functionality is extracted into reusable functions:
+## Key Features and Implementation
+
+### 1. Theme Switching
+
+The application implements theme switching with CSS variables and JavaScript:
 
 ```javascript
-// Centralized function for cleaning up audio resources
-function cleanupAudioResources() {
-  if (currentlyPlaying) {
-    currentlyPlaying.audio.pause();
-    currentlyPlaying.audio.src = "";
-    currentlyPlaying = null;
+themeToggle.addEventListener("click", () => {
+  isDarkTheme = !isDarkTheme;
+  if (!isDarkTheme) {
+    // Switch to light mode
+    document.documentElement.setAttribute("data-theme", "light");
+    // Update icon
+  } else {
+    // Switch to dark mode
+    document.documentElement.removeAttribute("data-theme");
+    // Update icon
   }
-}
-
-// Used in multiple places:
-// - When switching tracks
-// - When clearing search results
-// - When handling errors
+});
 ```
 
-#### 3. Progressive Enhancement
+### 2. Audio Player Controls
 
-The application functions at a basic level even without advanced features:
+The application creates custom audio controls for each track:
 
 ```javascript
-// Check for audio support
-if (!window.Audio) {
-  showError("Your browser doesn't support audio playback.");
-  // Disable playback buttons but still show search results
-}
+// Add volume controls
+const { controlsContainer, muteHandler } = createVolumeControl(audio);
+const existingControls = card.querySelector(".player-controls");
+if (existingControls) existingControls.remove();
+progressContainer.after(controlsContainer);
 
-// Provide fallback for missing preview URLs
-if (!track.preview) {
-  card.querySelector(".preview-button").disabled = true;
-  card.querySelector(".preview-button").textContent = "No preview available";
-}
+// Add mute button
+const muteButton = document.createElement("button");
+muteButton.className = "mute-button";
+muteButton.textContent = "🔊";
+controlsContainer.appendChild(muteButton);
+
+// Handle mute button clicks
+muteButton.addEventListener("click", (e) => {
+  const newIcon = muteHandler(e);
+  muteButton.textContent = newIcon;
+});
 ```
 
-#### 4. Defensive Programming
+### 3. Results Sorting
 
-The code includes checks to prevent errors:
+The application provides sorting functionality for search results:
 
 ```javascript
-// Safe access to nested properties
-const artistName = track?.artist?.name || "Unknown Artist";
-const albumTitle = track?.album?.title || "Unknown Album";
+// Handle sort selection changes
+const sortSelect = document.getElementById("sort-select");
+sortSelect.addEventListener("change", () => {
+  const sortType = sortSelect.value;
 
-// Check for required elements before operations
-if (progressContainer && audio) {
-  // Progress tracking logic
+  // Sort tracks based on selected criteria
+  const sortedTracks = [...currentTracks].sort((a, b) => {
+    switch (sortType) {
+      case "title":
+        return a.title.localeCompare(b.title);
+      case "artist":
+        return a.artist.name.localeCompare(b.artist.name);
+      case "duration":
+        return a.duration - b.duration;
+      default:
+        return 0;
+    }
+  });
+
+  renderTracks(sortedTracks);
+});
+```
+
+## Responsive Design
+
+The application implements a mobile-first approach with responsive breakpoints:
+
+```css
+/* Mobile First Styles (up to 480px) */
+@media (max-width: 480px) {
+  .results-grid {
+    grid-template-columns: 1fr;
+  }
+  /* Other mobile styles */
+}
+
+/* Tablets and small desktops (768px to 992px) */
+@media (min-width: 768px) and (max-width: 992px) {
+  .search-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  /* Other tablet styles */
+}
+
+/* Desktop styles (993px and above) */
+@media (min-width: 993px) {
+  .results-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  /* Other desktop styles */
 }
 ```
 
-### Future Architecture Considerations
+This ensures the application works well on devices of all sizes, from mobile phones to desktop computers.
 
-For future development, several architectural improvements could be considered:
-
-1. **Component Framework**: Migrating to a framework like React would enhance state management and component reusability.
-
-2. **Module Bundling**: Implementing Webpack or Rollup would enable better code organization and optimization.
-
-3. **TypeScript Integration**: Adding static typing would improve code reliability and developer experience.
-
-4. **Expanded Testing**: Implementing a comprehensive testing framework would enhance code quality and stability.
-
-By maintaining this architectural approach, Music Explorer remains maintainable, extensible, and performant as new features are added.
+By following this architectural approach, Music Explorer maintains a clear organization that separates concerns and creates a maintainable, user-friendly music discovery platform.
 
 ## ⚠️ Known Limitations and Technical Debt
 
