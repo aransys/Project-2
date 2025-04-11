@@ -43,6 +43,7 @@
 ### Development and Implementation
 
 - [💻 Code Examples and Implementation](#-code-examples-and-implementation)
+- [🧮 JavaScript Code Breakdown](#-javascript-code-breakdown)
 - [🧪 Testing Documentation](#-testing-documentation)
 - [🌐 Accessibility Compliance](#-accessibility-compliance)
 - [🚀 Deployment](#-deployment)
@@ -3249,6 +3250,682 @@ document.querySelector(".error-close").addEventListener("click", () => {
 ```
 
 These code examples demonstrate the core implementation patterns used throughout the Music Explorer application. The modular approach and clear separation of concerns enable maintainable development and future enhancements.
+
+## 🧮 JavaScript Code Breakdown
+
+This section provides a comprehensive analysis of the JavaScript implementation in Music Explorer, with explanations embedded directly within the code.
+
+### API Integration (api.js)
+
+The `api.js` file handles all communication with the Deezer music API.
+
+```javascript
+// MusicAPI class for handling Deezer API requests
+class MusicAPI {
+  // Search for tracks using Deezer API
+  async searchTracks(query, limit = 10) {
+    // Log the start of the request for debugging
+    try {
+      console.log("Starting API request...");
+
+      // Make API request to Deezer through RapidAPI
+      // Encode query parameter to handle special characters
+      // Include required API headers for authentication
+      const response = await fetch(
+        `https://deezerdevs-deezer.p.rapidapi.com/search?q=${encodeURIComponent(
+          query
+        )}`,
+        {
+          headers: {
+            "X-RapidAPI-Key":
+              "18246259eamsh6f81aaf5017de43p17f3f5jsnf02db3f3d57b",
+            "X-RapidAPI-Host": "deezerdevs-deezer.p.rapidapi.com",
+          },
+        }
+      );
+
+      // Check if request was successful (status 200-299)
+      // If not, throw an error with the status code
+      if (!response.ok) {
+        throw new Error("HTTP status " + response.status);
+      }
+
+      // Parse the JSON response and return just the data array
+      // (The Deezer API returns data in a { data: [...] } format)
+      const data = await response.json();
+      return data.data;
+    } catch (error) {
+      // Log the detailed error for debugging but re-throw
+      // so the calling code can handle it appropriately
+      console.error("Detailed error:", error);
+      throw error;
+    }
+  }
+}
+
+// Create a single global instance of MusicAPI to be used throughout the app
+const musicAPI = new MusicAPI();
+```
+
+### Core Application Logic (main.js)
+
+The `main.js` file contains all user interface logic, event handling, and DOM manipulation.
+
+#### 1. Theme Management
+
+```javascript
+// Wait for DOM to be fully loaded before running any code
+document.addEventListener("DOMContentLoaded", () => {
+  // Get the theme toggle button element
+  const themeToggle = document.querySelector(".theme-toggle");
+  // Track current theme state (starts as dark theme)
+  let isDarkTheme = true;
+
+  // Set initial sun icon for dark mode (SVG markup abbreviated)
+  themeToggle.innerHTML = `<svg>...</svg>`;
+
+  // Handle clicks on the theme toggle button
+  themeToggle.addEventListener("click", () => {
+    // Flip the current theme state
+    isDarkTheme = !isDarkTheme;
+
+    if (!isDarkTheme) {
+      // Switch to light mode: add data-theme attribute that CSS uses for theme variables
+      document.documentElement.setAttribute("data-theme", "light");
+      // Change icon to moon for light mode
+      themeToggle.innerHTML = `<svg>...</svg>`;
+    } else {
+      // Switch to dark mode: remove data-theme attribute to use default CSS variables
+      document.documentElement.removeAttribute("data-theme");
+      // Change icon back to sun
+      themeToggle.innerHTML = `<svg>...</svg>`;
+    }
+  });
+});
+```
+
+#### 2. Track Sorting
+
+```javascript
+// Global array to store current tracks for sorting operations
+let currentTracks = [];
+
+// Get the sort selection dropdown element
+const sortSelect = document.getElementById("sort-select");
+
+// Listen for changes to the sort selection
+sortSelect.addEventListener("change", () => {
+  // Get the selected sort option value
+  const sortType = sortSelect.value;
+
+  // If default option is selected, render original unsorted tracks
+  if (sortType === "default") {
+    renderTracks(currentTracks);
+    return;
+  }
+
+  // Create a copy of the tracks array to sort (avoid modifying original)
+  const sortedTracks = [...currentTracks].sort((a, b) => {
+    // Apply different sort logic based on the selected option
+    switch (sortType) {
+      case "title":
+        // Sort alphabetically by track title
+        return a.title.localeCompare(b.title);
+      case "artist":
+        // Sort alphabetically by artist name
+        return a.artist.name.localeCompare(b.artist.name);
+      case "duration":
+        // Sort numerically by track duration (shortest to longest)
+        return a.duration - b.duration;
+      default:
+        // No sorting (should never reach here with current options)
+        return 0;
+    }
+  });
+
+  // Render the newly sorted tracks to the UI
+  renderTracks(sortedTracks);
+});
+```
+
+#### 3. Utility Functions
+
+##### Time Formatting
+
+```javascript
+// Convert seconds to MM:SS format (e.g., 125 seconds → "2:05")
+function formatTime(seconds) {
+  // Return default time if seconds is invalid
+  if (!seconds || isNaN(seconds)) return "0:00";
+
+  // Calculate minutes and remaining seconds
+  const mins = Math.floor(seconds / 60);
+  const secs = Math.floor(seconds % 60);
+
+  // Format with leading zero for seconds if needed
+  return `${mins}:${secs.toString().padStart(2, "0")}`;
+}
+```
+
+##### Volume Control Creation
+
+```javascript
+// Factory function to create volume control elements
+function createVolumeControl(audio) {
+  // Create container for volume controls
+  const controlsContainer = document.createElement("div");
+  controlsContainer.className = "player-controls";
+
+  // Create volume slider input element
+  const volumeSlider = document.createElement("input");
+  volumeSlider.type = "range"; // Range input (slider)
+  volumeSlider.min = "0"; // Minimum value (muted)
+  volumeSlider.max = "1"; // Maximum value (full volume)
+  volumeSlider.step = "0.01"; // 100 possible volume levels
+  volumeSlider.value = "0.5"; // Initial value (50% volume)
+  volumeSlider.className = "volume-slider";
+
+  // Track mute state and previous volume
+  let isMuted = false;
+  let previousVolume = 0.5;
+
+  // Handle volume slider changes
+  volumeSlider.addEventListener("input", (e) => {
+    // Prevent event from affecting parent elements
+    e.stopPropagation();
+
+    // Get slider value as a number
+    const volume = parseFloat(e.target.value);
+
+    // Apply volume to audio element
+    audio.volume = volume;
+
+    // Store current volume for unmute operation
+    previousVolume = volume;
+  });
+
+  // Add slider to container
+  controlsContainer.appendChild(volumeSlider);
+
+  // Return the container and a function to handle mute/unmute
+  return {
+    controlsContainer,
+    muteHandler: (e) => {
+      // Prevent event from affecting parent elements
+      e.stopPropagation();
+
+      if (isMuted) {
+        // Unmute: restore previous volume
+        audio.volume = previousVolume;
+        volumeSlider.value = previousVolume;
+        isMuted = false;
+        return "🔊"; // Return unmuted icon
+      } else {
+        // Mute: save current volume and set to 0
+        previousVolume = audio.volume;
+        audio.volume = 0;
+        volumeSlider.value = 0;
+        isMuted = true;
+        return "🔇"; // Return muted icon
+      }
+    },
+  };
+}
+```
+
+#### 4. Mobile Navigation
+
+```javascript
+// Get the hamburger menu button and navigation links container
+const hamburger = document.querySelector(".hamburger");
+const navLinks = document.querySelector(".nav-links");
+
+// Toggle mobile menu when hamburger is clicked
+hamburger.addEventListener("click", () => {
+  // Toggle active class on hamburger (changes icon appearance)
+  hamburger.classList.toggle("active");
+  // Toggle active class on nav links (shows/hides menu)
+  navLinks.classList.toggle("active");
+});
+
+// Set up click handlers for all navigation links
+document.querySelectorAll(".nav-links a").forEach((link) => {
+  link.addEventListener("click", (e) => {
+    // Prevent default link navigation
+    e.preventDefault();
+
+    // Get the target section id from the link's href
+    const sectionId = e.target.getAttribute("href").substring(1);
+    // Get the corresponding section element
+    const targetSection = document.getElementById(sectionId);
+
+    // Hide all sections
+    document.querySelectorAll("section").forEach((section) => {
+      section.classList.add("hidden");
+    });
+
+    // Handle special case for search section
+    if (sectionId === "search") {
+      const resultsSection = document.getElementById("results-section");
+      // Show results section
+      resultsSection.classList.remove("hidden");
+      // Focus on search input for immediate typing
+      document.getElementById("search-input").focus();
+    } else if (targetSection) {
+      // For other sections, show the target section
+      targetSection.classList.remove("hidden");
+
+      // Trigger enter animation
+      targetSection.classList.add("entering");
+      // Force reflow to ensure animation runs
+      void targetSection.offsetHeight;
+      // Remove animation class
+      targetSection.classList.remove("entering");
+
+      // Scroll to section smoothly
+      targetSection.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }
+
+    // Close mobile menu
+    hamburger.classList.remove("active");
+    navLinks.classList.remove("active");
+  });
+});
+```
+
+#### 5. Error Handling
+
+```javascript
+// Track whether a search is currently in progress
+let isSearching = false;
+// Get search form element
+const searchForm = document.getElementById("search-form");
+
+// Function to display error messages to the user
+function showError(message) {
+  // Get error container and text elements
+  const errorContainer = document.getElementById("error-container");
+  const errorText = document.getElementById("error-text");
+
+  // Set error message text
+  errorText.textContent = message;
+  // Make error container visible
+  errorContainer.classList.remove("hidden");
+
+  // Automatically hide error after 5 seconds
+  setTimeout(() => {
+    errorContainer.classList.add("hidden");
+  }, 5000);
+}
+
+// Allow user to dismiss error by clicking close button
+document.querySelector(".error-close").addEventListener("click", () => {
+  // Hide error container
+  document.getElementById("error-container").classList.add("hidden");
+});
+```
+
+#### 6. Track Display
+
+```javascript
+// Store tracks and update display
+function displayTracks(tracks) {
+  // Store copy of tracks in global variable for sorting
+  currentTracks = [...tracks];
+  // Render tracks to the UI
+  renderTracks(tracks);
+}
+
+// Create and display track cards in the grid
+function renderTracks(tracks) {
+  // Get container elements
+  const resultsGrid = document.querySelector(".results-grid");
+  const sortContainer = document.querySelector(".sort-container");
+
+  // Exit if results grid doesn't exist in DOM
+  if (!resultsGrid) return;
+
+  // Clear existing track cards
+  resultsGrid.innerHTML = "";
+  // Show sort dropdown
+  sortContainer.classList.remove("hidden");
+
+  // Create a card for each track
+  tracks.forEach((track) => {
+    // Create article element for track card
+    const trackCard = document.createElement("article");
+    trackCard.className = "track-card";
+    // Store preview URL as data attribute for later access
+    trackCard.dataset.previewUrl = track.preview || "";
+
+    // Get and format track duration
+    const duration = track.duration || 0;
+    const formattedDuration = formatTime(duration);
+
+    // Create track card HTML structure
+    trackCard.innerHTML = `
+      <div class="track-card-inner">
+        <!-- Track image with play overlay -->
+        <div class="track-image">
+          <img src="${
+            track.album.cover_medium || "https://via.placeholder.com/250"
+          }" alt="${track.title}">
+          <div class="play-overlay">
+            <div class="play-icon">▶</div>
+          </div>
+        </div>
+        <!-- Track metadata -->
+        <div class="track-info">
+          <h3 class="track-name">${track.title}</h3>
+          <p class="artist-name">${track.artist.name}</p>
+          <p class="album-name">${track.album.title}</p>
+        </div>
+        <!-- Progress bar and time display -->
+        <div class="track-controls">
+          <div class="progress-container">
+            <div class="time-info">
+              <span class="current-time">0:00</span>
+              <span class="duration">-${formattedDuration}</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress"></div>
+            </div>
+          </div>
+        </div>
+        <!-- Preview button -->
+        <div class="track-actions">
+          <button class="preview-button">Preview</button>
+        </div>
+      </div>
+    `;
+
+    // Add track card to results grid
+    resultsGrid.appendChild(trackCard);
+  });
+
+  // Setup event listeners for the newly created track cards
+  setupPreviewButtons();
+}
+```
+
+#### 7. Audio Playback
+
+```javascript
+// Set up audio playback functionality for all track cards
+function setupPreviewButtons() {
+  // Track the currently playing audio and elements
+  let currentlyPlaying = null;
+
+  // Set up handlers for all track cards
+  document.querySelectorAll(".track-card").forEach((card) => {
+    // Get interactive elements within card
+    const playButton = card.querySelector(".preview-button");
+    const playOverlay = card.querySelector(".play-overlay");
+    const imageArea = card.querySelector(".track-image");
+    const trackInfo = card.querySelector(".track-info");
+
+    // Create function to handle play/pause action
+    const handlePlayPause = async () => {
+      // Get preview URL from data attribute
+      const previewUrl = card.dataset.previewUrl;
+      // Get UI elements for updates
+      const playIcon = card.querySelector(".play-icon");
+      const progressContainer = card.querySelector(".progress-container");
+      const progress = card.querySelector(".progress");
+
+      // Handle case where something is already playing
+      if (currentlyPlaying) {
+        // Stop currently playing audio
+        currentlyPlaying.audio.pause();
+        // Remove visual playing indicators
+        currentlyPlaying.card.classList.remove("playing", "loading");
+
+        // Reset play icon to play symbol
+        const oldPlayIcon = currentlyPlaying.card.querySelector(".play-icon");
+        if (oldPlayIcon) oldPlayIcon.textContent = "▶";
+
+        // Remove volume controls
+        const oldVolumeControl =
+          currentlyPlaying.card.querySelector(".player-controls");
+        if (oldVolumeControl) oldVolumeControl.remove();
+
+        // If clicking same track that's playing, just stop and exit
+        if (currentlyPlaying.card === card) {
+          currentlyPlaying = null;
+          return;
+        }
+      }
+
+      try {
+        // Create new audio object with preview URL
+        const audio = new Audio(previewUrl);
+        // Set initial volume to 50%
+        audio.volume = 0.5;
+
+        // Create and add volume controls
+        const { controlsContainer, muteHandler } = createVolumeControl(audio);
+        // Remove any existing controls
+        const existingControls = card.querySelector(".player-controls");
+        if (existingControls) existingControls.remove();
+        // Add controls after progress container
+        progressContainer.after(controlsContainer);
+
+        // Add mute button
+        const muteButton = document.createElement("button");
+        muteButton.className = "mute-button";
+        muteButton.textContent = "🔊";
+        controlsContainer.appendChild(muteButton);
+
+        // Handle mute button clicks
+        muteButton.addEventListener("click", (e) => {
+          // Call mute handler and get new icon
+          const newIcon = muteHandler(e);
+          // Update button icon
+          muteButton.textContent = newIcon;
+        });
+
+        // Start playing the audio file
+        await audio.play();
+
+        // Update UI to show playing state
+        card.classList.add("playing");
+        playIcon.textContent = "⏸";
+
+        // Update progress and time displays during playback
+        audio.addEventListener("timeupdate", () => {
+          // Calculate progress percentage
+          const percentage = (audio.currentTime / audio.duration) * 100;
+          // Update progress bar width
+          progress.style.width = `${percentage}%`;
+
+          // Update current time display
+          const currentTime = card.querySelector(".current-time");
+          const duration = card.querySelector(".duration");
+
+          currentTime.textContent = formatTime(audio.currentTime);
+          // Update remaining time with negative sign
+          const remainingTime = audio.duration - audio.currentTime;
+          duration.textContent = `-${formatTime(remainingTime)}`;
+        });
+
+        // Store references to currently playing elements
+        currentlyPlaying = {
+          audio,
+          card,
+          playIcon,
+          progressContainer,
+          progress,
+        };
+
+        // Handle track completion
+        audio.onended = () => {
+          // Reset playing state
+          card.classList.remove("playing");
+          playIcon.textContent = "▶";
+          progress.style.width = "0%";
+
+          // Reset time display
+          const currentTime = card.querySelector(".current-time");
+          if (currentTime) currentTime.textContent = "0:00";
+
+          // Remove volume controls
+          const volumeControl = card.querySelector(".player-controls");
+          if (volumeControl) volumeControl.remove();
+
+          // Clear currently playing reference
+          currentlyPlaying = null;
+        };
+      } catch (error) {
+        // Handle playback errors
+        console.error("Playback failed:", error);
+        // Reset UI state
+        card.classList.remove("playing");
+        playIcon.textContent = "▶";
+        progress.style.width = "0%";
+        currentlyPlaying = null;
+      }
+    };
+
+    // Add click handlers to various elements
+    // Each stops event propagation and calls handlePlayPause
+
+    // Preview button click
+    playButton.addEventListener("click", (e) => {
+      e.stopPropagation();
+      handlePlayPause();
+    });
+
+    // Play overlay click
+    playOverlay.addEventListener("click", (e) => {
+      e.stopPropagation();
+      handlePlayPause();
+    });
+
+    // Image area click
+    imageArea.addEventListener("click", (e) => {
+      e.stopPropagation();
+      handlePlayPause();
+    });
+
+    // Track info click
+    trackInfo.addEventListener("click", (e) => {
+      e.stopPropagation();
+      handlePlayPause();
+    });
+  });
+}
+```
+
+#### 8. Search Functionality
+
+```javascript
+// Handle search form submission
+searchForm.addEventListener("submit", async (e) => {
+  // Prevent default form submission behavior
+  e.preventDefault();
+
+  // Reset sort selection to default
+  sortSelect.value = "default";
+
+  // Prevent multiple simultaneous searches
+  if (isSearching) {
+    showError("A search is already in progress. Please wait...");
+    return;
+  }
+
+  // Get search input and trim whitespace
+  const searchInput = document.getElementById("search-input");
+  const query = searchInput.value.trim();
+
+  // Validate search input
+  if (!query) {
+    showError("Please enter a search term");
+    return;
+  }
+
+  // Get UI elements for showing loading state
+  const loadingSpinner = document.querySelector(".loading-spinner");
+  const resultsGrid = document.querySelector(".results-grid");
+
+  try {
+    // Set searching flag and show loading state
+    isSearching = true;
+    loadingSpinner.classList.remove("hidden");
+    resultsGrid.classList.add("hidden");
+
+    // Call API to perform search
+    const tracks = await musicAPI.searchTracks(query);
+
+    // Handle no results case
+    if (!tracks || tracks.length === 0) {
+      showError("No tracks found. Try a different search term.");
+      return;
+    }
+
+    // Display search results
+    displayTracks(tracks);
+  } catch (error) {
+    // Log error details and show user-friendly message
+    console.error("Search failed:", error);
+    showError("Something went wrong. Please try again later.");
+  } finally {
+    // Reset UI state whether search succeeded or failed
+    isSearching = false;
+    loadingSpinner.classList.add("hidden");
+    resultsGrid.classList.remove("hidden");
+  }
+});
+```
+
+#### 9. Back-to-Top Button
+
+```javascript
+// Get back-to-top button element
+const backToTop = document.querySelector(".back-to-top");
+
+// Show/hide back-to-top button based on scroll position
+window.addEventListener("scroll", () => {
+  // Get current scroll position (with fallback for older browsers)
+  const scrollPosition = window.scrollY || document.documentElement.scrollTop;
+
+  // Show button when scrolled down 100px or more
+  if (scrollPosition > 100) {
+    backToTop.classList.add("visible");
+  } else {
+    // Hide button when near the top
+    backToTop.classList.remove("visible");
+  }
+});
+
+// Scroll to top when button is clicked
+backToTop.addEventListener("click", () => {
+  // Scroll window to top with smooth animation
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth",
+  });
+});
+```
+
+### Code Structure Summary
+
+The JavaScript implementation is organized into these main components:
+
+1. **API Integration** - Handles external data retrieval through the Deezer API
+2. **Theme Management** - Controls light/dark theme switching
+3. **Track Sorting** - Organizes music tracks by different criteria
+4. **Utility Functions** - Provides helper functions for time formatting and UI creation
+5. **Mobile Navigation** - Manages responsive menu behavior
+6. **Error Handling** - Displays user-friendly error messages
+7. **Track Display** - Renders music data as visual track cards
+8. **Audio Playback** - Controls music preview playback and progress
+9. **Search Processing** - Handles user search queries
+10. **Scroll Management** - Provides easy navigation for scrollable content
+
+These components work together to create a cohesive music discovery experience.
 
 ## 🧪 Testing Documentation
 
