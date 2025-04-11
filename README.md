@@ -55,7 +55,7 @@
 - [📜 License](#-license)
 - [📅 Development Journey](#-development-journey)
 
-# 📌 Music Explorer: Project Overview
+# 📌 Project Overview
 
 Music Explorer is a modern, responsive web application designed to transform how users discover and interact with music. This project demonstrates advanced front-end development techniques while delivering an engaging user experience focused on music discovery and preview.
 
@@ -172,6 +172,50 @@ This project demonstrates mastery of:
 - **API Integration**: Building resilient connections to third-party services
 - **Performance Optimization**: Creating a fast, responsive application experience
 - **Cross-Browser Development**: Ensuring compatibility across modern browsers
+
+## 🎯 Purpose of the Website
+
+The primary purposes of the Music Explorer website include:
+
+### 1. Music Discovery
+
+The application provides an intuitive interface for users to discover music by:
+
+- Offering a fast, responsive search for artists and tracks
+- Presenting clear, visually engaging results
+- Supporting exploration through organized result presentation
+
+### 2. Audio Previewing
+
+Users can immediately preview music with:
+
+- One-click access to 30-second audio samples
+- Custom-built audio player with intuitive controls
+- Visual progress tracking and volume adjustment
+
+### 3. Interactive User Experience
+
+The interface enhances user engagement through:
+
+- Responsive interaction with immediate feedback
+- Animated transitions between states
+- Clear visual indicators for system status
+
+### 4. Responsive Access
+
+Music Explorer ensures consistent experience across devices with:
+
+- Mobile-first responsive design
+- Touch-optimized controls for mobile devices
+- Adaptive layout for any screen size
+
+### 5. Visual Customization
+
+The application supports user preferences with:
+
+- Light and dark theme options
+- Persistent theme selection
+- Coherent visual identity across themes
 
 ## 🎨 UX Section
 
@@ -401,8 +445,6 @@ _Intuitive volume slider with mute option provides granular control over audio p
 
 ![Error State](assets/images/screenshots/error-state.png)
 _Clear error messaging guides users when issues occur during searches or API requests._
-
----
 
 ## 👤 User Journey
 
@@ -1212,7 +1254,8 @@ function setupPreviewButtons() {
         if (oldPlayIcon) oldPlayIcon.textContent = "▶";
 
         // Remove old volume controls
-        const oldVolumeControl = currentlyPlaying.card.querySelector(".player-controls");
+        const oldVolumeControl =
+          currentlyPlaying.card.querySelector(".player-controls");
         if (oldVolumeControl) oldVolumeControl.remove();
 
         if (currentlyPlaying.card === card) {
@@ -1423,7 +1466,18 @@ The theme switching is supported by CSS that uses the `[data-theme="light"]` att
 
 /* Light theme specific background gradient */
 [data-theme="light"] body {
-  background: radial-gradient(circle, rgba(255, 255, 255, 1) 0%, rgba(240, 240, 255, 1) 26%, rgba(230, 230, 250, 1) 76%, rgba(220, 220, 245, 1) 100%), repeating-linear-gradient(45deg, transparent 0, transparent 10px, rgba(163, 147, 235, 0.05) 10px, rgba(163, 147, 235, 0.05) 20px);
+  background: radial-gradient(
+      circle,
+      rgba(255, 255, 255, 1) 0%,
+      rgba(240, 240, 255, 1) 26%,
+      rgba(230, 230, 250, 1) 76%,
+      rgba(220, 220, 245, 1) 100%
+    ), repeating-linear-gradient(45deg, transparent 0, transparent 10px, rgba(
+          163,
+          147,
+          235,
+          0.05
+        ) 10px, rgba(163, 147, 235, 0.05) 20px);
   background-attachment: fixed;
 }
 ```
@@ -1918,6 +1972,321 @@ Music Explorer/
 └── README.md                  # Project documentation
 ```
 
+**Key Event Bindings:**
+
+```javascript
+// Theme toggle event binding
+themeToggle.addEventListener("click", () => {
+  isDarkTheme = !isDarkTheme;
+  if (!isDarkTheme) {
+    // Switch to light mode
+    document.documentElement.setAttribute("data-theme", "light");
+    // Show moon icon
+    themeToggle.innerHTML = `<svg>...</svg>`;
+  } else {
+    // Switch to dark mode
+    document.documentElement.removeAttribute("data-theme");
+    // Show sun icon
+    themeToggle.innerHTML = `<svg>...</svg>`;
+  }
+});
+
+// Sort selection event binding
+sortSelect.addEventListener("change", () => {
+  const sortType = sortSelect.value;
+  // Sort implementation...
+});
+
+// Search form submission event binding
+searchForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  // Search implementation...
+});
+
+// Back to top button event binding
+backToTop.addEventListener("click", () => {
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth",
+  });
+});
+
+// Playback event binding (in setupPreviewButtons)
+audio.addEventListener("timeupdate", () => {
+  const percentage = (audio.currentTime / audio.duration) * 100;
+  progress.style.width = `${percentage}%`;
+  // Time display updates...
+});
+```
+
+The application uses direct event binding with inline anonymous functions rather than a central event handling system. Events are bound where they are relevant, and handlers are implemented directly at the point of binding. Audio-related events are set up dynamically when playback begins.
+
+### User Interaction Points
+
+This diagram highlights the primary interaction points throughout the application:
+
+```
+┌───────────────────────────────────────────────────────┐
+│                                                       │
+│                   Music Explorer                      │
+│                                                       │
+├───────────────┬───────────────────┬───────────────────┤
+│               │                   │                   │
+│    Header     │  Search Section   │  Results Grid     │
+│               │                   │                   │
+├───────────────┼───────────────────┼───────────────────┤
+│ ┌───────────┐ │ ┌───────────────┐ │ ┌───────────────┐ │
+│ │Theme Toggle│ │ │Search Input   │ │ │Track Cards    │ │
+│ └───────────┘ │ └───────────────┘ │ └───────────────┘ │
+│               │                   │                   │
+│ ┌───────────┐ │ ┌───────────────┐ │ ┌───────────────┐ │
+│ │Navigation │ │ │Search Button  │ │ │Play/Pause     │ │
+│ └───────────┘ │ └───────────────┘ │ └───────────────┘ │
+│               │                   │                   │
+│               │ ┌───────────────┐ │ ┌───────────────┐ │
+│               │ │Sort Dropdown  │ │ │Progress Bar   │ │
+│               │ └───────────────┘ │ └───────────────┘ │
+│               │                   │                   │
+│               │                   │ ┌───────────────┐ │
+│               │                   │ │Volume Control │ │
+│               │                   │ └───────────────┘ │
+│               │                   │                   │
+└───────────────┴───────────────────┴───────────────────┘
+                                    │
+                                    ▼
+┌───────────────────────────────────────────────────────┐
+│                                                       │
+│                   Footer Section                      │
+│                                                       │
+├───────────────────────────────────────────────────────┤
+│ ┌───────────────────┐         ┌───────────────────┐   │
+│ │Copyright Info     │         │Back to Top Button │   │
+│ └───────────────────┘         └───────────────────┘   │
+│                                                       │
+└───────────────────────────────────────────────────────┘
+```
+
+### Error Handling Flow
+
+The application implements comprehensive error handling throughout the user flow:
+
+```
+┌─────────────────┐
+│                 │
+│  Error Source   │
+│                 │
+├─────────────────┤
+│ - API Error     │
+│ - Empty Search  │
+│ - Duplicate     │
+│   Search        │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│                 │
+│  Error Logging  │
+│                 │
+├─────────────────┤
+│ - Console Error │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│                 │
+│ User Messaging  │
+│                 │
+├─────────────────┤
+│ - Error Display │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│                 │
+│ Auto-Dismissal  │
+│                 │
+├─────────────────┤
+│ - 5s Timeout    │
+│ - Manual Close  │
+└─────────────────┘
+```
+
+**Key Error Handling Implementation:**
+
+```javascript
+// Display error messages
+function showError(message) {
+  const errorContainer = document.getElementById("error-container");
+  const errorText = document.getElementById("error-text");
+
+  errorText.textContent = message;
+  errorContainer.classList.remove("hidden");
+
+  // Auto-hide error after 5 seconds
+  setTimeout(() => {
+    errorContainer.classList.add("hidden");
+  }, 5000);
+}
+
+// Handle error message close button
+document.querySelector(".error-close").addEventListener("click", () => {
+  document.getElementById("error-container").classList.add("hidden");
+});
+
+// Example of error handling in search
+try {
+  // Perform search
+  const tracks = await musicAPI.searchTracks(query);
+
+  // Handle no results
+  if (!tracks || tracks.length === 0) {
+    showError("No tracks found. Try a different search term.");
+    return;
+  }
+
+  // Display search results
+  displayTracks(tracks);
+} catch (error) {
+  // Handle search errors
+  console.error("Search failed:", error);
+  showError("Something went wrong. Please try again later.");
+}
+```
+
+The implementation uses a straightforward approach to error handling. A centralized `showError` function displays error messages to the user, with a fixed 5-second auto-dismissal timeout. Errors can also be manually dismissed via a close button. The application checks for specific error conditions (empty search, duplicate search, no results) and provides appropriate messaging, while also handling unexpected errors with a generic message.
+
+By visualizing and documenting these core application flows, developers can better understand the architecture, behavior, and interaction patterns within Music Explorer.
+
+## 📋 Features
+
+### 🔎 Search and Discovery
+
+- ✅ **Intuitive Search Interface**: Clean, prominent search form with instant feedback
+- ✅ **Loading Indicator**: Animated spinner during search operations
+- ✅ **Error Handling**: User-friendly error messages with auto-dismissal
+- ✅ **Empty State Management**: Welcoming initial screen for first-time visitors
+- ✅ **Results Management**: Dynamic grid system with adaptive layout
+- ✅ **Sort Functionality**: Ability to sort results by title, artist, or duration
+
+### 🎧 Audio Playback
+
+- ✅ **Preview Player**: One-click preview playback for search results
+- ✅ **Progress Tracking**: Visual progress bar with time display
+- ✅ **Volume Control**: Adjustable volume with mute/unmute option
+- ✅ **Multi-Track Management**: Proper handling when switching between tracks
+- ✅ **Visual Feedback**: Animated playing status indicators
+
+### 🎨 User Interface
+
+- ✅ **Responsive Design**: Seamless experience from 320px mobile to 1440px+ desktop displays
+- ✅ **Theme Customization**: Toggle between dark and light themes with smooth transitions
+- ✅ **Touch-Friendly Controls**: Optimized interface for mobile use
+- ✅ **Visual Hierarchy**: Clear distinction between tracks and currently playing content
+- ✅ **Animation System**: Subtle transitions for user interactions
+
+### 📱 Mobile Experience
+
+- ✅ **Hamburger Menu**: Touch-friendly navigation for smaller screens
+- ✅ **Optimized Controls**: Larger touch targets for mobile interaction
+- ✅ **Fluid Adaptation**: Dynamic layout adjustments for various screen sizes
+
+### 🧩 Technical Implementation
+
+- ✅ **Modular JavaScript**: Clean separation of concerns with focused components
+- ✅ **API Integration**: Efficient data fetching with error handling
+- ✅ **State Management**: Robust playback state tracking across user interactions
+- ✅ **Memory Optimization**: Proper audio resource cleanup to prevent leaks
+
+### 📝 Planned Enhancements
+
+- 📝 **Advanced search filters**: Filter by genre, popularity, release date
+- 📝 **Keyboard shortcuts**: Improved accessibility through keyboard navigation
+- 📝 **Personal favorites**: Save tracks for later listening
+- 📝 **Social sharing**: Share discoveries with others
+- 📝 **Offline mode**: Limited functionality when connection is lost
+
+## 🚀 Technologies Stack
+
+### Core Technologies
+
+- **HTML5**: Semantic markup for content structure and accessibility
+- **CSS3**: Modern styling with custom properties, flexbox, and grid layouts
+- **JavaScript**: ES6+ features for interactive functionality
+
+### API Integration
+
+- **Deezer API**: Music data source accessed via RapidAPI
+- **RapidAPI**: API proxy service for secure third-party API access
+
+### UI Components
+
+- **Google Fonts**: Typography with Outfit font family
+- **Font Awesome**: Vector icons for enhanced interface elements
+- **Normalize.css**: Cross-browser styling baseline
+
+### Development Tools
+
+- **Visual Studio Code**: Primary development environment
+- **Git & GitHub**: Version control and code hosting
+- **Live Server**: Local development server for testing
+
+### Testing Tools
+
+- **Chrome DevTools**: Performance profiling and debugging
+- **Lighthouse**: Automated performance, accessibility, and SEO auditing
+- **WAVE**: Web accessibility evaluation tool
+- **W3C Validators**: HTML and CSS validation
+
+## 📂 Project Structure
+
+### Visual Structure
+
+```mermaid
+graph TD
+  root[Music Explorer]
+
+  root --> index[index.html]
+  root --> cssDir[css]
+  root --> jsDir[js]
+  root --> assetsDir[assets]
+  root --> readme[README.md]
+
+  cssDir --> styleFile[style.css]
+
+  jsDir --> apiFile[api.js]
+  jsDir --> mainFile[main.js]
+
+  assetsDir --> imagesDir[images]
+  assetsDir --> faviconDir[favicon]
+
+  imagesDir --> wireframesDir[wireframes]
+  imagesDir --> testingDir[testing]
+  imagesDir --> screenshotsDir[screenshots]
+```
+
+### Directory Tree
+
+```
+Music Explorer/
+│
+├── index.html                 # Main HTML document
+├── css/
+│   └── style.css              # Main stylesheet with all styles
+│
+├── js/
+│   ├── api.js                 # API integration module
+│   └── main.js                # Core application logic
+│
+├── assets/
+│   ├── images/                # Project images and icons
+│   │   ├── wireframes/        # Project wireframes
+│   │   ├── testing/           # Testing screenshots
+│   │   └── screenshots/       # Various screenshots of the website for documentation
+│   └── favicon/               # Favicon files
+│
+└── README.md                  # Project documentation
+```
+
 ## ⚙️ Installation and Setup
 
 Follow these step-by-step instructions to set up the Music Explorer project for local development or deployment.
@@ -1975,12 +2344,17 @@ For complete functionality with music search and previews:
          console.log("Starting API request...");
 
          // Make API request to Deezer through RapidAPI
-         const response = await fetch(`https://deezerdevs-deezer.p.rapidapi.com/search?q=${encodeURIComponent(query)}`, {
-           headers: {
-             "X-RapidAPI-Key": "YOUR_API_KEY_HERE",
-             "X-RapidAPI-Host": "deezerdevs-deezer.p.rapidapi.com",
-           },
-         });
+         const response = await fetch(
+           `https://deezerdevs-deezer.p.rapidapi.com/search?q=${encodeURIComponent(
+             query
+           )}`,
+           {
+             headers: {
+               "X-RapidAPI-Key": "YOUR_API_KEY_HERE",
+               "X-RapidAPI-Host": "deezerdevs-deezer.p.rapidapi.com",
+             },
+           }
+         );
 
          // Check if request was successful
          if (!response.ok) {
@@ -2060,12 +2434,17 @@ class MusicAPI {
       console.log("Starting API request...");
 
       // Make API request to Deezer through RapidAPI
-      const response = await fetch(`https://deezerdevs-deezer.p.rapidapi.com/search?q=${encodeURIComponent(query)}`, {
-        headers: {
-          "X-RapidAPI-Key": "YOUR_API_KEY_HERE",
-          "X-RapidAPI-Host": "deezerdevs-deezer.p.rapidapi.com",
-        },
-      });
+      const response = await fetch(
+        `https://deezerdevs-deezer.p.rapidapi.com/search?q=${encodeURIComponent(
+          query
+        )}`,
+        {
+          headers: {
+            "X-RapidAPI-Key": "YOUR_API_KEY_HERE",
+            "X-RapidAPI-Host": "deezerdevs-deezer.p.rapidapi.com",
+          },
+        }
+      );
 
       // Check if request was successful
       if (!response.ok) {
@@ -2088,7 +2467,7 @@ const musicAPI = new MusicAPI();
 
 ### Available Endpoints
 
-While Music Explorer currently only uses the search endpoint, Deezer API offers several other endpoints that could be used for future enhancements:
+While Music Explorer currently uses the search endpoint, Deezer API offers several other endpoints that could be used for future enhancements:
 
 #### 1. Search Endpoint (Currently Implemented)
 
@@ -2190,12 +2569,16 @@ try {
 
   displayTracks(tracks);
 } catch (error) {
+  // Log for developers
   console.error("Search failed:", error);
 
   // Determine error type for appropriate messaging
   if (error.message.includes("429")) {
     showError("Too many requests. Please try again later.", 8000);
-  } else if (error.message.includes("Network") || error.message.includes("Failed to fetch")) {
+  } else if (
+    error.message.includes("Network") ||
+    error.message.includes("Failed to fetch")
+  ) {
     showError("Network error. Please check your connection.", 8000);
   } else {
     showError("Something went wrong. Please try again later.", 5000);
@@ -2255,12 +2638,17 @@ The application handles API credentials with care:
 
 ```javascript
 // API key directly in api.js
-const response = await fetch(`https://deezerdevs-deezer.p.rapidapi.com/search?q=${encodeURIComponent(query)}`, {
-  headers: {
-    "X-RapidAPI-Key": "YOUR_API_KEY_HERE",
-    "X-RapidAPI-Host": "deezerdevs-deezer.p.rapidapi.com",
-  },
-});
+const response = await fetch(
+  `https://deezerdevs-deezer.p.rapidapi.com/search?q=${encodeURIComponent(
+    query
+  )}`,
+  {
+    headers: {
+      "X-RapidAPI-Key": "YOUR_API_KEY_HERE",
+      "X-RapidAPI-Host": "deezerdevs-deezer.p.rapidapi.com",
+    },
+  }
+);
 ```
 
 #### Production Recommendations
@@ -2306,8 +2694,14 @@ All external resources are loaded over HTTPS, preventing man-in-the-middle attac
 
 ```html
 <!-- Secure CDN resources -->
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+<link
+  href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&display=swap"
+  rel="stylesheet"
+/>
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+/>
 ```
 
 #### Audio Content Security
@@ -2449,7 +2843,12 @@ For future development, consider implementing:
 1. **Subresource Integrity (SRI)**:
 
    ```html
-   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-[hash-value]" crossorigin="anonymous" />
+   <link
+     rel="stylesheet"
+     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+     integrity="sha384-[hash-value]"
+     crossorigin="anonymous"
+   />
    ```
 
 2. **Feature Policy Headers**:
@@ -2483,12 +2882,17 @@ class MusicAPI {
       console.log("Starting API request...");
 
       // Make API request to Deezer through RapidAPI
-      const response = await fetch(`https://deezerdevs-deezer.p.rapidapi.com/search?q=${encodeURIComponent(query)}`, {
-        headers: {
-          "X-RapidAPI-Key": "YOUR_RAPIDAPI_KEY_HERE", // Replace with your actual RapidAPI key
-          "X-RapidAPI-Host": "deezerdevs-deezer.p.rapidapi.com",
-        },
-      });
+      const response = await fetch(
+        `https://deezerdevs-deezer.p.rapidapi.com/search?q=${encodeURIComponent(
+          query
+        )}`,
+        {
+          headers: {
+            "X-RapidAPI-Key": "YOUR_RAPIDAPI_KEY_HERE", // Replace with your actual RapidAPI key
+            "X-RapidAPI-Host": "deezerdevs-deezer.p.rapidapi.com",
+          },
+        }
+      );
 
       // Check if request was successful
       if (!response.ok) {
@@ -2535,7 +2939,9 @@ function renderTracks(tracks) {
     trackCard.innerHTML = `
   <div class="track-card-inner">
     <div class="track-image">
-      <img src="${track.album.cover_medium || "https://via.placeholder.com/250"}" alt="${track.title}">
+      <img src="${
+        track.album.cover_medium || "https://via.placeholder.com/250"
+      }" alt="${track.title}">
       <div class="play-overlay">
         <div class="play-icon">▶</div>
       </div>
@@ -2600,7 +3006,8 @@ function setupPreviewButtons() {
         if (oldPlayIcon) oldPlayIcon.textContent = "▶";
 
         // Remove old volume controls
-        const oldVolumeControl = currentlyPlaying.card.querySelector(".player-controls");
+        const oldVolumeControl =
+          currentlyPlaying.card.querySelector(".player-controls");
         if (oldVolumeControl) oldVolumeControl.remove();
 
         if (currentlyPlaying.card === card) {
@@ -3050,37 +3457,10 @@ _Consistent memory usage indicates proper cleanup of resources_
 ### Input Validation
 
 | Test                      | Result  | Notes                                  |
-| ------------------------- | ------- | -------------------------------------- |
+| ------------------------- | ------- | -------------------------------------- | --- |
 | Search Input Sanitization | ✅ PASS | Properly encoded before API request    |
 | XSS Prevention            | ✅ PASS | No script injection possible in search |
-| API Response Handling     | ✅ PASS | Response data validated before use     |
-
-## Features
-
-### Core Functionality
-
-- ✅ Music search with Deezer API integration
-- ✅ Audio preview with playback controls
-- ✅ Progress tracking with timestamps
-- ✅ Volume adjustment and mute option
-- ✅ Results sorting (by title, artist, duration)
-
-### User Experience
-
-- ✅ Responsive design for all devices
-- ✅ Dark/Light theme toggle
-- ✅ Loading indicators with animations
-- ✅ Error handling with user feedback
-- ✅ Visual feedback for interactions
-- ✅ Welcoming introduction screen
-
-### Upcoming Enhancements
-
-- 📝 Advanced search filters
-- 📝 Keyboard shortcuts
-- 📝 Personal favorites system
-- 📝 Social sharing integration
-- 📝 Offline mode support
+| API Response Handling     | ✅ PASS | Response data validated before use     |     |
 
 ## 🚀 Deployment
 
@@ -3278,7 +3658,12 @@ const environments = {
 };
 
 // Determine environment (could be set via build process)
-const currentEnv = window.location.hostname === "localhost" ? "development" : window.location.hostname.includes("staging") ? "staging" : "production";
+const currentEnv =
+  window.location.hostname === "localhost"
+    ? "development"
+    : window.location.hostname.includes("staging")
+    ? "staging"
+    : "production";
 
 // Export configuration for current environment
 const config = environments[currentEnv];
@@ -3448,411 +3833,6 @@ If your custom domain doesn't work:
    - Issue: Certificate not provisioned
    - Solution: Ensure CNAME is correctly set up and wait for GitHub to provision the certificate
 
-## 🧩 Code Architecture
-
-Music Explorer follows a modular code organization with separation of user interface, audio functionality, and API integration. This section details the actual structure and key design decisions in the codebase.
-
-### Architectural Overview
-
-The application is built with a clear separation between HTML structure, CSS styling, and JavaScript functionality:
-
-```
-┌─────────────────────────────────────────────────────────┐
-│                     User Interface                       │
-│                   (HTML + CSS + DOM)                     │
-└───────────────────────────┬─────────────────────────────┘
-                            │
-                            ▼
-┌─────────────────────────────────────────────────────────┐
-│                    Event Handlers                        │
-│                   (main.js, Events)                      │
-└───────────────────────────┬─────────────────────────────┘
-                            │
-          ┌─────────────────┴─────────────────┐
-          │                                   │
-          ▼                                   ▼
-┌─────────────────────┐           ┌─────────────────────┐
-│    DOM Manipulation │           │    API Integration   │
-│     (main.js, UI)   │           │       (api.js)       │
-└─────────────────────┘           └─────────────────────┘
-          │                                   │
-          │                                   │
-          ▼                                   ▼
-┌─────────────────────┐           ┌─────────────────────┐
-│   Audio Playback    │           │   Data Processing   │
-│  (main.js, Audio)   │           │    (main.js, UI)    │
-└─────────────────────┘           └─────────────────────┘
-```
-
-### Implementation Patterns
-
-The application implements several patterns to organize functionality:
-
-### 1. API Encapsulation
-
-The API functionality is encapsulated in a dedicated class:
-
-```javascript
-// MusicAPI class for handling Deezer API requests
-class MusicAPI {
-  // Search for tracks using Deezer API
-  async searchTracks(query, limit = 10) {
-    try {
-      // API implementation...
-    } catch (error) {
-      console.error("Detailed error:", error);
-      throw error;
-    }
-  }
-}
-
-// Create global instance of MusicAPI
-const musicAPI = new MusicAPI();
-```
-
-This approach keeps the API interaction separate from the UI code and provides a clean interface for making requests.
-
-### 2. Direct DOM Manipulation
-
-The application creates and updates DOM elements using direct manipulation and template literals:
-
-```javascript
-function renderTracks(tracks) {
-  const resultsGrid = document.querySelector(".results-grid");
-  resultsGrid.innerHTML = "";
-
-  // Create track cards
-  tracks.forEach((track) => {
-    const trackCard = document.createElement("article");
-    trackCard.className = "track-card";
-    trackCard.dataset.previewUrl = track.preview || "";
-
-    // Create track card HTML using template literals
-    trackCard.innerHTML = `
-      <div class="track-card-inner">
-        <!-- Card content -->
-      </div>
-    `;
-
-    resultsGrid.appendChild(trackCard);
-  });
-
-  setupPreviewButtons();
-}
-```
-
-This direct approach allows for clear HTML templating and straightforward DOM updates.
-
-### 3. Event-Based Audio Control
-
-The application handles audio playback through events:
-
-```javascript
-audio.addEventListener("timeupdate", () => {
-  const percentage = (audio.currentTime / audio.duration) * 100;
-  progress.style.width = `${percentage}%`;
-
-  const currentTime = card.querySelector(".current-time");
-  const duration = card.querySelector(".duration");
-
-  currentTime.textContent = formatTime(audio.currentTime);
-  const remainingTime = audio.duration - audio.currentTime;
-  duration.textContent = `-${formatTime(remainingTime)}`;
-});
-
-// Handle track completion
-audio.onended = () => {
-  card.classList.remove("playing");
-  playIcon.textContent = "▶";
-  progress.style.width = "0%";
-  // Reset UI elements
-};
-```
-
-This creates a responsive UI that updates based on audio playback state.
-
-## State Management
-
-The application manages state through global variables and CSS classes:
-
-### 1. Global State Variables
-
-```javascript
-// Track storage for sorting functionality
-let currentTracks = [];
-
-// Current audio playback tracking
-let currentlyPlaying = null;
-
-// Search state
-let isSearching = false;
-```
-
-### 2. Class-Based UI State
-
-The application uses CSS classes to represent and update UI states:
-
-```javascript
-// Playing state
-card.classList.add("playing");
-playIcon.textContent = "⏸";
-
-// Idle state
-card.classList.remove("playing");
-playIcon.textContent = "▶";
-
-// Hidden state
-loadingSpinner.classList.add("hidden");
-resultsGrid.classList.remove("hidden");
-```
-
-This approach keeps the visual state tied to CSS, making it easier to maintain and update.
-
-## CSS Architecture
-
-The styling follows a consistent organization using CSS variables and a clear structure:
-
-### 1. Theme Variables
-
-```css
-:root {
-  --primary-color: #a393eb;
-  --secondary-color: #5e63b6;
-  --text-color: #ffffff;
-  --background-color: #27296d;
-  --gradient-color-1: rgba(183, 167, 255, 1);
-  --gradient-color-2: rgba(114, 119, 202, 1);
-  --gradient-color-3: rgba(59, 61, 129, 1);
-  --gradient-color-4: rgba(40, 41, 76, 1);
-  --error-color: #e74c3c;
-  --spacing-small: 0.5rem;
-  --spacing-medium: 1rem;
-  --spacing-large: 2rem;
-}
-
-/* Light theme overrides */
-[data-theme="light"] {
-  --primary-color: #5e63b6;
-  --secondary-color: #a393eb;
-  --text-color: #27296d;
-  --background-color: #f8f8ff;
-  /* Other light theme variables */
-}
-```
-
-This system enables theme switching and maintains consistent styling throughout the application.
-
-### 2. Component-Based Organization
-
-The CSS is organized by component functionality:
-
-```css
-/* Base Styles */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-/* NAVIGATION */
-nav {
-  background-color: var(--background-color-top);
-  padding: 0.4rem var(--spacing-medium);
-  /* Navigation styles */
-}
-
-/* Search and Sort Container Styles */
-.search-wrapper {
-  max-width: 1200px;
-  margin: 1rem auto;
-  /* Search styles */
-}
-
-/* Track Card */
-.track-card {
-  border-radius: 40px 40px 40px 40px;
-  overflow: hidden;
-  /* Track card styles */
-}
-
-/* State variations */
-.track-card:hover {
-  transform: translateY(-5px);
-  /* Hover state styles */
-}
-
-.track-card.playing {
-  animation: cardPulse 2s ease-in-out infinite;
-  /* Playing state styles */
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  /* Mobile styles */
-}
-```
-
-This structure makes styles easy to find and maintain.
-
-## Error Handling
-
-The application implements straightforward error handling with automatic dismissal:
-
-```javascript
-function showError(message) {
-  const errorContainer = document.getElementById("error-container");
-  const errorText = document.getElementById("error-text");
-
-  errorText.textContent = message;
-  errorContainer.classList.remove("hidden");
-
-  // Auto-hide error after 5 seconds
-  setTimeout(() => {
-    errorContainer.classList.add("hidden");
-  }, 5000);
-}
-
-// Handle error message close button
-document.querySelector(".error-close").addEventListener("click", () => {
-  document.getElementById("error-container").classList.add("hidden");
-});
-```
-
-This provides user-friendly error messaging with both automatic and manual dismissal options.
-
-## Helper Functions
-
-The application includes several utility functions that enhance code readability:
-
-```javascript
-// Convert seconds to MM:SS format
-function formatTime(seconds) {
-  if (!seconds || isNaN(seconds)) return "0:00";
-  const mins = Math.floor(seconds / 60);
-  const secs = Math.floor(seconds % 60);
-  return `${mins}:${secs.toString().padStart(2, "0")}`;
-}
-
-// Create volume control interface for audio player
-function createVolumeControl(audio) {
-  const controlsContainer = document.createElement("div");
-  controlsContainer.className = "player-controls";
-
-  // Creates and returns volume controls with event handling
-  // ...
-}
-```
-
-These functions keep the code DRY (Don't Repeat Yourself) by centralizing common functionality.
-
-## Key Features and Implementation
-
-### 1. Theme Switching
-
-The application implements theme switching with CSS variables and JavaScript:
-
-```javascript
-themeToggle.addEventListener("click", () => {
-  isDarkTheme = !isDarkTheme;
-  if (!isDarkTheme) {
-    // Switch to light mode
-    document.documentElement.setAttribute("data-theme", "light");
-    // Update icon
-  } else {
-    // Switch to dark mode
-    document.documentElement.removeAttribute("data-theme");
-    // Update icon
-  }
-});
-```
-
-### 2. Audio Player Controls
-
-The application creates custom audio controls for each track:
-
-```javascript
-// Add volume controls
-const { controlsContainer, muteHandler } = createVolumeControl(audio);
-const existingControls = card.querySelector(".player-controls");
-if (existingControls) existingControls.remove();
-progressContainer.after(controlsContainer);
-
-// Add mute button
-const muteButton = document.createElement("button");
-muteButton.className = "mute-button";
-muteButton.textContent = "🔊";
-controlsContainer.appendChild(muteButton);
-
-// Handle mute button clicks
-muteButton.addEventListener("click", (e) => {
-  const newIcon = muteHandler(e);
-  muteButton.textContent = newIcon;
-});
-```
-
-### 3. Results Sorting
-
-The application provides sorting functionality for search results:
-
-```javascript
-// Handle sort selection changes
-const sortSelect = document.getElementById("sort-select");
-sortSelect.addEventListener("change", () => {
-  const sortType = sortSelect.value;
-
-  // Sort tracks based on selected criteria
-  const sortedTracks = [...currentTracks].sort((a, b) => {
-    switch (sortType) {
-      case "title":
-        return a.title.localeCompare(b.title);
-      case "artist":
-        return a.artist.name.localeCompare(b.artist.name);
-      case "duration":
-        return a.duration - b.duration;
-      default:
-        return 0;
-    }
-  });
-
-  renderTracks(sortedTracks);
-});
-```
-
-## Responsive Design
-
-The application implements a mobile-first approach with responsive breakpoints:
-
-```css
-/* Mobile First Styles (up to 480px) */
-@media (max-width: 480px) {
-  .results-grid {
-    grid-template-columns: 1fr;
-  }
-  /* Other mobile styles */
-}
-
-/* Tablets and small desktops (768px to 992px) */
-@media (min-width: 768px) and (max-width: 992px) {
-  .search-wrapper {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-  }
-  /* Other tablet styles */
-}
-
-/* Desktop styles (993px and above) */
-@media (min-width: 993px) {
-  .results-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-  /* Other desktop styles */
-}
-```
-
-This ensures the application works well on devices of all sizes, from mobile phones to desktop computers.
-
-By following this architectural approach, Music Explorer maintains a clear organization that separates concerns and creates a maintainable, user-friendly music discovery platform.
-
 ## ⚠️ Known Limitations and Technical Debt
 
 While Music Explorer provides a robust music discovery experience, this section transparently documents current limitations, technical constraints, and areas for future improvement. Understanding these aspects is crucial for future development and maintenance.
@@ -3987,7 +3967,13 @@ try {
 ```html
 <!-- Future implementation -->
 <div class="track-image" style="aspect-ratio: 1;">
-  <img src="${track.album.cover_medium}" alt="${track.title} album cover" loading="lazy" width="250" height="250" />
+  <img
+    src="${track.album.cover_medium}"
+    alt="${track.title} album cover"
+    loading="lazy"
+    width="250"
+    height="250"
+  />
   <!-- Placeholder/skeleton shown during loading -->
 </div>
 ```
@@ -4595,7 +4581,9 @@ This section chronicles the evolution of Music Explorer from concept to completi
 
     // Restore playing state if applicable
     if (playingTrackId && currentlyPlaying) {
-      const newCard = document.querySelector(`.track-card[data-track-id="${playingTrackId}"]`);
+      const newCard = document.querySelector(
+        `.track-card[data-track-id="${playingTrackId}"]`
+      );
       if (newCard) {
         newCard.classList.add("playing");
         // Update currentlyPlaying reference
@@ -4633,7 +4621,13 @@ This section chronicles the evolution of Music Explorer from concept to completi
   - **Solution**: Advanced gradient techniques with CSS
   ```css
   body {
-    background: radial-gradient(circle, rgba(163, 147, 235, 1) 0%, rgba(94, 99, 182, 1) 26%, rgba(39, 41, 109, 1) 76%, rgba(20, 21, 56, 1) 100%);
+    background: radial-gradient(
+      circle,
+      rgba(163, 147, 235, 1) 0%,
+      rgba(94, 99, 182, 1) 26%,
+      rgba(39, 41, 109, 1) 76%,
+      rgba(20, 21, 56, 1) 100%
+    );
     background-attachment: fixed;
   }
   ```
