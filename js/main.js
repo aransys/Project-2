@@ -79,9 +79,8 @@ document.addEventListener("DOMContentLoaded", () => {
       }
       
       try {
-        // In a real application, you would send the data to a server here
-        // For this demo, we'll simulate a successful submission
-        
+        // In a real application, we would send the data to a server here
+      
         // Show loading state
         const submitButton = contactForm.querySelector("button[type='submit']");
         const originalText = submitButton.textContent;

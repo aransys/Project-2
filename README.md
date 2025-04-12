@@ -3910,6 +3910,113 @@ backToTop.addEventListener("click", () => {
 });
 ```
 
+#### 10. Contact Form Handling
+
+```javascript
+// Function to handle the contact form submission process
+// This intercepts the form event, validates inputs and provides feedback
+document.addEventListener("DOMContentLoaded", () => {
+  // Get reference to the contact form element
+  const contactForm = document.getElementById("contact-form");
+
+  if (contactForm) {
+    // Add event listener to intercept form submissions
+    contactForm.addEventListener("submit", async (e) => {
+      // Prevent default form submission behavior
+      e.preventDefault();
+
+      // Extract and sanitize form input values
+      const name = document.getElementById("name-input").value.trim();
+      const email = document.getElementById("email-input").value.trim();
+      const message = document.getElementById("message-input").value.trim();
+
+      // Validate that all required fields are filled
+      if (!name || !email || !message) {
+        showError("Please fill in all fields");
+        return;
+      }
+
+      // Perform email format validation with regular expression
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        showError("Please enter a valid email address");
+        return;
+      }
+
+      try {
+        // In a real application, form data would be sent to a server
+        // This implementation simulates that process
+
+        // Update UI to show processing state
+        const submitButton = contactForm.querySelector("button[type='submit']");
+        const originalText = submitButton.textContent;
+        submitButton.textContent = "Sending...";
+        submitButton.disabled = true;
+
+        // Simulate network delay for server processing
+        await new Promise((resolve) => setTimeout(resolve, 1500));
+
+        // Display success feedback to the user
+        showSuccessMessage();
+
+        // Reset form fields to initial state
+        contactForm.reset();
+
+        // Restore submit button to original state
+        submitButton.textContent = originalText;
+        submitButton.disabled = false;
+      } catch (error) {
+        // Log detailed error for debugging purposes
+        console.error("Form submission error:", error);
+        // Show user-friendly error message
+        showError("Something went wrong. Please try again later.");
+
+        // Reset button state after error
+        const submitButton = contactForm.querySelector("button[type='submit']");
+        submitButton.textContent = "Send";
+        submitButton.disabled = false;
+      }
+    });
+  }
+
+  // Helper function to create and display success message
+  function showSuccessMessage() {
+    // Check if success message already exists in DOM
+    let successMessage = document.querySelector(".success-message");
+
+    // If not, create a new message element
+    if (!successMessage) {
+      successMessage = document.createElement("div");
+      successMessage.className = "success-message";
+      // Apply inline styles for visual feedback
+      successMessage.style.backgroundColor = "#2ecc71";
+      successMessage.style.color = "white";
+      successMessage.style.padding = "1rem";
+      successMessage.style.marginTop = "1rem";
+      successMessage.style.borderRadius = "8px";
+      successMessage.style.textAlign = "center";
+      successMessage.style.animation = "slideDown 0.3s ease-out";
+
+      // Insert message after the form in the DOM
+      const contactForm = document.getElementById("contact-form");
+      contactForm.parentNode.insertBefore(
+        successMessage,
+        contactForm.nextSibling
+      );
+    }
+
+    // Set success message content
+    successMessage.textContent =
+      "Thank you! Your message has been sent successfully.";
+
+    // Automatically remove message after 5 seconds
+    setTimeout(() => {
+      successMessage.remove();
+    }, 5000);
+  }
+});
+```
+
 ### Code Structure Summary
 
 The JavaScript implementation is organized into these main components:
@@ -3923,7 +4030,8 @@ The JavaScript implementation is organized into these main components:
 7. **Track Display** - Renders music data as visual track cards
 8. **Audio Playback** - Controls music preview playback and progress
 9. **Search Processing** - Handles user search queries
-10. **Scroll Management** - Provides easy navigation for scrollable content
+10. **Contact Form Handling** - Processes form submissions with validation and feedback
+11. **Scroll Management** - Provides easy navigation for scrollable content
 
 These components work together to create a cohesive music discovery experience.
 
