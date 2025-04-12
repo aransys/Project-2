@@ -52,6 +52,98 @@ document.addEventListener("DOMContentLoaded", () => {
       `;
     }
   });
+
+  // Contact form handling
+  const contactForm = document.getElementById("contact-form");
+  
+  if (contactForm) {
+    contactForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      
+      // Get form values
+      const name = document.getElementById("name-input").value.trim();
+      const email = document.getElementById("email-input").value.trim();
+      const message = document.getElementById("message-input").value.trim();
+      
+      // Basic validation
+      if (!name || !email || !message) {
+        showError("Please fill in all fields");
+        return;
+      }
+      
+      // Email validation
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        showError("Please enter a valid email address");
+        return;
+      }
+      
+      try {
+        // In a real application, you would send the data to a server here
+        // For this demo, we'll simulate a successful submission
+        
+        // Show loading state
+        const submitButton = contactForm.querySelector("button[type='submit']");
+        const originalText = submitButton.textContent;
+        submitButton.textContent = "Sending...";
+        submitButton.disabled = true;
+        
+        // Simulate server delay
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        
+        // Show success message
+        showSuccessMessage();
+        
+        // Reset form
+        contactForm.reset();
+        
+        // Reset button
+        submitButton.textContent = originalText;
+        submitButton.disabled = false;
+        
+      } catch (error) {
+        console.error("Form submission error:", error);
+        showError("Something went wrong. Please try again later.");
+        
+        // Reset button state
+        const submitButton = contactForm.querySelector("button[type='submit']");
+        submitButton.textContent = "Send";
+        submitButton.disabled = false;
+      }
+    });
+  }
+  
+  // Function to show success message
+  function showSuccessMessage() {
+    // Check if success message already exists
+    let successMessage = document.querySelector(".success-message");
+    
+    // If not, create one
+    if (!successMessage) {
+      successMessage = document.createElement("div");
+      successMessage.className = "success-message";
+      successMessage.style.backgroundColor = "#2ecc71";
+      successMessage.style.color = "white";
+      successMessage.style.padding = "1rem";
+      successMessage.style.marginTop = "1rem";
+      successMessage.style.borderRadius = "8px";
+      successMessage.style.textAlign = "center";
+      successMessage.style.animation = "slideDown 0.3s ease-out";
+      
+      // Add success message after the form
+      const contactForm = document.getElementById("contact-form");
+      contactForm.parentNode.insertBefore(successMessage, contactForm.nextSibling);
+    }
+    
+    // Update message content
+    successMessage.textContent = "Thank you! Your message has been sent successfully.";
+    
+    // Auto-hide success message after 5 seconds
+    setTimeout(() => {
+      successMessage.remove();
+    }, 5000);
+  }
+
 });
 
 // Track storage for sorting functionality
@@ -165,7 +257,7 @@ document.querySelectorAll(".nav-links a").forEach((link) => {
     });
 
     // Show appropriate section
-    if (sectionId === "search") {
+    if (sectionId === "results-section") {  // FIXED: Changed from "search" to match href
       const resultsSection = document.getElementById("results-section");
       resultsSection.classList.remove("hidden");
       document.getElementById("search-input").focus();
