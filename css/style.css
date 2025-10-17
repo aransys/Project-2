@@ -1400,6 +1400,22 @@ footer p {
     gap: 0.5rem;
   }
 
+  /* Enhanced visibility for very small screens */
+  .search-wrapper {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 1.5rem 1rem;
+  }
+
+  .search-input {
+    font-size: 1rem;
+    padding: 0.75rem 2.5rem 0.75rem 1rem;
+  }
+
+  .search-button {
+    font-size: 1rem;
+    padding: 0.75rem 1.5rem;
+  }
+
   .sort-container {
     width: 100%;
     display: flex;
@@ -1408,6 +1424,7 @@ footer p {
 
   .sort-select {
     width: 100%;
+    font-size: 1rem;
   }
 
   .search-input,
@@ -1419,6 +1436,19 @@ footer p {
   .contact-form button {
     width: 60%;
   }
+
+  /* Welcome message adjustments */
+  .welcome-message h2 {
+    font-size: 2.5rem;
+  }
+
+  .welcome-message p {
+    font-size: 1.3rem;
+  }
+
+  .welcome-icon {
+    font-size: 3rem;
+  }
 }
 
 /* Small tablets and large phones (481px to 767px) */
@@ -1427,6 +1457,36 @@ footer p {
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 1.5rem 1rem;
+    border-radius: 30px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  }
+
+  [data-theme="light"] .search-wrapper {
+    background: rgba(255, 255, 255, 0.8);
+    box-shadow: 0 4px 15px rgba(94, 99, 182, 0.15);
+  }
+
+  .search-input {
+    border-color: rgba(255, 255, 255, 0.9);
+    color: var(--text-color);
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .search-input::placeholder {
+    color: rgba(255, 255, 255, 0.8);
+  }
+
+  [data-theme="light"] .search-input {
+    border-color: var(--secondary-color);
+    background: rgba(255, 255, 255, 0.5);
+  }
+
+  [data-theme="light"] .search-input::placeholder {
+    color: var(--secondary-color);
   }
 
   .search-form,
@@ -1437,6 +1497,14 @@ footer p {
 
   .sort-select {
     width: 200px;
+    border-color: rgba(255, 255, 255, 0.9);
+    color: var(--text-color);
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+
+  [data-theme="light"] .sort-select {
+    border-color: var(--secondary-color);
+    background-color: rgba(255, 255, 255, 0.5);
   }
 }
 
@@ -1478,6 +1546,93 @@ footer p {
 
   .hamburger {
     display: flex;
+  }
+
+  /* Improve search visibility on mobile */
+  .search-wrapper {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 1.5rem 1rem;
+    border-radius: 30px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  }
+
+  .search-input {
+    border-color: rgba(255, 255, 255, 0.9);
+    color: var(--text-color);
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .search-input::placeholder {
+    color: rgba(255, 255, 255, 0.8);
+  }
+
+  .search-button {
+    border-color: var(--text-color);
+    background: var(--text-color);
+    color: var(--background-color);
+    font-weight: 600;
+  }
+
+  .clear-search-button {
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  .clear-search-button:hover {
+    background: rgba(255, 255, 255, 0.2);
+    color: var(--text-color);
+  }
+
+  /* Light theme adjustments for mobile */
+  [data-theme="light"] .search-wrapper {
+    background: rgba(255, 255, 255, 0.8);
+    box-shadow: 0 4px 15px rgba(94, 99, 182, 0.15);
+  }
+
+  [data-theme="light"] .search-input {
+    border-color: var(--secondary-color);
+    color: var(--text-color);
+    background: rgba(255, 255, 255, 0.5);
+  }
+
+  [data-theme="light"] .search-input::placeholder {
+    color: var(--secondary-color);
+  }
+
+  [data-theme="light"] .search-button {
+    border-color: var(--secondary-color);
+    background: var(--secondary-color);
+    color: white;
+  }
+
+  /* Improve welcome message visibility on mobile */
+  .welcome-message {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 2rem 1rem;
+    border-radius: 30px;
+    margin-bottom: 1rem;
+  }
+
+  [data-theme="light"] .welcome-message {
+    background: rgba(255, 255, 255, 0.6);
+  }
+
+  /* Improve sort dropdown visibility on mobile */
+  .sort-select {
+    border-color: rgba(255, 255, 255, 0.9);
+    color: var(--text-color);
+    background-color: rgba(255, 255, 255, 0.1);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  }
+
+  [data-theme="light"] .sort-select {
+    border-color: var(--secondary-color);
+    color: var(--text-color);
+    background-color: rgba(255, 255, 255, 0.5);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23a393eb' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
   }
 
   .nav-links {
