@@ -1,5 +1,5 @@
 # API Keys and Configuration
-js/config.js
+# js/config.js  (Commented out for deployment - uncomment for production with backend)
 
 # Environment files
 .env
