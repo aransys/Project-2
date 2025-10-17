@@ -1,15 +1,27 @@
 // MusicAPI class for handling Deezer API requests
 class MusicAPI {
+  constructor() {
+    // Validate that CONFIG is loaded
+    if (typeof CONFIG === 'undefined') {
+      console.error('CONFIG not loaded! Make sure config.js is included before api.js');
+    }
+  }
+
   // Search for tracks using Deezer API
-  async searchTracks(query, limit = 10) {
+  async searchTracks(query, limit = CONFIG.SEARCH_LIMIT) {
     try {
       console.log("Starting API request...");
 
+      // Validate API key is configured
+      if (!CONFIG.RAPIDAPI_KEY || CONFIG.RAPIDAPI_KEY === 'YOUR_RAPIDAPI_KEY_HERE') {
+        throw new Error('API key not configured. Please update js/config.js with your RapidAPI key.');
+      }
+
       // Make API request to Deezer through RapidAPI
-      const response = await fetch(`https://deezerdevs-deezer.p.rapidapi.com/search?q=${encodeURIComponent(query)}`, {
+      const response = await fetch(`https://${CONFIG.RAPIDAPI_HOST}/search?q=${encodeURIComponent(query)}`, {
         headers: {
-          "X-RapidAPI-Key": "18246259eamsh6f81aaf5017de43p17f3f5jsnf02db3f3d57b",
-          "X-RapidAPI-Host": "deezerdevs-deezer.p.rapidapi.com",
+          "X-RapidAPI-Key": CONFIG.RAPIDAPI_KEY,
+          "X-RapidAPI-Host": CONFIG.RAPIDAPI_HOST,
         },
       });
 

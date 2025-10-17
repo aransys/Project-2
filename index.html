@@ -61,7 +61,10 @@
         <div class="search-wrapper">
           <form id="search-form" class="search-form">
             <label for="search-input" class="visually-hidden">Search for songs</label>
-            <input type="text" id="search-input" class="search-input" placeholder="Search for songs..." autocomplete="off" />
+            <div class="search-input-wrapper">
+              <input type="text" id="search-input" class="search-input" placeholder="Search for songs..." autocomplete="off" />
+              <button type="button" id="clear-search" class="clear-search-button" aria-label="Clear search" style="display: none;">×</button>
+            </div>
             <button type="submit" class="search-button">Search</button>
           </form>
           <div class="sort-container hidden">
@@ -136,6 +139,7 @@
     </footer>
 
     <!-- JavaScript -->
+    <script src="js/config.js"></script>
     <script src="js/api.js"></script>
     <script src="js/main.js"></script>
   </body>

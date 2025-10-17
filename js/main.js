@@ -1,42 +1,53 @@
-/* global document, window, setTimeout, Audio, console, musicAPI */
+/* global document, window, setTimeout, Audio, console, musicAPI, CONFIG */
+
+// Application State Management
+const AppState = {
+  currentTracks: [],
+  isSearching: false,
+  isDarkTheme: true,
+  currentlyPlayingAudio: null,
+  
+  // Initialize state from localStorage
+  init() {
+    // Load theme preference from localStorage
+    const savedTheme = localStorage.getItem('musicExplorerTheme');
+    if (savedTheme) {
+      this.isDarkTheme = savedTheme === 'dark';
+    }
+  },
+  
+  // Save theme preference to localStorage
+  saveTheme() {
+    localStorage.setItem('musicExplorerTheme', this.isDarkTheme ? 'dark' : 'light');
+  },
+};
+
+// Utility function for debouncing
+function debounce(func, delay) {
+  let timeoutId;
+  return function (...args) {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => func.apply(this, args), delay);
+  };
+}
 
 // Wait for DOM to be fully loaded before running
 document.addEventListener("DOMContentLoaded", () => {
+  // Initialize app state
+  AppState.init();
+  
   // Theme toggle setup
   const themeToggle = document.querySelector(".theme-toggle");
-  let isDarkTheme = true;
+  
+  // Apply saved theme on load
+  if (!AppState.isDarkTheme) {
+    document.documentElement.setAttribute("data-theme", "light");
+  }
 
-  // Set initial sun icon for dark mode
-  themeToggle.innerHTML = `
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="12" cy="12" r="5"></circle>
-      <line x1="12" y1="1" x2="12" y2="3"></line>
-      <line x1="12" y1="21" x2="12" y2="23"></line>
-      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-      <line x1="1" y1="12" x2="3" y2="12"></line>
-      <line x1="21" y1="12" x2="23" y2="12"></line>
-      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-    </svg>
-  `;
-
-  // Handle theme toggle clicks
-  themeToggle.addEventListener("click", () => {
-    isDarkTheme = !isDarkTheme;
-    if (!isDarkTheme) {
-      // Switch to light mode
-      document.documentElement.setAttribute("data-theme", "light");
-      // Show moon icon
-      themeToggle.innerHTML = `
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-        </svg>
-      `;
-    } else {
-      // Switch to dark mode
-      document.documentElement.removeAttribute("data-theme");
-      // Show sun icon (same as initial icon)
+  // Function to update theme icon
+  function updateThemeIcon() {
+    if (AppState.isDarkTheme) {
+      // Show sun icon for dark mode
       themeToggle.innerHTML = `
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="12" cy="12" r="5"></circle>
@@ -50,7 +61,31 @@ document.addEventListener("DOMContentLoaded", () => {
           <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
         </svg>
       `;
+    } else {
+      // Show moon icon for light mode
+      themeToggle.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+      `;
     }
+  }
+
+  // Set initial icon based on saved theme
+  updateThemeIcon();
+
+  // Handle theme toggle clicks
+  themeToggle.addEventListener("click", () => {
+    AppState.isDarkTheme = !AppState.isDarkTheme;
+    
+    if (!AppState.isDarkTheme) {
+      document.documentElement.setAttribute("data-theme", "light");
+    } else {
+      document.documentElement.removeAttribute("data-theme");
+    }
+    
+    updateThemeIcon();
+    AppState.saveTheme();
   });
 
   // Contact form handling
@@ -137,16 +172,13 @@ document.addEventListener("DOMContentLoaded", () => {
     // Update message content
     successMessage.textContent = "Thank you! Your message has been sent successfully.";
     
-    // Auto-hide success message after 5 seconds
+    // Auto-hide success message after configured duration
     setTimeout(() => {
       successMessage.remove();
-    }, 5000);
+    }, CONFIG.ERROR_DISPLAY_DURATION);
   }
 
 });
-
-// Track storage for sorting functionality
-let currentTracks = [];
 
 // Handle sort selection changes
 const sortSelect = document.getElementById("sort-select");
@@ -155,12 +187,12 @@ sortSelect.addEventListener("change", () => {
 
   // Return to default order if selected
   if (sortType === "default") {
-    renderTracks(currentTracks);
+    renderTracks(AppState.currentTracks);
     return;
   }
 
   // Sort tracks based on selected criteria
-  const sortedTracks = [...currentTracks].sort((a, b) => {
+  const sortedTracks = [...AppState.currentTracks].sort((a, b) => {
     switch (sortType) {
       case "title":
         return a.title.localeCompare(b.title);
@@ -280,8 +312,8 @@ document.querySelectorAll(".nav-links a").forEach((link) => {
   });
 });
 
-let isSearching = false;
 const searchForm = document.getElementById("search-form");
+const searchInput = document.getElementById("search-input");
 
 // Display error messages
 function showError(message) {
@@ -291,10 +323,10 @@ function showError(message) {
   errorText.textContent = message;
   errorContainer.classList.remove("hidden");
 
-  // Auto-hide error after 5 seconds
+  // Auto-hide error after configured duration
   setTimeout(() => {
     errorContainer.classList.add("hidden");
-  }, 5000);
+  }, CONFIG.ERROR_DISPLAY_DURATION);
 }
 
 // Handle error message close button
@@ -304,7 +336,7 @@ document.querySelector(".error-close").addEventListener("click", () => {
 
 // Store and display track results
 function displayTracks(tracks) {
-  currentTracks = [...tracks];
+  AppState.currentTracks = [...tracks];
   renderTracks(tracks);
 }
 
@@ -365,8 +397,6 @@ function renderTracks(tracks) {
 
 // Set up audio preview functionality
 function setupPreviewButtons() {
-  let currentlyPlaying = null;
-
   document.querySelectorAll(".track-card").forEach((card) => {
     const playButton = card.querySelector(".preview-button");
     const playOverlay = card.querySelector(".play-overlay");
@@ -382,20 +412,25 @@ function setupPreviewButtons() {
       // Removed timeInfo variable since it's declared but never used
 
       // Stop currently playing track if exists
-      if (currentlyPlaying) {
-        currentlyPlaying.audio.pause();
-        currentlyPlaying.card.classList.remove("playing", "loading");
+      if (AppState.currentlyPlayingAudio) {
+        // Proper audio cleanup
+        AppState.currentlyPlayingAudio.audio.pause();
+        AppState.currentlyPlayingAudio.audio.currentTime = 0;
+        AppState.currentlyPlayingAudio.audio.src = '';
+        AppState.currentlyPlayingAudio.audio = null;
+        
+        AppState.currentlyPlayingAudio.card.classList.remove("playing", "loading");
 
         // Reset previous track's UI
-        const oldPlayIcon = currentlyPlaying.card.querySelector(".play-icon");
+        const oldPlayIcon = AppState.currentlyPlayingAudio.card.querySelector(".play-icon");
         if (oldPlayIcon) oldPlayIcon.textContent = "▶";
 
         // Remove old volume controls
-        const oldVolumeControl = currentlyPlaying.card.querySelector(".player-controls");
+        const oldVolumeControl = AppState.currentlyPlayingAudio.card.querySelector(".player-controls");
         if (oldVolumeControl) oldVolumeControl.remove();
 
-        if (currentlyPlaying.card === card) {
-          currentlyPlaying = null;
+        if (AppState.currentlyPlayingAudio.card === card) {
+          AppState.currentlyPlayingAudio = null;
           return;
         }
       }
@@ -442,7 +477,7 @@ function setupPreviewButtons() {
           duration.textContent = `-${formatTime(remainingTime)}`;
         });
 
-        currentlyPlaying = {
+        AppState.currentlyPlayingAudio = {
           audio,
           card,
           playIcon,
@@ -461,8 +496,11 @@ function setupPreviewButtons() {
 
           const volumeControl = card.querySelector(".player-controls");
           if (volumeControl) volumeControl.remove();
+          
+          // Clean up audio object
+          audio.src = '';
 
-          currentlyPlaying = null;
+          AppState.currentlyPlayingAudio = null;
         };
       } catch (error) {
         // Handle playback errors
@@ -470,7 +508,7 @@ function setupPreviewButtons() {
         card.classList.remove("playing");
         playIcon.textContent = "▶";
         progress.style.width = "0%";
-        currentlyPlaying = null;
+        AppState.currentlyPlayingAudio = null;
       }
     };
 
@@ -499,25 +537,17 @@ function setupPreviewButtons() {
 
 // The musicAPI object is defined in a separate file (musicAPI.js)
 
-// Handle search form submission
-searchForm.addEventListener("submit", async (e) => {
-  e.preventDefault();
-
-  // Reset sort selection
-  sortSelect.value = "default";
-
-  // Prevent multiple simultaneous searches
-  if (isSearching) {
-    showError("A search is already in progress. Please wait...");
+// Search function
+async function performSearch(query) {
+  // Validate search input
+  if (!query || !query.trim()) {
+    showError("Please enter a search term");
     return;
   }
 
-  const searchInput = document.getElementById("search-input");
-  const query = searchInput.value.trim();
-
-  // Validate search input
-  if (!query) {
-    showError("Please enter a search term");
+  // Prevent multiple simultaneous searches
+  if (AppState.isSearching) {
+    showError("A search is already in progress. Please wait...");
     return;
   }
 
@@ -526,12 +556,12 @@ searchForm.addEventListener("submit", async (e) => {
 
   try {
     // Show loading state
-    isSearching = true;
+    AppState.isSearching = true;
     loadingSpinner.classList.remove("hidden");
     resultsGrid.classList.add("hidden");
 
     // Perform search
-    const tracks = await musicAPI.searchTracks(query);
+    const tracks = await musicAPI.searchTracks(query.trim());
 
     // Handle no results
     if (!tracks || tracks.length === 0) {
@@ -541,16 +571,36 @@ searchForm.addEventListener("submit", async (e) => {
 
     // Display search results
     displayTracks(tracks);
+    
+    // Show clear button
+    const clearButton = document.getElementById("clear-search");
+    if (clearButton) {
+      clearButton.style.display = "block";
+    }
   } catch (error) {
     // Handle search errors
     console.error("Search failed:", error);
     showError("Something went wrong. Please try again later.");
   } finally {
     // Reset search state and UI
-    isSearching = false;
+    AppState.isSearching = false;
     loadingSpinner.classList.add("hidden");
     resultsGrid.classList.remove("hidden");
   }
+}
+
+// Debounced search for live search (optional future feature)
+const debouncedSearch = debounce(performSearch, CONFIG.SEARCH_DEBOUNCE_DELAY);
+
+// Handle search form submission
+searchForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  // Reset sort selection
+  sortSelect.value = "default";
+
+  const query = searchInput.value.trim();
+  await performSearch(query);
 });
 
 // Back to top button functionality
@@ -560,7 +610,7 @@ const backToTop = document.querySelector(".back-to-top");
 window.addEventListener("scroll", () => {
   const scrollPosition = window.scrollY || document.documentElement.scrollTop;
 
-  if (scrollPosition > 100) {
+  if (scrollPosition > CONFIG.SCROLL_THRESHOLD) {
     backToTop.classList.add("visible");
   } else {
     backToTop.classList.remove("visible");
@@ -573,4 +623,105 @@ backToTop.addEventListener("click", () => {
     top: 0,
     behavior: "smooth",
   });
+});
+
+// Clear search button functionality
+const clearSearchButton = document.getElementById("clear-search");
+if (clearSearchButton) {
+  clearSearchButton.addEventListener("click", () => {
+    searchInput.value = "";
+    searchInput.focus();
+    clearSearchButton.style.display = "none";
+    
+    // Clear results
+    const resultsGrid = document.querySelector(".results-grid");
+    const sortContainer = document.querySelector(".sort-container");
+    resultsGrid.innerHTML = "";
+    sortContainer.classList.add("hidden");
+    AppState.currentTracks = [];
+    
+    // Stop any playing audio
+    if (AppState.currentlyPlayingAudio) {
+      AppState.currentlyPlayingAudio.audio.pause();
+      AppState.currentlyPlayingAudio.audio.src = '';
+      AppState.currentlyPlayingAudio = null;
+    }
+  });
+}
+
+// Show/hide clear button based on input
+searchInput.addEventListener("input", () => {
+  if (clearSearchButton) {
+    clearSearchButton.style.display = searchInput.value ? "block" : "none";
+  }
+});
+
+// Keyboard shortcuts
+document.addEventListener("keydown", (e) => {
+  // Don't trigger shortcuts when typing in input fields
+  if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA") {
+    return;
+  }
+  
+  // Spacebar - Play/Pause currently playing track
+  if (e.code === "Space" && AppState.currentlyPlayingAudio) {
+    e.preventDefault();
+    const audio = AppState.currentlyPlayingAudio.audio;
+    const playIcon = AppState.currentlyPlayingAudio.card.querySelector(".play-icon");
+    
+    if (audio.paused) {
+      audio.play();
+      playIcon.textContent = "⏸";
+    } else {
+      audio.pause();
+      playIcon.textContent = "▶";
+    }
+  }
+  
+  // Arrow Up - Increase volume
+  if (e.code === "ArrowUp" && AppState.currentlyPlayingAudio) {
+    e.preventDefault();
+    const audio = AppState.currentlyPlayingAudio.audio;
+    const newVolume = Math.min(audio.volume + 0.1, 1);
+    audio.volume = newVolume;
+    
+    // Update volume slider if visible
+    const volumeSlider = AppState.currentlyPlayingAudio.card.querySelector(".volume-slider");
+    if (volumeSlider) {
+      volumeSlider.value = newVolume;
+    }
+  }
+  
+  // Arrow Down - Decrease volume
+  if (e.code === "ArrowDown" && AppState.currentlyPlayingAudio) {
+    e.preventDefault();
+    const audio = AppState.currentlyPlayingAudio.audio;
+    const newVolume = Math.max(audio.volume - 0.1, 0);
+    audio.volume = newVolume;
+    
+    // Update volume slider if visible
+    const volumeSlider = AppState.currentlyPlayingAudio.card.querySelector(".volume-slider");
+    if (volumeSlider) {
+      volumeSlider.value = newVolume;
+    }
+  }
+  
+  // M - Mute/Unmute
+  if (e.code === "KeyM" && AppState.currentlyPlayingAudio) {
+    e.preventDefault();
+    const muteButton = AppState.currentlyPlayingAudio.card.querySelector(".mute-button");
+    if (muteButton) {
+      muteButton.click();
+    }
+  }
+  
+  // Escape - Stop playing
+  if (e.code === "Escape" && AppState.currentlyPlayingAudio) {
+    e.preventDefault();
+    const card = AppState.currentlyPlayingAudio.card;
+    const playButton = card.querySelector(".preview-button");
+    if (playButton) {
+      playButton.click();
+    }
+  }
 });
