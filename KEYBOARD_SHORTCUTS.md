@@ -1,68 +1,62 @@
-# 🎮 Music Explorer - Keyboard Shortcuts
+# Music Explorer — Keyboard Shortcuts
 
-Quick reference guide for keyboard shortcuts in Music Explorer.
+Quick reference for keyboard shortcuts in Music Explorer.
 
 ## Available Shortcuts
 
+### Search & Navigation
+
+| Key | Action |
+|-----|--------|
+| `/` | Focus the search field |
+| `Esc` | Close the mini-player (or close the mobile menu if open) |
+
 ### Playback Control
 
-| Key | Action | Description |
-|-----|--------|-------------|
-| `Space` | Play / Pause | Toggle playback of currently playing track |
-| `Esc` | Stop | Stop playback and close player controls |
+| Key | Action |
+|-----|--------|
+| `Space` | Play / pause the current track |
+| `←` (Left Arrow)  | Previous track in queue (or restart current if > 3s in) |
+| `→` (Right Arrow) | Next track in queue |
 
 ### Volume Control
 
-| Key | Action | Description |
-|-----|--------|-------------|
-| `↑` | Volume Up | Increase volume by 10% |
-| `↓` | Volume Down | Decrease volume by 10% |
-| `M` | Mute / Unmute | Toggle mute on currently playing track |
+| Key | Action |
+|-----|--------|
+| `↑` (Up Arrow)    | Volume up by 10% |
+| `↓` (Down Arrow)  | Volume down by 10% |
+| `M` | Mute / unmute |
 
-## Important Notes
+### Favorites
 
-- ⚠️ Shortcuts only work when **not** typing in input fields
-- ℹ️ A track must be playing for playback shortcuts to work
-- ✅ Volume changes are reflected in the volume slider
-- 🔊 Volume changes are capped between 0% and 100%
+| Key | Action |
+|-----|--------|
+| `F` | Favorite / unfavorite the currently-playing track |
 
-## Usage Examples
+### Card Interaction
 
-### Starting Playback
-1. Search for a song
-2. Click on any track card or preview button
-3. Use keyboard shortcuts to control playback
+| Key | Action |
+|-----|--------|
+| `Tab` | Move focus between track cards |
+| `Enter` or `Space` (on a focused card) | Play that track |
 
-### Quick Volume Adjustment
-1. While a track is playing
-2. Press `↑` or `↓` multiple times
-3. Each press adjusts volume by 10%
+### Mini-Player Scrubber (focused)
 
-### Mute During Playback
-1. Press `M` to instantly mute
-2. Press `M` again to restore volume
+| Key | Action |
+|-----|--------|
+| `←` / `→` | Seek backward / forward by 5% |
 
-### Stop and Switch Tracks
-1. Press `Esc` to stop current track
-2. Click another track to play
-3. Or use mouse to click the same track again
+## Notes
 
-## Tips
-
-- 💡 Use `Space` for quick pause/resume without mouse
-- 💡 Use arrow keys for precise volume control
-- 💡 Use `Esc` for quick stop when switching tasks
-- 💡 Combine with mouse clicks for best experience
+- Shortcuts are ignored while typing in an input, select, or textarea.
+- Playback shortcuts only fire while a track is loaded in the mini-player.
+- Volume and mute state persist across sessions via `localStorage`.
 
 ## Accessibility
 
-Keyboard shortcuts improve accessibility by:
-- Reducing reliance on mouse/trackpad
-- Enabling hands-free control
-- Supporting power users
-- Following standard media key patterns
-
----
-
-**Print this page for quick reference while using Music Explorer!**
-
+Shortcuts complement full keyboard navigation throughout the app:
+- Skip-link at the top jumps to the main content.
+- Every interactive element shows a visible focus ring.
+- Track cards are focusable and operable with `Tab` + `Enter`.
+- Toggle buttons (theme, favorite, view) expose `aria-pressed`.
+- `aria-live` regions announce results and toasts to screen readers.

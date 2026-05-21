@@ -2,140 +2,308 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Music Explorer - Interactive Music Discovery Platform" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#0b0a1f" />
+    <meta name="description" content="Music Explorer — discover, preview, and save your favorite tracks. A polished music discovery experience powered by Deezer." />
 
-    <!-- Google Fonts -->
+    <!-- Preload critical resources -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap" rel="stylesheet" />
-    <!-- Font Awesome -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" />
+    <link rel="preconnect" href="https://deezerdevs-deezer.p.rapidapi.com" />
+    <link rel="preconnect" href="https://e-cdns-images.dzcdn.net" />
 
-    <!-- Normalize CSS first, then custom CSS -->
+    <!-- Fonts: Outfit (display) + Inter (UI) -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
     <link rel="stylesheet" href="https://necolas.github.io/normalize.css/8.0.1/normalize.css" />
     <link rel="stylesheet" href="css/style.css" />
 
-    <title>Music Explorer</title>
+    <title>Music Explorer — Discover & Preview Music</title>
   </head>
   <body>
-    <header>
-      <nav>
-        <div class="logo">
-          <h1>ME</h1>
-        </div>
-        <button class="theme-toggle" aria-label="Toggle theme">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="5"></circle>
-            <line x1="12" y1="1" x2="12" y2="3"></line>
-            <line x1="12" y1="21" x2="12" y2="23"></line>
-            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-            <line x1="1" y1="12" x2="3" y2="12"></line>
-            <line x1="21" y1="12" x2="23" y2="12"></line>
-            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-          </svg>
-        </button>
-        <button class="hamburger" aria-label="Toggle menu">
-          <span></span>
-          <span></span>
-          <span></span>
-        </button>
-        <ul class="nav-links">
-          <li><a href="#results-section">Search</a></li>
-          <li><a href="#get-started">Get Started</a></li>
-          <li><a href="#about">About</a></li>
+    <!-- Decorative background layers -->
+    <div class="bg-decor" aria-hidden="true">
+      <div class="blob blob-1"></div>
+      <div class="blob blob-2"></div>
+      <div class="blob blob-3"></div>
+      <div class="grain"></div>
+    </div>
+
+    <a href="#main" class="skip-link">Skip to content</a>
+
+    <header class="site-header">
+      <nav class="navbar" aria-label="Primary">
+        <a href="#main" class="brand" aria-label="Music Explorer home">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 18V5l12-2v13"></path>
+              <circle cx="6" cy="18" r="3"></circle>
+              <circle cx="18" cy="16" r="3"></circle>
+            </svg>
+          </span>
+          <span class="brand-text">Music<span class="brand-accent">Explorer</span></span>
+        </a>
+
+        <ul class="nav-links" id="primary-menu">
+          <li><a href="#discover" data-nav="discover">Discover</a></li>
+          <li><a href="#favorites" data-nav="favorites">Favorites <span class="badge" id="fav-count" hidden>0</span></a></li>
+          <li><a href="#about" data-nav="about">About</a></li>
         </ul>
+
+        <div class="nav-actions">
+          <button class="icon-btn theme-toggle" type="button" aria-label="Toggle color theme" aria-pressed="false">
+            <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="4"></circle>
+              <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path>
+            </svg>
+            <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+          </button>
+          <button class="icon-btn hamburger" type="button" aria-label="Toggle menu" aria-expanded="false" aria-controls="primary-menu">
+            <span></span><span></span><span></span>
+          </button>
+        </div>
       </nav>
     </header>
 
-    <main>
-      <section id="results-section">
-        <div class="welcome-message">
-          <div class="welcome-icon"><i class="fas fa-music" aria-hidden="true"></i></div>
-          <h2>Welcome to Music Explorer</h2>
-          <p>Search for your favorite songs and listen to previews!</p>
-        </div>
+    <main id="main">
+      <!-- HERO + SEARCH -->
+      <section class="hero" id="discover" aria-labelledby="hero-title">
+        <div class="hero-inner">
+          <div class="hero-eyebrow">
+            <span class="pulse-dot" aria-hidden="true"></span>
+            Powered by Deezer · 30-second previews
+          </div>
+          <h1 id="hero-title" class="hero-title">
+            Find the song that <span class="text-gradient">moves you</span>.
+          </h1>
+          <p class="hero-sub">Search millions of tracks, preview them instantly, and build a list of your favorites.</p>
 
-        <div class="search-wrapper">
-          <form id="search-form" class="search-form">
-            <label for="search-input" class="visually-hidden">Search for songs</label>
-            <div class="search-input-wrapper">
-              <input type="text" id="search-input" class="search-input" placeholder="Search for songs..." autocomplete="off" />
-              <button type="button" id="clear-search" class="clear-search-button" aria-label="Clear search" style="display: none;">×</button>
+          <form id="search-form" class="search-form" role="search" aria-label="Search music">
+            <label for="search-input" class="visually-hidden">Search for songs, artists, or albums</label>
+            <div class="search-field">
+              <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="11" cy="11" r="7"></circle>
+                <path d="m21 21-4.3-4.3"></path>
+              </svg>
+              <input
+                type="search"
+                id="search-input"
+                class="search-input"
+                placeholder="Search songs, artists, albums…"
+                autocomplete="off"
+                spellcheck="false"
+                aria-autocomplete="list"
+                aria-controls="search-suggestions"
+              />
+              <button type="button" id="clear-search" class="clear-btn" aria-label="Clear search" hidden>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M18 6 6 18M6 6l12 12"></path>
+                </svg>
+              </button>
+              <button type="submit" class="search-submit">
+                <span>Search</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M5 12h14M13 5l7 7-7 7"></path>
+                </svg>
+              </button>
             </div>
-            <button type="submit" class="search-button">Search</button>
+            <ul id="search-suggestions" class="suggestions" role="listbox" hidden></ul>
           </form>
-          <div class="sort-container hidden">
-            <label for="sort-select" class="visually-hidden">Sort results by</label>
-            <select id="sort-select" class="sort-select">
-              <option value="default">Sort by...</option>
-              <option value="title">Title (A-Z)</option>
-              <option value="artist">Artist (A-Z)</option>
-              <option value="duration">Duration</option>
-            </select>
+
+          <div class="chips" role="list" aria-label="Quick search suggestions">
+            <button class="chip" data-query="Daft Punk" role="listitem">Daft Punk</button>
+            <button class="chip" data-query="Lofi beats" role="listitem">Lofi beats</button>
+            <button class="chip" data-query="Taylor Swift" role="listitem">Taylor Swift</button>
+            <button class="chip" data-query="Jazz classics" role="listitem">Jazz classics</button>
+            <button class="chip" data-query="Synthwave" role="listitem">Synthwave</button>
+            <button class="chip" data-query="The Weeknd" role="listitem">The Weeknd</button>
           </div>
-        </div>
-
-        <!-- Error message after search form -->
-        <div class="error-message hidden" id="error-container" role="alert">
-          <p id="error-text"></p>
-          <button class="error-close" aria-label="Close error message">×</button>
-        </div>
-
-        <div class="loading-spinner hidden" aria-hidden="true">
-          <div class="spinner"></div>
-          <p>Searching for tracks...</p>
-        </div>
-        <div class="results-grid" aria-live="polite"></div>
-      </section>
-
-      <section id="get-started" class="info-section hidden">
-        <h2>Get Started</h2>
-        <div class="guide-content">
-          <h3>How to use Music Explorer:</h3>
-          <ol>
-            <li>Use the search bar to find your favorite songs</li>
-            <li>Click on any track to play a preview</li>
-            <li>Adjust volume using the controls that appear during playback</li>
-            <li>Use the sort options to organize your search results</li>
-          </ol>
         </div>
       </section>
 
-      <section id="about" class="info-section hidden">
-        <h2>About Music Explorer</h2>
-        <div class="about-content">
-          <p>Music Explorer is a web application designed to help music lovers discover and preview their favorite tracks.</p>
-          <div class="contact-form">
-            <h3>Get in Touch</h3>
-            <form id="contact-form">
-              <div class="form-group">
-                <label for="name-input" class="visually-hidden">Your name</label>
-                <input id="name-input" type="text" placeholder="Your name" required />
-              </div>
-              <div class="form-group">
-                <label for="email-input" class="visually-hidden">Your email</label>
-                <input id="email-input" type="email" placeholder="Your email" required />
-              </div>
-              <div class="form-group">
-                <label for="message-input" class="visually-hidden">Your message</label>
-                <textarea id="message-input" placeholder="Your message" required></textarea>
-              </div>
-              <button type="submit">Send</button>
-            </form>
+      <!-- RESULTS -->
+      <section class="results-section" id="results-section" aria-labelledby="results-title">
+        <div class="results-header" hidden>
+          <h2 id="results-title" class="section-title">
+            <span class="results-label">Results</span>
+            <span class="results-query" id="results-query"></span>
+          </h2>
+          <div class="results-tools">
+            <div class="view-toggle" role="tablist" aria-label="View mode">
+              <button class="view-btn active" data-view="grid" role="tab" aria-selected="true" aria-label="Grid view">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <rect x="3" y="3" width="7" height="7" rx="1.5"></rect>
+                  <rect x="14" y="3" width="7" height="7" rx="1.5"></rect>
+                  <rect x="3" y="14" width="7" height="7" rx="1.5"></rect>
+                  <rect x="14" y="14" width="7" height="7" rx="1.5"></rect>
+                </svg>
+              </button>
+              <button class="view-btn" data-view="list" role="tab" aria-selected="false" aria-label="List view">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"></path>
+                </svg>
+              </button>
+            </div>
+            <label class="sort-wrap">
+              <span class="visually-hidden">Sort results</span>
+              <select id="sort-select" class="sort-select">
+                <option value="default">Best match</option>
+                <option value="title">Title (A–Z)</option>
+                <option value="artist">Artist (A–Z)</option>
+                <option value="duration">Duration</option>
+              </select>
+            </label>
           </div>
+        </div>
+
+        <!-- Empty / welcome state -->
+        <div class="empty-state" id="empty-state">
+          <div class="empty-art" aria-hidden="true">
+            <div class="record">
+              <div class="record-label"></div>
+            </div>
+            <div class="note note-a">♪</div>
+            <div class="note note-b">♫</div>
+            <div class="note note-c">♩</div>
+          </div>
+          <h2>Start exploring</h2>
+          <p>Type an artist, song, or vibe in the search above — or pick one of the suggestions to get started.</p>
+        </div>
+
+        <!-- Loading skeleton -->
+        <div class="skeleton-grid" id="skeleton-grid" hidden aria-hidden="true">
+          <div class="skeleton-card"></div>
+          <div class="skeleton-card"></div>
+          <div class="skeleton-card"></div>
+          <div class="skeleton-card"></div>
+          <div class="skeleton-card"></div>
+          <div class="skeleton-card"></div>
+          <div class="skeleton-card"></div>
+          <div class="skeleton-card"></div>
+        </div>
+
+        <div class="results-grid" id="results-grid" aria-live="polite" aria-busy="false"></div>
+      </section>
+
+      <!-- FAVORITES -->
+      <section class="favorites-section" id="favorites" aria-labelledby="fav-title" hidden>
+        <h2 id="fav-title" class="section-title">Your favorites</h2>
+        <p class="section-sub">Tracks you've saved appear here. Stored locally on this device.</p>
+        <div class="results-grid" id="favorites-grid"></div>
+        <div class="empty-state small" id="favorites-empty">
+          <h3>No favorites yet</h3>
+          <p>Tap the heart on any track to save it here.</p>
+        </div>
+      </section>
+
+      <!-- ABOUT -->
+      <section class="about-section" id="about" aria-labelledby="about-title" hidden>
+        <h2 id="about-title" class="section-title">About Music Explorer</h2>
+        <div class="about-grid">
+          <div class="about-text">
+            <p>Music Explorer is a web app built to help you discover music quickly. Search the Deezer catalog, preview tracks, save your favorites, and keep things sorted the way you like.</p>
+            <ul class="feature-list">
+              <li><span class="dot"></span> Instant previews with a sleek mini-player</li>
+              <li><span class="dot"></span> Save favorites locally — they persist between visits</li>
+              <li><span class="dot"></span> Keyboard shortcuts: <kbd>Space</kbd> play/pause, <kbd>←</kbd>/<kbd>→</kbd> tracks, <kbd>↑</kbd>/<kbd>↓</kbd> volume, <kbd>M</kbd> mute, <kbd>F</kbd> favorite, <kbd>/</kbd> focus search</li>
+              <li><span class="dot"></span> Light & dark themes, respects your system preference</li>
+              <li><span class="dot"></span> Fully responsive and built with accessibility in mind</li>
+            </ul>
+          </div>
+          <form id="contact-form" class="contact-form" novalidate>
+            <h3>Say hi</h3>
+            <div class="form-group">
+              <label for="name-input">Name</label>
+              <input id="name-input" type="text" autocomplete="name" required />
+            </div>
+            <div class="form-group">
+              <label for="email-input">Email</label>
+              <input id="email-input" type="email" autocomplete="email" required />
+            </div>
+            <div class="form-group">
+              <label for="message-input">Message</label>
+              <textarea id="message-input" rows="4" required></textarea>
+            </div>
+            <button type="submit" class="primary-btn">Send message</button>
+          </form>
         </div>
       </section>
     </main>
-    <button class="back-to-top hidden" aria-label="Back to top">
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <path d="M18 15l-6-6-6 6" />
+
+    <!-- Mini player -->
+    <aside class="mini-player" id="mini-player" aria-label="Now playing" hidden>
+      <div class="mp-track">
+        <div class="mp-cover">
+          <img id="mp-cover-img" src="" alt="" />
+          <div class="mp-eq" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+        </div>
+        <div class="mp-meta">
+          <div class="mp-title" id="mp-title">—</div>
+          <div class="mp-artist" id="mp-artist">—</div>
+        </div>
+        <button class="mp-fav icon-btn" id="mp-fav" aria-label="Add to favorites" aria-pressed="false">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+          </svg>
+        </button>
+      </div>
+
+      <div class="mp-controls">
+        <div class="mp-buttons">
+          <button class="icon-btn" id="mp-prev" aria-label="Previous track">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 6h2v12H6zM9.5 12l10-6v12z"/></svg>
+          </button>
+          <button class="play-btn" id="mp-play" aria-label="Play">
+            <svg class="ic-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+            <svg class="ic-pause" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>
+          </button>
+          <button class="icon-btn" id="mp-next" aria-label="Next track">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16 6h2v12h-2zM4.5 6v12l10-6z"/></svg>
+          </button>
+        </div>
+        <div class="mp-progress-wrap">
+          <span class="mp-time" id="mp-current">0:00</span>
+          <div class="mp-progress" id="mp-progress" role="slider" tabindex="0" aria-label="Seek" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+            <div class="mp-progress-fill" id="mp-progress-fill"></div>
+            <div class="mp-progress-thumb" id="mp-progress-thumb"></div>
+          </div>
+          <span class="mp-time" id="mp-duration">0:00</span>
+        </div>
+      </div>
+
+      <div class="mp-volume">
+        <button class="icon-btn" id="mp-mute" aria-label="Mute">
+          <svg class="ic-vol" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M11 5 6 9H2v6h4l5 4z"></path>
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+          </svg>
+          <svg class="ic-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M11 5 6 9H2v6h4l5 4zM23 9l-6 6M17 9l6 6"></path>
+          </svg>
+        </button>
+        <input type="range" id="mp-volume" min="0" max="1" step="0.01" value="0.6" aria-label="Volume" />
+      </div>
+
+      <button class="icon-btn mp-close" id="mp-close" aria-label="Close player">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M18 6 6 18M6 6l12 12"></path>
+        </svg>
+      </button>
+    </aside>
+
+    <!-- Toasts -->
+    <div class="toast-stack" id="toast-stack" aria-live="polite" aria-atomic="false"></div>
+
+    <button class="back-to-top" type="button" aria-label="Back to top" hidden>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M18 15l-6-6-6 6"/>
       </svg>
     </button>
-    <footer>
-      <p>Created by Aurimas Ransys - Powered by Deezer</p>
+
+    <footer class="site-footer">
+      <p>Created by Aurimas Ransys · Powered by <a href="https://www.deezer.com/" target="_blank" rel="noopener">Deezer</a></p>
     </footer>
 
     <!-- JavaScript -->

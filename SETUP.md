@@ -1,223 +1,159 @@
-# Music Explorer - Setup Guide
+# Music Explorer — Setup Guide
 
-## 🚀 Quick Start
+## Quick Start
 
 ### 1. API Key Configuration
 
-Music Explorer uses the Deezer API through RapidAPI. Follow these steps to configure your API key:
+Music Explorer uses the Deezer API via RapidAPI.
 
-#### Option A: Using the existing configuration (Development)
-The project includes a pre-configured API key in `js/config.js` for testing purposes.
+**Option A — use the included development key**
+The repo ships with a pre-configured key in `js/config.js` for local testing.
 
-#### Option B: Using your own API key (Recommended for production)
+**Option B — bring your own key (recommended)**
 
-1. Get a free API key from [RapidAPI Deezer API](https://rapidapi.com/deezerdevs/api/deezer-1)
-2. Copy `js/config.example.js` to `js/config.js`:
+1. Get a free API key from [RapidAPI Deezer API](https://rapidapi.com/deezerdevs/api/deezer-1).
+2. Copy the template:
    ```bash
    cp js/config.example.js js/config.js
    ```
-3. Open `js/config.js` and replace `YOUR_RAPIDAPI_KEY_HERE` with your actual API key
-4. The file is already in `.gitignore` so your key won't be committed to git
+3. Open `js/config.js` and replace `YOUR_RAPIDAPI_KEY_HERE`.
+4. The file is already in `.gitignore`.
 
-### 2. Running the Application
+### 2. Run the app
 
-Simply open `index.html` in a web browser:
+Open `index.html` directly in a browser, or serve the folder:
 
 ```bash
-# Using Python's built-in server (recommended)
+# Python
 python -m http.server 8000
 
-# Or using Node.js http-server
+# Node
 npx http-server
-
-# Or just open the file directly
-open index.html  # macOS
-start index.html # Windows
-xdg-open index.html # Linux
 ```
 
-Then navigate to `http://localhost:8000` in your browser.
+Then visit `http://localhost:8000`.
 
-## ⚙️ Configuration Options
+## Configuration
 
-All configuration options are in `js/config.js`:
+All knobs live in `js/config.js`:
 
-```javascript
+```js
 const CONFIG = {
-  // API Configuration
-  RAPIDAPI_KEY: 'your-api-key-here',
-  RAPIDAPI_HOST: 'deezerdevs-deezer.p.rapidapi.com',
-  SEARCH_LIMIT: 10,
-  
-  // UI Settings
-  ERROR_DISPLAY_DURATION: 5000,      // milliseconds
-  SEARCH_DEBOUNCE_DELAY: 300,        // milliseconds
-  SCROLL_THRESHOLD: 100,             // pixels
+  RAPIDAPI_KEY:           "your-api-key-here",
+  RAPIDAPI_HOST:          "deezerdevs-deezer.p.rapidapi.com",
+  SEARCH_LIMIT:            10,    // tracks returned per search
+  ERROR_DISPLAY_DURATION:  5000,  // ms (legacy)
+  SEARCH_DEBOUNCE_DELAY:   300,   // ms
+  SCROLL_THRESHOLD:        100,   // px before back-to-top appears
 };
 ```
 
-### Available Settings:
+## Features
 
-- **SEARCH_LIMIT**: Number of tracks to return from API (default: 10)
-- **ERROR_DISPLAY_DURATION**: How long error messages display (default: 5000ms)
-- **SEARCH_DEBOUNCE_DELAY**: Delay for debounced search (default: 300ms)
-- **SCROLL_THRESHOLD**: Scroll position before showing back-to-top button (default: 100px)
+### Search & Discovery
+- Glassmorphism search field with quick-search chips
+- Recent searches dropdown (focus the field to see them)
+- Skeleton loaders during fetch; toasts for errors and empty results
+- Sort by relevance, title, artist, or duration
+- Grid / list view toggle
 
-## 🎮 Keyboard Shortcuts
+### Mini-Player
+- Sticky bottom bar with album art, scrubber, prev / next, volume, mute, favorite
+- Live equalizer animation while playing
+- Auto-advances through the current queue (results or favorites)
+- Click + drag + keyboard scrubbing
 
-Music Explorer supports keyboard shortcuts for enhanced user experience:
+### Favorites
+- Heart any track to save it; persists in `localStorage`
+- Dedicated Favorites view with a badge counter in the nav
+
+### Themes
+- Dark / light themes with smooth transitions
+- First-visit theme follows `prefers-color-scheme`
+- Selection persists across sessions
+
+### Accessibility
+- Semantic landmarks, ARIA labels, `aria-live` regions
+- Visible focus rings; keyboard-operable cards
+- Skip-link, `prefers-reduced-motion` respected
+- Pressed states on all toggle buttons
+
+## Keyboard Shortcuts
+
+See [KEYBOARD_SHORTCUTS.md](KEYBOARD_SHORTCUTS.md) for the full table.
 
 | Key | Action |
 |-----|--------|
-| `Space` | Play/Pause currently playing track |
-| `↑` (Arrow Up) | Increase volume by 10% |
-| `↓` (Arrow Down) | Decrease volume by 10% |
-| `M` | Toggle mute |
-| `Esc` | Stop playing track |
+| `/` | Focus search |
+| `Space` | Play / pause |
+| `←` / `→` | Prev / next track |
+| `↑` / `↓` | Volume up / down |
+| `M` | Mute |
+| `F` | Favorite current track |
+| `Esc` | Close mini-player |
 
-**Note**: Keyboard shortcuts only work when not typing in input fields.
+## Security Notes
 
-## 🎨 Features
+⚠️ Because the app is fully client-side, the API key is always visible in the browser's network panel. For production, place a small backend proxy in front of RapidAPI and add domain restrictions in the RapidAPI dashboard.
 
-### Theme Persistence
-- Your theme preference (light/dark) is automatically saved to `localStorage`
-- The app will remember your choice on future visits
+Good practices already in the repo:
+- Key in a separate `config.js`, excluded from git
+- `config.example.js` template for new contributors
+- All user input is HTML-escaped before insertion
 
-### State Management
-- Centralized state management through `AppState` object
-- Proper audio cleanup when switching tracks
-- No memory leaks from unmanaged resources
+## File Structure
 
-### Search Enhancements
-- Clear search button (×) appears when typing
-- Debounced search function available for future live-search feature
-- Proper loading states and error handling
-
-### Audio Player
-- Single-track playback (stops previous when playing new)
-- Volume controls with slider and mute button
-- Progress bar with time display
-- Proper cleanup on track end
-
-## 🔒 Security Notes
-
-### Client-Side API Key Visibility
-⚠️ **Important**: Since this is a client-side application, the API key will always be visible in the browser's network inspector, regardless of configuration methods.
-
-For production applications, consider:
-1. Using a backend proxy to hide API keys
-2. Implementing rate limiting on your backend
-3. Using API key restrictions (domain/IP whitelisting) on RapidAPI
-4. Monitoring API usage for unusual patterns
-
-### Best Practices Implemented:
-- ✅ API key in separate config file
-- ✅ Config file excluded from git via `.gitignore`
-- ✅ Example config file provided for setup
-- ✅ Clear documentation on security limitations
-
-## 🛠️ Development
-
-### File Structure
 ```
 Project-2/
-├── index.html              # Main HTML file
+├── index.html              # App shell + landmarks
 ├── css/
-│   └── style.css          # All styles
+│   └── style.css           # Design tokens, components, responsive layout
 ├── js/
-│   ├── config.js          # Configuration (gitignored)
-│   ├── config.example.js  # Config template
-│   ├── api.js             # API communication
-│   └── main.js            # Main application logic
-├── assets/                 # Images and screenshots
-├── .gitignore             # Git ignore rules
-├── README.md              # Project documentation
-└── SETUP.md               # This file
+│   ├── config.js           # API key & UI settings (gitignored)
+│   ├── config.example.js   # Template
+│   ├── api.js              # MusicAPI wrapper around Deezer/RapidAPI
+│   └── main.js             # App logic: state, render, player, favorites, a11y
+├── assets/
+│   └── images/             # Wireframes, screenshots, testing artifacts
+├── IMPROVEMENTS.md         # Changelog
+├── KEYBOARD_SHORTCUTS.md   # Shortcut reference
+├── README.md               # Project documentation
+└── SETUP.md                # This file
 ```
 
-### Code Architecture
+## Architecture
 
-**State Management**: Centralized in `AppState` object
-```javascript
-AppState = {
-  currentTracks: [],
-  isSearching: false,
-  isDarkTheme: true,
-  currentlyPlayingAudio: null
+**State** — a single `State` object inside `main.js` (IIFE-scoped) holds:
+```js
+{
+  tracks,        // current search results
+  favorites,     // persisted in localStorage
+  recent,        // recent search queries (persisted)
+  queue,         // active queue: results or favorites
+  queueSource,   // "results" | "favorites"
+  currentIndex,  // index in queue that's playing
+  volume,        // persisted in localStorage
+  isPlaying, isSearching, isMuted, view, activeSection
 }
 ```
 
-**API Communication**: Handled by `MusicAPI` class
-```javascript
-musicAPI.searchTracks(query) // Returns Promise<Track[]>
-```
+**Audio** — a single shared `Audio` element is reused across tracks. No `new Audio()` per click → no leaks.
 
-**Configuration**: Global `CONFIG` object
-```javascript
-CONFIG.ERROR_DISPLAY_DURATION // Access config values
-```
+**API** — `MusicAPI` class in `api.js` exposes `searchTracks(query, limit)` and returns Deezer track objects unchanged.
 
-## 📝 Recent Improvements
+**Persistence** — `localStorage` keys: `me.theme`, `me.favorites`, `me.recentSearches`, `me.volume`.
 
-### Version 2.0 Updates:
+## Troubleshooting
 
-1. **Security**
-   - Extracted API key to configuration file
-   - Added proper `.gitignore` rules
-   - Created config template for easy setup
+| Problem | Fix |
+|---------|-----|
+| "API key not configured" | Confirm `js/config.js` exists and `RAPIDAPI_KEY` is set |
+| No preview audio | Some tracks have no preview URL — try another |
+| Theme reverts | Check `localStorage` isn't blocked / cleared |
+| Favorites missing | Same — `localStorage` was cleared |
 
-2. **Code Quality**
-   - Refactored global variables into `AppState`
-   - Extracted magic numbers to `CONFIG`
-   - Improved audio cleanup and resource management
-   - Added proper error handling
+## Resources
 
-3. **User Experience**
-   - Theme preference persistence with `localStorage`
-   - Clear search button
-   - Keyboard shortcuts for playback control
-   - Better visual feedback
-
-4. **Performance**
-   - Debouncing utility for search
-   - Proper audio object cleanup
-   - Optimized event listeners
-
-## 🐛 Troubleshooting
-
-### API Key Issues
-**Problem**: "API key not configured" error
-**Solution**: Ensure `js/config.js` exists and contains valid API key
-
-### Audio Not Playing
-**Problem**: Audio preview not working
-**Solution**: Check browser console for CORS errors; try different browser
-
-### Theme Not Persisting
-**Problem**: Theme resets on page reload
-**Solution**: Check browser's localStorage is not disabled
-
-### Clear Button Not Appearing
-**Problem**: × button not showing when typing
-**Solution**: Clear browser cache and refresh
-
-## 📚 Additional Resources
-
-- [Deezer API Documentation](https://developers.deezer.com/api)
-- [RapidAPI Deezer Endpoint](https://rapidapi.com/deezerdevs/api/deezer-1)
-- [Web Audio API MDN Docs](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API)
-
-## 🤝 Contributing
-
-If you'd like to contribute improvements:
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
-
-## 📄 License
-
-See LICENSE file for details.
-
+- [Deezer API docs](https://developers.deezer.com/api)
+- [RapidAPI Deezer endpoint](https://rapidapi.com/deezerdevs/api/deezer-1)
+- [MDN — HTMLMediaElement](https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement)

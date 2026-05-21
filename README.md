@@ -1,3 +1,13 @@
+# 🎵 Music Explorer
+
+> A modern, responsive music discovery web app — search the Deezer catalogue, preview 30-second clips in a sticky mini-player, save favorites, and explore in light or dark themes.
+
+**Latest release — v3.0 redesign:** new hero, glassmorphism search, sticky mini-player with scrubber & EQ visualization, favorites system, recent searches, grid/list views, skeleton loaders, toast notifications, refreshed accessibility, and a single shared `Audio` element. See [IMPROVEMENTS.md](IMPROVEMENTS.md) for the full changelog.
+
+**Quick links:** [Setup](SETUP.md) · [Keyboard shortcuts](KEYBOARD_SHORTCUTS.md) · [Changelog](IMPROVEMENTS.md)
+
+---
+
 ## Table of Contents
 
 ### Project Fundamentals
@@ -87,52 +97,44 @@ Music Explorer demonstrates technical mastery through:
 
 ## 🌟 Key Features Highlights
 
-### Interactive Music Preview
+### Sticky Mini-Player
+A persistent player anchored to the bottom of the viewport:
+- Album art with live equalizer animation
+- Scrubber supporting click, drag, and keyboard seeking
+- Previous / next, play / pause, volume slider, mute toggle, favorite toggle
+- Auto-advances through the current queue (results or favorites) on track end
+- Volume is restored across sessions via `localStorage`
 
-The application's custom audio player allows users to:
+### Favorites & Recent Searches
+- Heart any track to save it; persisted locally with a badge counter in the nav
+- Dedicated Favorites view with grid/list toggle
+- Recent searches dropdown when the search field is focused, with per-entry removal
 
-- Play/pause 30-second previews with a single click
-- Track playback progress with a visual timeline
-- Adjust volume with an intuitive slider
-- See currently playing status with visual indicators
+### Modern Visual Language
+- Hero with animated gradient headline and floating color blobs
+- Glassmorphism search field, quick-search chips, frosted-glass sticky header
+- Premium streaming-app card grid with hover overlay and play button reveal
+- Skeleton loaders during search; toast notification stack for system messages
+- Refreshed dark and light themes; first visit follows `prefers-color-scheme`
 
-### Responsive Design System
+### Responsive Across Devices
+- Fluid `clamp()` typography
+- Grid adapts from a single column on small phones to four+ on wide desktops
+- Mini-player collapses to a two-row layout on mobile with full-width scrubber
+- Touch + mouse drag both supported on the scrubber
 
-Music Explorer adapts fluidly across devices with:
+### Accessibility-First
+- Skip-link, semantic landmarks, ARIA roles and labels throughout
+- `aria-live` regions for results and toasts
+- Visible focus rings on every interactive element
+- Track cards are keyboard-operable (`Tab` + `Enter`)
+- Toggle buttons (theme, favorite, view) expose `aria-pressed`
+- `prefers-reduced-motion` disables non-essential animations
 
-- Mobile-first design approach
-- Responsive grid layout that adjusts from single to triple columns
-- Touch-optimized controls for mobile users
-- Consistent experience from 320px to 1440px+ displays
-
-### Visual Customization
-
-The application features a comprehensive theming system with:
-
-- Toggle between light and dark themes
-- Animated theme transitions
-- Theme applies to all elements consistently
-- Clean visual design in both themes
-
-### Intelligent User Interface
-
-The UI focuses on user experience through:
-
-- Clear visual hierarchy and information architecture
-- Loading spinner with animated feedback
-- Error handling with user-friendly messages
-- Welcome message for first-time visitors
-- Clean modern design with intuitive controls
-
-### Contact Form Functionality
-
-The application includes a user-friendly contact form with:
-
-- Input validation for required fields
-- Email format validation
-- Visual feedback during submission
-- Success/error messaging
-- Clean form reset after submission
+### Contact Form
+- Inline label/field pairs with `autocomplete` hints
+- Client-side validation for required fields and email format
+- Animated submission state, toast confirmation on success
 
 ## 📊 Technical Achievements
 
@@ -166,13 +168,18 @@ Music Explorer was built using:
 
 ## 🔮 Future Vision
 
-While already feature-complete, Music Explorer has potential for expansion:
+Shipped in v3.0:
+- ✅ Personalization: favorites & recent searches (persisted locally)
+- ✅ Sticky mini-player with queue auto-advance
+- ✅ Grid / list view modes
+- ✅ Comprehensive keyboard shortcuts
 
-- **Advanced Filtering**: Adding genre, year, and popularity filters
-- **Personalization**: Implementing favorites and history tracking
-- **Social Features**: Enabling sharing of discoveries
-- **Extended Information**: Adding artist bios and album details
-- **Offline Support**: Implementing service workers for offline functionality
+Still on the roadmap:
+- **Advanced Filtering**: Genre, year, and popularity filters
+- **Social Features**: Shareable links for tracks and favorites
+- **Extended Information**: Artist bios, album details, related tracks
+- **Offline Support**: Service worker for caching shell + previously-viewed results
+- **Backend Proxy**: Hide the RapidAPI key and add rate limiting
 
 ## 🏆 Learning Outcomes
 
@@ -308,35 +315,32 @@ As a developer, the objectives for the website were:
 #### Fonts
 
 - **Google Fonts - Outfit**: Selected for its clean, modern, and highly legible qualities across different weights. The font works well for both headings and body text, providing a consistent typographic experience.
-- **Font Hierarchy**:
-  - Headings: 4rem (welcome heading) to 1.2rem (track names)
-  - Body text: 1.1rem
-  - Secondary text: 0.9rem (artist names, duration)
-- **Reasoning**: The Outfit font family provides excellent readability while maintaining a contemporary aesthetic that aligns with the music discovery theme.
+- **Font Pairing (v3.0)**:
+  - **Outfit** (display) — headings, brand, section titles
+  - **Inter** (UI) — body, controls, metadata
+- **Fluid Type**: All major sizes use `clamp()` so the hierarchy scales between mobile and ultrawide without media queries.
+- **Reasoning**: Outfit gives the headings a contemporary, music-forward personality; Inter keeps body copy comfortable and legible at small sizes.
 
 #### Icons
 
-- **Font Awesome Icons**: Implemented for interactive elements and status indicators, providing consistent and recognizable visual cues.
-- **Custom SVG Icons**: Used for the theme toggle and back-to-top buttons, allowing for theme-specific styling and animation.
-- **Reasoning**: Icons enhance the user interface by providing intuitive visual cues for interactive elements, improving usability without cluttering the design.
+- **Inline SVG only (v3.0)**: All icons are inline SVG — theme toggle, search, mini-player transport, favorite hearts, sort arrows. No icon-font dependency, no FOIT, crisp at every density.
+- **Reasoning**: Inline SVG inherits `currentColor`, so every icon themes for free and animates without extra CSS files.
 
-#### Colors
+#### Colors (v3.0)
 
-- **Dark Theme (Default)**:
+The palette is driven by a design-token system in CSS custom properties.
 
-  - Primary Palette:
-    - Purple/Blue Gradient: (#a393eb to #27296d) - Creates an immersive, music-themed environment
-    - White Text (#ffffff) - Ensures readability against the dark background
-    - Secondary Accent (#5e63b6) - Provides visual hierarchy for interactive elements
-  - Background: Radial gradient with subtle pattern overlay for depth
+- **Dark Theme (default)**:
+  - Accents: violet `#b18cff`, cyan `#5be3ff`, magenta `#ff7ad6` — combined in gradient brand mark, hero title, and player controls
+  - Surfaces: layered `rgba(255,255,255, …)` over deep indigo `#07061a → #161136`
+  - Text: `#f4f1ff` primary, `#b8b3d9` dim, `#807aa7` muted
 
 - **Light Theme**:
+  - Accents: `#6d4eff`, `#00b6d6`, `#d63cad`
+  - Surfaces: soft lavender `#f7f5ff → #dfddff`
+  - Text: ink `#1a1542` primary
 
-  - Light Background: Soft white to lavender gradient for a clean, airy feel
-  - Dark Text (#27296d) - Maintains readability while connecting to the brand color scheme
-  - Secondary Accent (#5e63b6) - Preserves brand identity across themes
-
-- **Reasoning**: The color scheme was chosen to create an immersive, music-focused environment while ensuring accessibility. The purple-blue palette evokes creativity and musical exploration while providing sufficient contrast for text readability.
+- **Reasoning**: The token-driven approach guarantees every component themes consistently. The two palettes share the same gradient logic but rebalance saturation and contrast so both themes feel intentional — not a quick invert.
 
 #### Styling
 
@@ -391,6 +395,8 @@ The wireframes were created during the planning stage to guide the website's str
 - Animation and transition effects were added incrementally during development
 
 ## 📸 Application Screenshots
+
+> ℹ️ **Note**: The screenshots below capture the pre-v3.0 design. The v3.0 redesign introduces a new hero, glassmorphism search, sticky mini-player, favorites view, skeleton loaders, and refreshed dark/light themes. Up-to-date captures will be added in the next documentation pass.
 
 The following screenshots showcase key interfaces and functionality of Music Explorer across different themes and devices.
 
@@ -1858,81 +1864,85 @@ By visualizing and documenting these core application flows, developers can bett
 ## 📋 Features
 
 ### 🔎 Search and Discovery
-
-- ✅ **Intuitive Search Interface**: Clean, prominent search form with instant feedback
-- ✅ **Loading Indicator**: Animated spinner during search operations
-- ✅ **Error Handling**: User-friendly error messages with auto-dismissal
-- ✅ **Empty State Management**: Welcoming initial screen for first-time visitors
-- ✅ **Results Management**: Dynamic grid system with adaptive layout
-- ✅ **Sort Functionality**: Ability to sort results by title, artist, or duration
+- ✅ Glassmorphism search field with quick-search chips
+- ✅ Recent searches dropdown with per-entry removal (`localStorage`)
+- ✅ Skeleton loaders during fetch (replaces the spinner)
+- ✅ Toast notifications for empty results, errors, and confirmations
+- ✅ Sort by relevance, title, artist, or duration
+- ✅ Grid / list view toggle
 
 ### 🎧 Audio Playback
+- ✅ Sticky mini-player with album art, scrubber, prev / next, volume, mute, favorite
+- ✅ Live equalizer animation on the playing card and in the player
+- ✅ Click + drag + keyboard scrubbing
+- ✅ Auto-advance through the active queue when a preview ends
+- ✅ Single shared `Audio` element (no per-click leaks)
+- ✅ Volume persisted across sessions
 
-- ✅ **Preview Player**: One-click preview playback for search results
-- ✅ **Progress Tracking**: Visual progress bar with time display
-- ✅ **Volume Control**: Adjustable volume with mute/unmute option
-- ✅ **Multi-Track Management**: Proper handling when switching between tracks
-- ✅ **Visual Feedback**: Animated playing status indicators
+### ⭐ Favorites
+- ✅ Heart any track to save it locally
+- ✅ Live badge counter on the Favorites nav link
+- ✅ Dedicated Favorites view that becomes its own queue
 
 ### 🎨 User Interface
+- ✅ Fluid responsive design from 320 px to ultrawide
+- ✅ Dark / light themes with smooth transitions; first-visit follows `prefers-color-scheme`
+- ✅ `clamp()`-based typography & cohesive design tokens
+- ✅ Hover overlays, animated entrance, micro-interactions
 
-- ✅ **Responsive Design**: Seamless experience from 320px mobile to 1440px+ desktop displays
-- ✅ **Theme Customization**: Toggle between dark and light themes with smooth transitions
-- ✅ **Touch-Friendly Controls**: Optimized interface for mobile use
-- ✅ **Visual Hierarchy**: Clear distinction between tracks and currently playing content
-- ✅ **Animation System**: Subtle transitions for user interactions
+### ⌨️ Keyboard & Accessibility
+- ✅ Full shortcut set (see [KEYBOARD_SHORTCUTS.md](KEYBOARD_SHORTCUTS.md))
+- ✅ Skip-link, semantic landmarks, ARIA labels and `aria-live` regions
+- ✅ Keyboard-operable track cards and scrubber
+- ✅ `prefers-reduced-motion` respected
 
 ### 📱 Mobile Experience
-
-- ✅ **Hamburger Menu**: Touch-friendly navigation for smaller screens
-- ✅ **Optimized Controls**: Larger touch targets for mobile interaction
-- ✅ **Fluid Adaptation**: Dynamic layout adjustments for various screen sizes
+- ✅ Hamburger menu with proper ARIA state
+- ✅ Mini-player collapses to a two-row layout with full-width scrubber
+- ✅ Touch-tuned hit targets and gestures
 
 ### 🧩 Technical Implementation
-
-- ✅ **Modular JavaScript**: Clean separation of concerns with focused components
-- ✅ **API Integration**: Efficient data fetching with error handling
-- ✅ **State Management**: Robust playback state tracking across user interactions
-- ✅ **Memory Optimization**: Proper audio resource cleanup to prevent leaks
+- ✅ Vanilla JS with an IIFE-scoped module and a single `State` object
+- ✅ Cached DOM references and HTML-escaped insertion
+- ✅ Debounced scroll handling
+- ✅ API key isolated in `config.js` (gitignored)
 
 ### 📝 Planned Enhancements
-
-- 📝 **Advanced search filters**: Filter by genre, popularity, release date
-- 📝 **Keyboard shortcuts**: Improved accessibility through keyboard navigation
-- 📝 **Personal favorites**: Save tracks for later listening
-- 📝 **Social sharing**: Share discoveries with others
-- 📝 **Offline mode**: Limited functionality when connection is lost
+- 📝 Advanced search filters (genre, popularity, release date)
+- 📝 Social sharing of tracks and favorites
+- 📝 Service worker for offline shell
+- 📝 Backend proxy to hide the API key
 
 ## 🚀 Technologies Stack
 
 ### Core Technologies
 
-- **HTML5**: Semantic markup for content structure and accessibility
-- **CSS3**: Modern styling with custom properties, flexbox, and grid layouts
-- **JavaScript**: ES6+ features for interactive functionality
+- **HTML5**: Semantic landmarks, ARIA, native form validation
+- **CSS3**: Design tokens via custom properties, Grid + Flexbox, `clamp()` fluid typography, `backdrop-filter` glassmorphism, `prefers-color-scheme` + `prefers-reduced-motion`
+- **JavaScript (ES2020+)**: IIFE module pattern, single shared `Audio` element, `localStorage` persistence, no framework dependencies
 
 ### API Integration
 
 - **Deezer API**: Music data source accessed via RapidAPI
 - **RapidAPI**: API proxy service for secure third-party API access
 
-### UI Components
+### UI Components & Assets
 
-- **Google Fonts**: Typography with Outfit font family
-- **Font Awesome**: Vector icons for enhanced interface elements
+- **Google Fonts**: Outfit (display) + Inter (UI)
+- **Inline SVG icons**: All icons are inline SVG for crisp scaling and easy theming (no icon-font dependency)
 - **Normalize.css**: Cross-browser styling baseline
 
 ### Development Tools
 
 - **Visual Studio Code**: Primary development environment
 - **Git & GitHub**: Version control and code hosting
-- **Live Server**: Local development server for testing
+- **Live Server / `python -m http.server`**: Local development
 
 ### Testing Tools
 
 - **Chrome DevTools**: Performance profiling and debugging
-- **Lighthouse**: Automated performance, accessibility, and SEO auditing
-- **WAVE**: Web accessibility evaluation tool
+- **Lighthouse**: Performance, accessibility, and SEO auditing
+- **WAVE**: Web accessibility evaluation
 - **W3C Validators**: HTML and CSS validation
 
 ## 📂 Project Structure
@@ -1947,19 +1957,25 @@ graph TD
   root --> cssDir[css]
   root --> jsDir[js]
   root --> assetsDir[assets]
-  root --> readme[README.md]
+  root --> docs[Docs]
 
   cssDir --> styleFile[style.css]
 
+  jsDir --> configFile[config.js]
+  jsDir --> configEx[config.example.js]
   jsDir --> apiFile[api.js]
   jsDir --> mainFile[main.js]
 
   assetsDir --> imagesDir[images]
-  assetsDir --> faviconDir[favicon]
 
   imagesDir --> wireframesDir[wireframes]
   imagesDir --> testingDir[testing]
   imagesDir --> screenshotsDir[screenshots]
+
+  docs --> readme[README.md]
+  docs --> setup[SETUP.md]
+  docs --> shortcuts[KEYBOARD_SHORTCUTS.md]
+  docs --> changelog[IMPROVEMENTS.md]
 ```
 
 ### Directory Tree
@@ -1967,22 +1983,26 @@ graph TD
 ```
 Music Explorer/
 │
-├── index.html                 # Main HTML document
+├── index.html                 # App shell, semantic landmarks
 ├── css/
-│   └── style.css              # Main stylesheet with all styles
+│   └── style.css              # Design tokens, components, responsive layout
 │
 ├── js/
-│   ├── api.js                 # API integration module
-│   └── main.js                # Core application logic
+│   ├── config.js              # API key & UI settings (gitignored)
+│   ├── config.example.js      # Template for new contributors
+│   ├── api.js                 # MusicAPI wrapper (Deezer via RapidAPI)
+│   └── main.js                # App logic: state, render, player, favorites, a11y
 │
 ├── assets/
-│   ├── images/                # Project images and icons
-│   │   ├── wireframes/        # Project wireframes
-│   │   ├── testing/           # Testing screenshots
-│   │   └── screenshots/       # Various screenshots of the website for documentation
-│   └── favicon/               # Favicon files
+│   └── images/
+│       ├── wireframes/        # Desktop / tablet / mobile wireframes
+│       ├── screenshots/       # App screenshots for documentation
+│       └── testing/           # Lighthouse, validator, cross-browser captures
 │
-└── README.md                  # Project documentation
+├── IMPROVEMENTS.md            # Changelog (v1 → v3)
+├── KEYBOARD_SHORTCUTS.md      # Shortcut reference
+├── SETUP.md                   # Setup, architecture, troubleshooting
+└── README.md                  # This file
 ```
 
 **Key Event Bindings:**
@@ -2173,81 +2193,85 @@ By visualizing and documenting these core application flows, developers can bett
 ## 📋 Features
 
 ### 🔎 Search and Discovery
-
-- ✅ **Intuitive Search Interface**: Clean, prominent search form with instant feedback
-- ✅ **Loading Indicator**: Animated spinner during search operations
-- ✅ **Error Handling**: User-friendly error messages with auto-dismissal
-- ✅ **Empty State Management**: Welcoming initial screen for first-time visitors
-- ✅ **Results Management**: Dynamic grid system with adaptive layout
-- ✅ **Sort Functionality**: Ability to sort results by title, artist, or duration
+- ✅ Glassmorphism search field with quick-search chips
+- ✅ Recent searches dropdown with per-entry removal (`localStorage`)
+- ✅ Skeleton loaders during fetch (replaces the spinner)
+- ✅ Toast notifications for empty results, errors, and confirmations
+- ✅ Sort by relevance, title, artist, or duration
+- ✅ Grid / list view toggle
 
 ### 🎧 Audio Playback
+- ✅ Sticky mini-player with album art, scrubber, prev / next, volume, mute, favorite
+- ✅ Live equalizer animation on the playing card and in the player
+- ✅ Click + drag + keyboard scrubbing
+- ✅ Auto-advance through the active queue when a preview ends
+- ✅ Single shared `Audio` element (no per-click leaks)
+- ✅ Volume persisted across sessions
 
-- ✅ **Preview Player**: One-click preview playback for search results
-- ✅ **Progress Tracking**: Visual progress bar with time display
-- ✅ **Volume Control**: Adjustable volume with mute/unmute option
-- ✅ **Multi-Track Management**: Proper handling when switching between tracks
-- ✅ **Visual Feedback**: Animated playing status indicators
+### ⭐ Favorites
+- ✅ Heart any track to save it locally
+- ✅ Live badge counter on the Favorites nav link
+- ✅ Dedicated Favorites view that becomes its own queue
 
 ### 🎨 User Interface
+- ✅ Fluid responsive design from 320 px to ultrawide
+- ✅ Dark / light themes with smooth transitions; first-visit follows `prefers-color-scheme`
+- ✅ `clamp()`-based typography & cohesive design tokens
+- ✅ Hover overlays, animated entrance, micro-interactions
 
-- ✅ **Responsive Design**: Seamless experience from 320px mobile to 1440px+ desktop displays
-- ✅ **Theme Customization**: Toggle between dark and light themes with smooth transitions
-- ✅ **Touch-Friendly Controls**: Optimized interface for mobile use
-- ✅ **Visual Hierarchy**: Clear distinction between tracks and currently playing content
-- ✅ **Animation System**: Subtle transitions for user interactions
+### ⌨️ Keyboard & Accessibility
+- ✅ Full shortcut set (see [KEYBOARD_SHORTCUTS.md](KEYBOARD_SHORTCUTS.md))
+- ✅ Skip-link, semantic landmarks, ARIA labels and `aria-live` regions
+- ✅ Keyboard-operable track cards and scrubber
+- ✅ `prefers-reduced-motion` respected
 
 ### 📱 Mobile Experience
-
-- ✅ **Hamburger Menu**: Touch-friendly navigation for smaller screens
-- ✅ **Optimized Controls**: Larger touch targets for mobile interaction
-- ✅ **Fluid Adaptation**: Dynamic layout adjustments for various screen sizes
+- ✅ Hamburger menu with proper ARIA state
+- ✅ Mini-player collapses to a two-row layout with full-width scrubber
+- ✅ Touch-tuned hit targets and gestures
 
 ### 🧩 Technical Implementation
-
-- ✅ **Modular JavaScript**: Clean separation of concerns with focused components
-- ✅ **API Integration**: Efficient data fetching with error handling
-- ✅ **State Management**: Robust playback state tracking across user interactions
-- ✅ **Memory Optimization**: Proper audio resource cleanup to prevent leaks
+- ✅ Vanilla JS with an IIFE-scoped module and a single `State` object
+- ✅ Cached DOM references and HTML-escaped insertion
+- ✅ Debounced scroll handling
+- ✅ API key isolated in `config.js` (gitignored)
 
 ### 📝 Planned Enhancements
-
-- 📝 **Advanced search filters**: Filter by genre, popularity, release date
-- 📝 **Keyboard shortcuts**: Improved accessibility through keyboard navigation
-- 📝 **Personal favorites**: Save tracks for later listening
-- 📝 **Social sharing**: Share discoveries with others
-- 📝 **Offline mode**: Limited functionality when connection is lost
+- 📝 Advanced search filters (genre, popularity, release date)
+- 📝 Social sharing of tracks and favorites
+- 📝 Service worker for offline shell
+- 📝 Backend proxy to hide the API key
 
 ## 🚀 Technologies Stack
 
 ### Core Technologies
 
-- **HTML5**: Semantic markup for content structure and accessibility
-- **CSS3**: Modern styling with custom properties, flexbox, and grid layouts
-- **JavaScript**: ES6+ features for interactive functionality
+- **HTML5**: Semantic landmarks, ARIA, native form validation
+- **CSS3**: Design tokens via custom properties, Grid + Flexbox, `clamp()` fluid typography, `backdrop-filter` glassmorphism, `prefers-color-scheme` + `prefers-reduced-motion`
+- **JavaScript (ES2020+)**: IIFE module pattern, single shared `Audio` element, `localStorage` persistence, no framework dependencies
 
 ### API Integration
 
 - **Deezer API**: Music data source accessed via RapidAPI
 - **RapidAPI**: API proxy service for secure third-party API access
 
-### UI Components
+### UI Components & Assets
 
-- **Google Fonts**: Typography with Outfit font family
-- **Font Awesome**: Vector icons for enhanced interface elements
+- **Google Fonts**: Outfit (display) + Inter (UI)
+- **Inline SVG icons**: All icons are inline SVG for crisp scaling and easy theming (no icon-font dependency)
 - **Normalize.css**: Cross-browser styling baseline
 
 ### Development Tools
 
 - **Visual Studio Code**: Primary development environment
 - **Git & GitHub**: Version control and code hosting
-- **Live Server**: Local development server for testing
+- **Live Server / `python -m http.server`**: Local development
 
 ### Testing Tools
 
 - **Chrome DevTools**: Performance profiling and debugging
-- **Lighthouse**: Automated performance, accessibility, and SEO auditing
-- **WAVE**: Web accessibility evaluation tool
+- **Lighthouse**: Performance, accessibility, and SEO auditing
+- **WAVE**: Web accessibility evaluation
 - **W3C Validators**: HTML and CSS validation
 
 ## 📂 Project Structure
@@ -2262,19 +2286,25 @@ graph TD
   root --> cssDir[css]
   root --> jsDir[js]
   root --> assetsDir[assets]
-  root --> readme[README.md]
+  root --> docs[Docs]
 
   cssDir --> styleFile[style.css]
 
+  jsDir --> configFile[config.js]
+  jsDir --> configEx[config.example.js]
   jsDir --> apiFile[api.js]
   jsDir --> mainFile[main.js]
 
   assetsDir --> imagesDir[images]
-  assetsDir --> faviconDir[favicon]
 
   imagesDir --> wireframesDir[wireframes]
   imagesDir --> testingDir[testing]
   imagesDir --> screenshotsDir[screenshots]
+
+  docs --> readme[README.md]
+  docs --> setup[SETUP.md]
+  docs --> shortcuts[KEYBOARD_SHORTCUTS.md]
+  docs --> changelog[IMPROVEMENTS.md]
 ```
 
 ### Directory Tree
@@ -2282,22 +2312,26 @@ graph TD
 ```
 Music Explorer/
 │
-├── index.html                 # Main HTML document
+├── index.html                 # App shell, semantic landmarks
 ├── css/
-│   └── style.css              # Main stylesheet with all styles
+│   └── style.css              # Design tokens, components, responsive layout
 │
 ├── js/
-│   ├── api.js                 # API integration module
-│   └── main.js                # Core application logic
+│   ├── config.js              # API key & UI settings (gitignored)
+│   ├── config.example.js      # Template for new contributors
+│   ├── api.js                 # MusicAPI wrapper (Deezer via RapidAPI)
+│   └── main.js                # App logic: state, render, player, favorites, a11y
 │
 ├── assets/
-│   ├── images/                # Project images and icons
-│   │   ├── wireframes/        # Project wireframes
-│   │   ├── testing/           # Testing screenshots
-│   │   └── screenshots/       # Various screenshots of the website for documentation
-│   └── favicon/               # Favicon files
+│   └── images/
+│       ├── wireframes/        # Desktop / tablet / mobile wireframes
+│       ├── screenshots/       # App screenshots for documentation
+│       └── testing/           # Lighthouse, validator, cross-browser captures
 │
-└── README.md                  # Project documentation
+├── IMPROVEMENTS.md            # Changelog (v1 → v3)
+├── KEYBOARD_SHORTCUTS.md      # Shortcut reference
+├── SETUP.md                   # Setup, architecture, troubleshooting
+└── README.md                  # This file
 ```
 
 ## ⚙️ Installation and Setup
@@ -2879,6 +2913,8 @@ For future development, consider implementing:
    - Implement debouncing for search inputs
 
 ## 💻 Code Examples and Implementation
+
+> ⚠️ **Note on snippets below**: The code excerpts in this and the following "JavaScript Code Breakdown" section describe the pre-v3.0 architecture — they document the project's evolution and reasoning, not the current source. The v3.0 source uses an IIFE module, a single `State` object, a single shared `Audio` element, and an event-driven mini-player. See [`js/main.js`](js/main.js) for the current implementation and [IMPROVEMENTS.md](IMPROVEMENTS.md) for the diff at a glance.
 
 This section highlights key implementation details with properly formatted code examples that illustrate the application's architecture and functionality.
 
